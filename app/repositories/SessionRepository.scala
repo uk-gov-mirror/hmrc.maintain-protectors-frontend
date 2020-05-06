@@ -16,10 +16,11 @@
 
 package repositories
 
+import java.sql.Timestamp
 import java.time.LocalDateTime
 
 import akka.stream.Materializer
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.UserAnswers
 import play.api.Configuration
 import play.api.libs.json._
@@ -28,61 +29,84 @@ import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
 import reactivemongo.play.json.collection.JSONCollection
+import utils.DateFormatter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DefaultSessionRepository @Inject()(
-                                          mongo: ReactiveMongoApi,
-                                          config: Configuration
-                                        )(implicit ec: ExecutionContext, m: Materializer) extends SessionRepository {
-
+class PlaybackRepository @Inject()(
+                                    mongo: ReactiveMongoApi,
+                                    config: Configuration,
+                                    dateFormatter: DateFormatter
+                                  )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
 
   private val collectionName: String = "user-answers"
 
-  private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
+  private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
-  private def collection: Future[JSONCollection] =
+  private def collection: Future[JSONCollection] = {
     mongo.database.map(_.collection[JSONCollection](collectionName))
+  }
 
   private val lastUpdatedIndex = Index(
-    key     = Seq("lastUpdated" -> IndexType.Ascending),
-    name    = Some("user-answers-last-updated-index"),
+    key = Seq("updatedAt" -> IndexType.Ascending),
+    name = Some("user-answers-updated-at-index"),
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  val started: Future[Unit] =
-    collection.flatMap {
-      _.indexesManager.ensure(lastUpdatedIndex)
-    }.map(_ => ())
+  private val internalAuthIdIndex = Index(
+    key = Seq("internalId" -> IndexType.Ascending),
+    name = Some("internal-auth-id-index")
+  )
 
-  override def get(id: String): Future[Option[UserAnswers]] =
-    collection.flatMap(_.find(Json.obj("_id" -> id), None).one[UserAnswers])
+  val started = Future.sequence {
+    Seq(
+      collection.map(_.indexesManager.ensure(lastUpdatedIndex)),
+      collection.map(_.indexesManager.ensure(internalAuthIdIndex))
+    )
+  }.map(_ => ())
+
+  override def get(internalId: String): Future[Option[UserAnswers]] = {
+
+    val selector = Json.obj(
+      "internalId" -> internalId
+    )
+
+    val modifier = Json.obj(
+      "$set" -> Json.obj(
+        "updatedAt" -> Json.obj(
+          "$date" -> Timestamp.valueOf(LocalDateTime.now)
+        )
+      )
+    )
+
+    collection.flatMap {
+      _.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false).map(_.result[UserAnswers])
+    }
+  }
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
-      "_id" -> userAnswers.id
+      "internalId" -> userAnswers.internalAuthId
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers copy (lastUpdated = LocalDateTime.now))
+      "$set" -> (userAnswers copy (updatedAt = LocalDateTime.now))
     )
 
     collection.flatMap {
-      _.update(ordered = false)
-        .one(selector, modifier, upsert = true).map {
-          lastError =>
-            lastError.ok
+      _.update(ordered = false).one(selector, modifier, upsert = true, multi = false).map {
+        result => result.ok
       }
     }
   }
 }
 
-trait SessionRepository {
+trait MongoRepository {
 
   val started: Future[Unit]
 
-  def get(id: String): Future[Option[UserAnswers]]
+  def get(internalId: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 }

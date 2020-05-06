@@ -18,7 +18,8 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
-import repositories.{DefaultSessionRepository, SessionRepository}
+import repositories.{MongoRepository, PlaybackRepository}
+import services.{AuthenticationService, AuthenticationServiceImpl}
 
 class Module extends AbstractModule {
 
@@ -27,9 +28,10 @@ class Module extends AbstractModule {
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
+    bind(classOf[MongoRepository]).to(classOf[PlaybackRepository]).asEagerSingleton()
+
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-
-    bind(classOf[SessionRepository]).to(classOf[DefaultSessionRepository]).asEagerSingleton()
+    bind(classOf[AuthenticationService]).to(classOf[AuthenticationServiceImpl]).asEagerSingleton()
   }
 }

@@ -14,10 +14,27 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import play.api.mvc.{Request, WrappedRequest}
+import viewmodels.RadioOption
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)
+sealed trait CompanyType
+
+object CompanyType extends Enumerable.Implicits {
+
+  case object Trading extends WithName("Trading") with CompanyType
+  case object Investment extends WithName("Investment") with CompanyType
+
+  val values: List[CompanyType] = List(
+    Trading, Investment
+  )
+
+  val options: List[RadioOption] = values.map {
+    value =>
+      RadioOption("companyType", value.toString)
+  }
+
+  implicit val enumerable: Enumerable[CompanyType] =
+    Enumerable(values.map(v => v.toString -> v): _*)
+
+}

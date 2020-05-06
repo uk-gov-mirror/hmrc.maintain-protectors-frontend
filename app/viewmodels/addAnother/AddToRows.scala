@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package models.requests
+package viewmodels.addAnother
 
-import play.api.mvc.{Request, WrappedRequest}
+case class AddToRows(inProgress : List[AddRow], complete: List[AddRow]) {
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)
+  def count : Int = inProgress.size + complete.size
+
+}

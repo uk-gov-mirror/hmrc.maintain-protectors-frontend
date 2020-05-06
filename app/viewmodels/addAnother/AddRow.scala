@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package models.requests
+package viewmodels.addAnother
 
-import play.api.mvc.{Request, WrappedRequest}
+case class AddRow(name: String, typeLabel: String, changeLabel : String, changeUrl: Option[String], removeLabel: String, removeUrl: Option[String])
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)

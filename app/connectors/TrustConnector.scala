@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package models.requests
+package connectors
 
-import play.api.mvc.{Request, WrappedRequest}
+import config.FrontendAppConfig
+import javax.inject.Inject
+import models.protectors.Protectors
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)
+import scala.concurrent.{ExecutionContext, Future}
+
+class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
+
+  private def getProtectorsUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed/protectors"
+
+  def getProtectors(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[Protectors] = {
+    http.GET[Protectors](getProtectorsUrl(utr))
+  }
+
+}

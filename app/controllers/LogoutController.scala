@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package models.requests
+package controllers
 
-import play.api.mvc.{Request, WrappedRequest}
+import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)
+@Singleton
+class LogoutController @Inject()(appConfig: FrontendAppConfig, val controllerComponents: MessagesControllerComponents) extends FrontendBaseController {
+
+  def logout: Action[AnyContent] = Action {
+    implicit request =>
+      Redirect(appConfig.logoutUrl).withNewSession
+  }
+}

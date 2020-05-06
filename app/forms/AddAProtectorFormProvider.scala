@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package models.requests
+package forms
 
-import play.api.mvc.{Request, WrappedRequest}
+import forms.mappings.Mappings
+import javax.inject.Inject
+import models.AddAProtector
+import play.api.data.Form
 
-case class IdentifierRequest[A](request: Request[A],
-                                user: User
-                               ) extends WrappedRequest[A](request)
+class AddAProtectorFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[AddAProtector] =
+    Form(
+      "value" -> enumerable[AddAProtector]("addAProtector.error.required")
+    )
+}
