@@ -17,7 +17,7 @@
 package base
 
 import config.FrontendAppConfig
-import controllers.actions._
+import controllers.actions.{FakeIdentifierAction, _}
 import models.UserAnswers
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -27,29 +27,24 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.libs.json.Json
+import play.api.mvc.BodyParsers
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
+trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with FakeTrustsApp {
+
+  val bodyParsers = injector.instanceOf[BodyParsers.Default]
 
   val userAnswersId = "id"
 
-  def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
-
-  def injector: Injector = app.injector
-
-  def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-
-  def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
-
-  def fakeRequest = FakeRequest("", "")
-
-  implicit def messages: Messages = messagesApi.preferred(fakeRequest)
+  def emptyUserAnswers = UserAnswers(userAnswersId, "UTRUTRUTR", Json.obj())
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, AffinityGroup.Organisation)),
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 }
