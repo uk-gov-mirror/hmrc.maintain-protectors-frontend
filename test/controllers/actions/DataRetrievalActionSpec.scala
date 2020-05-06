@@ -58,10 +58,10 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
       "build a userAnswers object and add it to the request" in {
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(Some(new UserAnswers("id")))
+        when(sessionRepository.get("id")) thenReturn Future(Some(new UserAnswers("id", "UTR")))
         val action = new Harness(sessionRepository)
 
-        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, user))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, user))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isDefined mustBe true

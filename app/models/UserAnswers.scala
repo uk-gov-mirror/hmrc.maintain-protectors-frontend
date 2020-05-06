@@ -24,7 +24,8 @@ import play.api.libs.json._
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
-                              id: String,
+                              internalAuthId: String,
+                              utr: String,
                               data: JsObject = Json.obj(),
                               lastUpdated: LocalDateTime = LocalDateTime.now
                             ) {
@@ -72,7 +73,8 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").read[String] and
+      (__ \ "internalId").read[String] and
+      (__ \ "utr").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "lastUpdated").read(MongoDateTimeFormats.localDateTimeRead)
     ) (UserAnswers.apply _)
@@ -83,7 +85,8 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").write[String] and
+      (__ \ "internalId").write[String] and
+      (__ \ "utr").write[String] and
       (__ \ "data").write[JsObject] and
       (__ \ "lastUpdated").write(MongoDateTimeFormats.localDateTimeWrite)
     ) (unlift(UserAnswers.unapply))
