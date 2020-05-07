@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /maintain-protectors-frontend                    app.Routes
+->         /maintain-a-trust/protectors                    app.Routes
 ->         /                          health.Routes
 ->     	   /template                  template.Routes
 
