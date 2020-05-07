@@ -17,7 +17,7 @@
 package controllers.individual.remove
 
 import controllers.actions.StandardActionSets
-import forms.RemoveIndexFormProvider
+import forms.YesNoFormProvider
 import javax.inject.Inject
 import models.{ProtectorType, RemoveProtector}
 import pages.individual.RemoveYesNoPage
@@ -33,18 +33,18 @@ import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveIndividualProtectorController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    repository: PlaybackRepository,
-                                                    standardActionSets: StandardActionSets,
-                                                    trustService: TrustService,
-                                                    formProvider: RemoveIndexFormProvider,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: RemoveIndividualProtectorView
+                                                     override val messagesApi: MessagesApi,
+                                                     repository: PlaybackRepository,
+                                                     standardActionSets: StandardActionSets,
+                                                     trustService: TrustService,
+                                                     formProvider: YesNoFormProvider,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: RemoveIndividualProtectorView
                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val messagesPrefix: String = "removeIndividualProtector"
 
-  private val form = formProvider.apply(messagesPrefix)
+  private val form = formProvider.withPrefix(messagesPrefix)
 
   def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.identifiedUserWithData.async {
     implicit request =>

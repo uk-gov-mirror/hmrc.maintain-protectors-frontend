@@ -23,8 +23,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 final case class BusinessProtector(name: String,
-                                 companyType: Option[CompanyType],
-                                 companyTime: Option[Boolean],
                                  utr: Option[String],
                                  address: Option[Address],
                                  entityStart: LocalDate,
@@ -34,21 +32,17 @@ object BusinessProtector {
 
   implicit val reads: Reads[BusinessProtector] =
     ((__ \ 'name).read[String] and
-      (__ \ 'companyType).readNullable[CompanyType] and
-      (__ \ 'companyTime).readNullable[Boolean] and
       __.lazyRead(readNullableAtSubPath[String](__ \ 'identification \ 'utr)) and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address)) and
       (__ \ "entityStart").read[LocalDate] and
       (__ \ "provisional").readWithDefault(false)).tupled.map {
 
-      case (name, companyType, companyTime, utr, address, entityStart, provisional) =>
-        BusinessProtector(name, companyType, companyTime, utr, address, entityStart, provisional)
+      case (name, utr, address, entityStart, provisional) =>
+        BusinessProtector(name, utr, address, entityStart, provisional)
     }
 
   implicit val writes: Writes[BusinessProtector] =
     ((__ \ 'name).write[String] and
-      (__ \ 'companyType).writeNullable[CompanyType] and
-      (__ \ 'companyTime).writeNullable[Boolean] and
       (__ \ 'identification \ 'utr).writeNullable[String] and
       (__ \ 'identification \ 'address).writeNullable[Address] and
       (__ \ "entityStart").write[LocalDate] and

@@ -58,8 +58,6 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
   private def businessProtector(provisional: Boolean) = BusinessProtector(
     name = "Humanitarian Company Ltd",
-    companyType = Some(CompanyType.Investment),
-    companyTime = Some(false),
     utr = None,
     address = None,
     entityStart = LocalDate.parse("2012-03-14"),
@@ -84,7 +82,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
     override def getBusinessProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector] =
       Future.successful(businessProtector(false))
 
-    override def removeProtector(utr: String, beneficiary: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+    override def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
       Future.successful(HttpResponse(OK))
   }
 

@@ -16,20 +16,13 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import javax.inject.Inject
 import play.api.data.Form
 
-trait RemoveForm {
+class YesNoFormProvider @Inject() extends Mappings {
 
-  def apply(prefix : String) : Form[Boolean]
-
-}
-
-class RemoveIndexFormProvider @Inject() extends Mappings with RemoveForm {
-
-  override def apply(prefix : String): Form[Boolean] =
+  def withPrefix(prefix: String): Form[Boolean] =
     Form(
       "value" -> boolean(s"$prefix.error.required")
     )
