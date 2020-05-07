@@ -77,3 +77,31 @@ whatTypeOfProtector.business = Business
 entities.protector = Protectors
 entities.protector.individual = Individual protector
 entities.protector.business = Business protector
+
+removeIndividualProtector.title = Are you sure you want to remove the individual protector?
+removeIndividualProtector.heading = Are you sure you want to remove {0}?
+removeIndividualProtector.error.required = Select yes if you want to remove the individual protector
+
+individualProtector.whenRemoved.title = When was the individual removed as a protector?
+individualProtector.whenRemoved.heading = When was {0} removed as a protector?
+individualProtector.whenRemoved.hint = For example, 31 3 1980
+individualProtector.whenRemoved.error.required.all = Enter the date the individual protector was removed from the trust
+individualProtector.whenRemoved.error.required.two = The date the individual protector was removed from the trust must include a {0} and {1}
+individualProtector.whenRemoved.error.required = The date the individual protector was removed from the trust must include {0}
+individualProtector.whenRemoved.error.invalid = Enter a real date when the individual protector was removed from the trust
+individualProtector.whenRemoved.error.future = The date the individual protector was removed from the trust must be today or in the past
+individualProtector.whenRemoved.error.past = The date the individual protector was removed must be on or after the date they were added
+
+removeBusinessProtector.title = Are you sure you want to remove the business protector?
+removeBusinessProtector.heading = Are you sure you want to remove {0}?
+removeBusinessProtector.error.required = Select yes if you want to remove the business protector
+
+businessProtector.whenRemoved.title = When was the business removed as a protector?
+businessProtector.whenRemoved.heading = When was {0} removed as a protector?
+businessProtector.whenRemoved.hint = For example, 31 3 1980
+businessProtector.whenRemoved.error.required.all = Enter the date the business protector was removed from the trust
+businessProtector.whenRemoved.error.required.two = The date the business protector was removed from the trust must include a {0} and {1}
+businessProtector.whenRemoved.error.required = The date the business protector was removed from the trust must include {0}
+businessProtector.whenRemoved.error.invalid = Enter a real date when the business protector was removed from the trust
+businessProtector.whenRemoved.error.future = The date the business protector was removed from the trust must be today or in the past
+businessProtector.whenRemoved.error.past = The date the business protector was removed must be on or after the date they were added

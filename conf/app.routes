@@ -1,5 +1,9 @@
 # microservice specific routes
 
+->         /individual/remove                           individualProtector.remove.Routes
+
+->         /business/remove                             businessProtector.remove.Routes
+
 GET        /add                                         controllers.AddAProtectorController.onPageLoad()
 POST       /add                                         controllers.AddAProtectorController.submit()
 POST       /complete                                    controllers.AddAProtectorController.submitComplete()
