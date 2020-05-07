@@ -16,6 +16,8 @@
 
 package generators
 
+import java.time.LocalDate
+
 import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
@@ -44,6 +46,7 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers (
         internalAuthId = id,
         utr = utr,
+        whenTrustSetup = LocalDate.now(),
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get

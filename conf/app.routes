@@ -1,6 +1,8 @@
 # microservice specific routes
 
-GET        /                                            controllers.IndexController.onPageLoad
+GET        /add                                         controllers.AddAProtectorController.onPageLoad()
+POST       /add                                         controllers.AddAProtectorController.submit()
+POST       /complete                                    controllers.AddAProtectorController.submitComplete()
 
 GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
@@ -8,6 +10,15 @@ GET        /language/:lang                              controllers.LanguageSwit
 
 GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
 
+GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
+
+GET        /what-kind                                   controllers.AddNowController.onPageLoad()
+POST       /what-kind                                   controllers.AddNowController.onSubmit()
+
+GET        /logout                                      controllers.LogoutController.logout()
+
 GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /:utr                                        controllers.IndexController.onPageLoad(utr: String)

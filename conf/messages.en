@@ -33,12 +33,49 @@ site.back = Back
 site.delete = Remove
 site.edit = Change
 site.hidden-delete = Delete {0}
+site.hidden-cannot-delete = You cannot remove {0} as they have already been declared
 site.hidden-edit = Change {0}
+site.hidden-cannot-edit = You cannot change {0}
+site.change.details = Change details
 site.no = No
 site.yes = Yes
 site.continue = Continue
 site.service_name = maintain-protectors-frontend
 site.textarea.char_limit = (Limit is {0} characters)
+site.inprogress = In Progress
+site.complete = Completed
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+featureNotAvailable.title = This part of the online service is not available yet
+featureNotAvailable.heading = This part of the online service is not available yet
+featureNotAvailable.p1 = If you need to make any changes to the trust you can
+featureNotAvailable.link = contact our trusts helpline (opens in a new window or tab)
+featureNotAvailable.p2 = You will be able to update these details online in the future.
+
+addAProtector.heading = Add a protector
+addAProtector.singular.heading = Add a protector
+addAProtector.count.heading = The trust has {0} protectors
+addAProtector.details = Why you cannot remove some protectors
+addAProtector.details.text = You will be unable to remove a protector after you make a declaration. If you have declared a protector by mistake you can
+addAProtector.details.text.link = contact the trusts helpline (opens in a new window or tab)
+addAProtector.additional-content = Do you want to add a new protector?
+addAProtector.add-them-now = Yes, I want to add them now
+addAProtector.add-them-later = No, not now
+addAProtector.no-complete = No, all the protectors are up to date
+addAProtector.error.required = Select yes if you want to add a new protector
+addAProtector.maxedOut = You cannot enter another protector as you have entered a maximum of {0}.
+addAProtector.maxedOut.paragraph = Check the protectors you have added. If you have further protectors to add, write to HMRC with their details.
+
+addNow.heading = Is the protector an individual or a business?
+addNow.title = Is the protector an individual or a business?
+addNow.error.required = Select if the protector is an individual or a business
+addNow.return.link = Return to add a protector
+
+whatTypeOfProtector.individual = Individual
+whatTypeOfProtector.business = Business
+
+entities.protector = Protectors
+entities.protector.individual = Individual protector
+entities.protector.business = Business protector

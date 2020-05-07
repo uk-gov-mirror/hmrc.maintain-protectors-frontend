@@ -20,12 +20,12 @@ import com.google.inject.Inject
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
-import repositories.SessionRepository
+import repositories.PlaybackRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(
-                                         val repository: SessionRepository
+                                         val playbackRepository: PlaybackRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
@@ -38,7 +38,7 @@ class DataRetrievalActionImpl @Inject()(
       )
     }
 
-    repository.get(request.user.internalId) map {
+    playbackRepository.get(request.user.internalId) map {
       case None =>
         createdOptionalDataRequest(request, None)
       case Some(userAnswers) =>

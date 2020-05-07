@@ -16,6 +16,8 @@
 
 package navigation
 
+import java.time.LocalDate
+
 import base.SpecBase
 import controllers.routes
 import pages._
@@ -32,7 +34,7 @@ class NavigatorSpec extends SpecBase {
       "go to Index from a page that doesn't exist in the route map" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id", "UTR")) mustBe routes.IndexController.onPageLoad()
+        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id", "UTR", LocalDate.parse("2020-01-01"))) mustBe routes.IndexController.onPageLoad("UTR")
       }
     }
 
@@ -41,7 +43,7 @@ class NavigatorSpec extends SpecBase {
       "go to CheckYourAnswers from a page that doesn't exist in the edit route map" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id", "UTR")) mustBe routes.CheckYourAnswersController.onPageLoad()
+        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id", "UTR", LocalDate.parse("2020-01-01"))) mustBe routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }
