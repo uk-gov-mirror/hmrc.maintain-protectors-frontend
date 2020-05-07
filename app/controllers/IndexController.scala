@@ -38,6 +38,9 @@ class IndexController @Inject()(
 
     identifierAction.async {
       implicit request =>
+        println("******************************************")
+        println(s"Got here with utr: $utr")
+        println("******************************************")
         for {
           details <- connector.getTrustDetails(utr)
           _ <- repo.set(UserAnswers(
