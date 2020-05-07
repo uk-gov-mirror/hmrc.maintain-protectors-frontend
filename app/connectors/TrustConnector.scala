@@ -18,6 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import javax.inject.Inject
+import models.TrustDetails
 import models.protectors.Protectors
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -25,6 +26,13 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
+
+
+  private def getTrustDetailsUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/trust-details"
+
+  def getTrustDetails(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext):  Future[TrustDetails] = {
+    http.GET[TrustDetails](getTrustDetailsUrl(utr))
+  }
 
   private def getProtectorsUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed/protectors"
 

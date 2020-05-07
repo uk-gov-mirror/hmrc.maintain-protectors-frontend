@@ -4,8 +4,6 @@ GET        /add                                         controllers.AddAProtecto
 POST       /add                                         controllers.AddAProtectorController.submit()
 POST       /complete                                    controllers.AddAProtectorController.submitComplete()
 
-GET        /                                            controllers.IndexController.onPageLoad
-
 GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
 GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
@@ -22,3 +20,5 @@ GET        /logout                                      controllers.LogoutContro
 GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /:utr                                        controllers.IndexController.onPageLoad(utr: String)

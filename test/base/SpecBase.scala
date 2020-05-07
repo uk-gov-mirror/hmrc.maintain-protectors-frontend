@@ -16,35 +16,44 @@
 
 package base
 
-import config.FrontendAppConfig
-import controllers.actions.{FakeIdentifierAction, _}
-import models.UserAnswers
-import org.scalatest.TryValues
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import java.time.LocalDate
+
+import controllers.actions._
+import models.TypeOfTrust
+import navigation.FakeNavigator
+import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.inject.{Injector, bind}
-import play.api.libs.json.Json
 import play.api.mvc.BodyParsers
-import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.AffinityGroup
+import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with FakeTrustsApp {
+trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
+  this: TestSuite =>
+
+  lazy val draftId = "id"
+  lazy val userInternalId = "internalId"
+
+  def emptyUserAnswers = models.UserAnswers(userInternalId, "UTRUTRUTR", LocalDate.now())
 
   val bodyParsers = injector.instanceOf[BodyParsers.Default]
 
-  val userAnswersId = "id"
+  val fakeNavigator = new FakeNavigator()
 
-  def emptyUserAnswers = UserAnswers(userAnswersId, "UTRUTRUTR", Json.obj())
-
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
+                                   affinityGroup: AffinityGroup = AffinityGroup.Organisation,
+                                   enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
+                                  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
+        bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, affinityGroup)),
+        bind[PlaybackIdentifierAction].toInstance(new FakePlaybackIdentifierAction()),
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, AffinityGroup.Organisation)),
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[PlaybackRepository].toInstance(playbackRepository)
       )
 }
+
+trait SpecBase extends PlaySpec with SpecBaseHelpers

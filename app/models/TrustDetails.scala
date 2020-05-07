@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package navigation
+package models
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, NormalMode, UserAnswers}
+import java.time.LocalDate
 
-class FakeNavigator(val desiredRoute: Call = Call("GET", "/foo"), mode: Mode = NormalMode) extends Navigator {
+import play.api.libs.json.{Format, Json}
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+case class TrustDetails(startDate: LocalDate, typeOfTrust: TypeOfTrust)
+
+object TrustDetails {
+
+  implicit val formats: Format[TrustDetails] = Json.format[TrustDetails]
+
 }

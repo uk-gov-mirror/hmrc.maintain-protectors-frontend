@@ -16,29 +16,50 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBase
+import connectors.TrustConnector
+import models.protectors.{IndividualProtector, Protectors}
+import models.{Name, TrustDetails, TypeOfTrust}
+import org.mockito.Matchers.any
+import org.mockito.Mockito._
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.IndexView
+
+import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase {
 
   "Index Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "redirect to task list when there are living protectors" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val mockTrustConnector = mock[TrustConnector]
 
-      val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+      when(mockTrustConnector.getTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(TrustDetails(startDate = LocalDate.parse("2019-06-01"), typeOfTrust = TypeOfTrust.WillTrustOrIntestacyTrust)))
+
+      when(mockTrustConnector.getProtectors(any())(any(), any()))
+        .thenReturn(Future.successful(
+          Protectors(
+            protector = List(IndividualProtector(Name("Adam", None, "Test"), None, None, None, LocalDate.now, false)),
+            protectorCompany = Nil
+            )
+          )
+        )
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector)).build()
+
+      val request = FakeRequest(GET, routes.IndexController.onPageLoad("UTRUTRUTR").url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[IndexView]
+      status(result) mustEqual SEE_OTHER
 
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(fakeRequest, messages).toString
+      redirectLocation(result) mustBe Some(controllers.routes.AddAProtectorController.onPageLoad().url)
 
       application.stop()
     }
