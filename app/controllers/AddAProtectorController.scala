@@ -63,7 +63,7 @@ class AddAProtectorController @Inject()(
           Ok(completeView(
             inProgressProtectors = protectorRows.inProgress,
             completeProtectors = protectorRows.complete,
-            size = protectors.size
+            heading = protectors.addToHeading
           ))
         } else {
           Ok(addAnotherView(

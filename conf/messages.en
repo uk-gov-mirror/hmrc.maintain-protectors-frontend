@@ -65,7 +65,7 @@ addAProtector.add-them-now = Yes, I want to add them now
 addAProtector.add-them-later = No, not now
 addAProtector.no-complete = No, all the protectors are up to date
 addAProtector.error.required = Select yes if you want to add a new protector
-addAProtector.maxedOut = You cannot enter another protector as you have entered a maximum of {0}.
+addAProtector.maxedOut = You cannot enter another protector as you have entered a maximum of 25.
 addAProtector.maxedOut.paragraph = Check the protectors you have added. If you have further protectors to add, write to HMRC with their details.
 
 addNow.heading = Is the protector an individual or a business?

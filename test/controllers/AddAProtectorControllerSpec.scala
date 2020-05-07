@@ -260,7 +260,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
           view(
             protectorRows.inProgress,
             protectorRows.complete,
-            25
+            protectors.addToHeading
           )(fakeRequest, messages).toString
         content must include("You cannot enter another protector as you have entered a maximum of 25.")
         content must include("If you have further protectors to add, write to HMRC with their details.")
