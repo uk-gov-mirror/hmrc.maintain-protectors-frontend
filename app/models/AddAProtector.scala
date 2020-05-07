@@ -26,7 +26,7 @@ object AddAProtector extends Enumerable.Implicits {
   case object YesLater extends WithName("add-them-later") with AddAProtector
   case object NoComplete extends WithName("no-complete") with AddAProtector
 
-  val values: List[AddAProtector] = List(YesNow, YesLater, NoComplete) filterNot { _ == YesLater}
+  val values: List[AddAProtector] = List(YesNow, YesLater, NoComplete)
 
   val options: List[RadioOption] = values.map {
     value =>

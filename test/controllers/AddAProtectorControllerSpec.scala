@@ -58,8 +58,6 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
   private def businessProtector(provisional: Boolean) = BusinessProtector(
     name = "Humanitarian Company Ltd",
-    companyType = Some(CompanyType.Investment),
-    companyTime = Some(false),
     utr = None,
     address = None,
     entityStart = LocalDate.parse("2012-03-14"),

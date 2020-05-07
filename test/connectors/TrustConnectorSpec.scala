@@ -216,8 +216,6 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ), protectorCompany = List(
               BusinessProtector(
                 name = "Protector Org 24",
-                companyType = Some(CompanyType.Investment),
-                companyTime = Some(false),
                 utr = None,
                 address = None,
                 entityStart = LocalDate.parse("2019-09-23"),
