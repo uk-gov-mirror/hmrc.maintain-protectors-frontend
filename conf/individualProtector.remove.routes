@@ -1,6 +1,0 @@
-
-GET        /:index/remove                            controllers.individual.remove.RemoveIndividualProtectorController.onPageLoad(index: Int)
-POST       /:index/remove                            controllers.individual.remove.RemoveIndividualProtectorController.onSubmit(index: Int)
-
-GET        /:index/when-removed                      controllers.individual.remove.WhenRemovedController.onPageLoad(index: Int)
-POST       /:index/when-removed                      controllers.individual.remove.WhenRemovedController.onSubmit(index: Int)

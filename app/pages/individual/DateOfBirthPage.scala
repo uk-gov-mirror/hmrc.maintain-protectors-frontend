@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package navigation
+package pages.individual
 
-import models.{Mode, UserAnswers}
-import pages.Page
-import play.api.mvc.Call
+import java.time.LocalDate
 
-trait Navigator {
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-  def nextPage(page: Page, userAnswers: UserAnswers): Call
+case object DateOfBirthPage extends QuestionPage[LocalDate] {
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+  override def path: JsPath = basePath \ toString
 
+  override def toString: String = "dateOfBirth"
 }

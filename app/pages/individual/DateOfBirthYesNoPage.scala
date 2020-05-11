@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package navigation
+package pages.individual
 
-import models.{Mode, UserAnswers}
-import pages.Page
-import play.api.mvc.Call
+import models.UserAnswers
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-trait Navigator {
+import scala.util.Try
 
-  def nextPage(page: Page, userAnswers: UserAnswers): Call
+case object DateOfBirthYesNoPage extends QuestionPage[Boolean] {
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+  override def path: JsPath = basePath \ toString
 
+  override def toString: String = "dateOfBirthYesNo"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(false) =>
+        userAnswers.remove(DateOfBirthPage)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
 }

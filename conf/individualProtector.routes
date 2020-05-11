@@ -1,0 +1,21 @@
+
+GET        /name                                            controllers.individual.NameController.onPageLoad(mode: Mode = NormalMode)
+POST       /name                                            controllers.individual.NameController.onSubmit(mode: Mode = NormalMode)
+GET        /change-name                                     controllers.individual.NameController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-name                                     controllers.individual.NameController.onSubmit(mode: Mode = CheckMode)
+
+GET        /know-date-of-birth                              controllers.individual.DateOfBirthYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /know-date-of-birth                              controllers.individual.DateOfBirthYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-know-date-of-birth                       controllers.individual.DateOfBirthYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-know-date-of-birth                       controllers.individual.DateOfBirthYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /date-of-birth                                   controllers.individual.DateOfBirthController.onPageLoad(mode: Mode = NormalMode)
+POST       /date-of-birth                                   controllers.individual.DateOfBirthController.onSubmit(mode: Mode = NormalMode)
+GET        /change-date-of-birth                            controllers.individual.DateOfBirthController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-date-of-birth                            controllers.individual.DateOfBirthController.onSubmit(mode: Mode = CheckMode)
+
+GET        /:index/remove                                   controllers.individual.remove.RemoveIndividualProtectorController.onPageLoad(index: Int)
+POST       /:index/remove                                   controllers.individual.remove.RemoveIndividualProtectorController.onSubmit(index: Int)
+
+GET        /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onPageLoad(index: Int)
+POST       /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onSubmit(index: Int)
