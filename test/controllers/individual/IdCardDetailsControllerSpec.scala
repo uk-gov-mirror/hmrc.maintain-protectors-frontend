@@ -20,43 +20,44 @@ import java.time.LocalDate
 
 import base.SpecBase
 import config.annotations.IndividualProtector
-import forms.NonUkAddressFormProvider
-import models.{Name, NonUkAddress, NormalMode, TypeOfTrust, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import forms.IdCardDetailsFormProvider
+import models.{IdCard, Name, NormalMode, UserAnswers}
+import navigation.Navigator
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.individual.{NamePage, NonUkAddressPage}
+import pages.individual.{IdCardDetailsPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
 import utils.InputOption
-import utils.countryOptions.CountryOptionsNonUK
-import views.html.individual.NonUkAddressView
+import utils.countryOptions.CountryOptions
+import views.html.individual.IdCardDetailsView
 
 import scala.concurrent.Future
 
-class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
+class IdCardDetailsControllerSpec extends SpecBase with MockitoSugar {
 
-  val form = new NonUkAddressFormProvider().apply()
+  val formProvider = new IdCardDetailsFormProvider()
+  private def form = formProvider.withPrefix("individualProtector")
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
   val name: Name = Name("FirstName", None, "LastName")
 
   override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", LocalDate.now())
     .set(NamePage, name).success.value
 
-  val nonUkAddressRoute: String = routes.NonUkAddressController.onPageLoad(NormalMode).url
+  val idCardDetailsRoute: String = routes.IdCardDetailsController.onPageLoad(NormalMode).url
 
-  val getRequest = FakeRequest(GET, nonUkAddressRoute)
+  val getRequest = FakeRequest(GET, idCardDetailsRoute)
 
-  val countryOptions: Seq[InputOption] = app.injector.instanceOf[CountryOptionsNonUK].options
+  val countryOptions: Seq[InputOption] = app.injector.instanceOf[CountryOptions].options
 
-  val validData: NonUkAddress = NonUkAddress("line1", "line2", None, "country")
+  val validData: IdCard = IdCard("country", "card number", LocalDate.of(2020, 1, 1))
 
-  "NonUkAddress Controller" must {
+  "IdCardDetails Controller" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -64,7 +65,7 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[NonUkAddressView]
+      val view = application.injector.instanceOf[IdCardDetailsView]
 
       status(result) mustEqual OK
 
@@ -77,12 +78,12 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NonUkAddressPage, validData).success.value
         .set(NamePage, name).success.value
+        .set(IdCardDetailsPage, validData).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[NonUkAddressView]
+      val view = application.injector.instanceOf[IdCardDetailsView]
 
       val result = route(application, getRequest).value
 
@@ -102,14 +103,19 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].qualifiedWith(classOf[IndividualProtector]).toInstance(new FakeNavigator(onwardRoute))
-          )
+          .overrides(bind[Navigator].qualifiedWith(classOf[IndividualProtector]).toInstance(fakeNavigator))
+
           .build()
 
       val request =
-        FakeRequest(POST, nonUkAddressRoute)
-          .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("country", "IN"))
+        FakeRequest(POST, idCardDetailsRoute)
+          .withFormUrlEncodedBody(
+            "country" -> "country",
+            "number" -> "123456",
+            "expiryDate.day"   -> validData.expirationDate.getDayOfMonth.toString,
+            "expiryDate.month" -> validData.expirationDate.getMonthValue.toString,
+            "expiryDate.year"  -> validData.expirationDate.getYear.toString
+          )
 
       val result = route(application, request).value
 
@@ -125,12 +131,12 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, nonUkAddressRoute)
+        FakeRequest(POST, idCardDetailsRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[NonUkAddressView]
+      val view = application.injector.instanceOf[IdCardDetailsView]
 
       val result = route(application, request).value
 
@@ -159,8 +165,14 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, nonUkAddressRoute)
-          .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("country", "IN"))
+        FakeRequest(POST, idCardDetailsRoute)
+          .withFormUrlEncodedBody(
+            "country" -> "country",
+            "number" -> "123456",
+            "expiryDate.day"   -> validData.expirationDate.getDayOfMonth.toString,
+            "expiryDate.month" -> validData.expirationDate.getMonthValue.toString,
+            "expiryDate.year"  -> validData.expirationDate.getYear.toString
+          )
 
       val result = route(application, request).value
 

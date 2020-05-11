@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(headingKey: String, msgParam: Option[String] = None, headingSize: String = "heading-large")(implicit messages: Messages)
+package pages.individual
 
-<h1 class="@headingSize">@messages(headingKey, msgParam.getOrElse(""))</h1>
+import models.IdCard
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object IdCardDetailsPage extends QuestionPage[IdCard] {
+
+  override def path: JsPath = basePath \ toString
+
+  override def toString: String = "idCardDetails"
+
+}

@@ -44,22 +44,22 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
       yesNoNav(ua, DateOfBirthYesNoPage, rts.DateOfBirthController.onPageLoad(mode), rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
     case NationalInsuranceNumberYesNoPage => ua =>
       yesNoNav(ua, NationalInsuranceNumberYesNoPage, rts.NationalInsuranceNumberController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
-//    case LiveInTheUkYesNoPage => ua =>
-//      yesNoNav(ua, LiveInTheUkYesNoPage, rts.UkAddressController.onPageLoad(mode), rts.NonUkAddressController.onPageLoad(mode))
+    case LiveInTheUkYesNoPage => ua =>
+      yesNoNav(ua, LiveInTheUkYesNoPage, rts.UkAddressController.onPageLoad(mode), rts.NonUkAddressController.onPageLoad(mode))
 //    case PassportDetailsYesNoPage => ua =>
 //      yesNoNav(ua, PassportDetailsYesNoPage, rts.PassportDetailsController.onPageLoad(mode), rts.IdCardDetailsYesNoController.onPageLoad(mode))
   }
 
-//  private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
-//    mode match {
-//      case NormalMode => {
-//        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | PassportDetailsPage | IdCardDetailsPage => _ =>
-//          rts.StartDateController.onPageLoad()
-//        case AddressYesNoPage => ua =>
-//          yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
+  private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
+    mode match {
+      case NormalMode => {
+        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | IdCardDetailsPage => _ => // | PassportDetailsPage  => _ =>
+          rts.StartDateController.onPageLoad()
+        case AddressYesNoPage => ua =>
+          yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
 //        case IdCardDetailsYesNoPage => ua =>
 //          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), rts.StartDateController.onPageLoad())
-//      }
+      }
 //      case CheckMode => {
 //        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | PassportDetailsPage | IdCardDetailsPage => ua =>
 //          checkDetailsRoute(ua)
@@ -68,8 +68,8 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
 //        case IdCardDetailsYesNoPage => ua =>
 //          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), checkDetailsRoute(ua))
 //      }
-//    }
-//  }
+    }
+  }
 
   def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
     ua.get(fromPage)
@@ -81,14 +81,14 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
 //    answers.get(IndexPage) match {
 //      case None => controllers.routes.SessionExpiredController.onPageLoad()
 //      case Some(x) =>
-//        controllers.individual.living.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
+//        controllers.individual.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
 //    }
 //  }
 
   def routes(mode: Mode): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation(mode) andThen (c => (_: UserAnswers) => c) orElse
-      yesNoNavigation(mode) // orElse
-//      navigationWithCheck(mode)
+      yesNoNavigation(mode)  orElse
+      navigationWithCheck(mode)
 
 }
 

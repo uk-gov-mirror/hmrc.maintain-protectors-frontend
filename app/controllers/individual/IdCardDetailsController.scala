@@ -19,38 +19,38 @@ package controllers.individual
 import config.annotations.IndividualProtector
 import controllers.actions._
 import controllers.actions.individual.NameRequiredAction
-import forms.NonUkAddressFormProvider
+import forms.IdCardDetailsFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.individual.NonUkAddressPage
+import pages.individual.IdCardDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.individual.NonUkAddressView
-import utils.countryOptions.CountryOptionsNonUK
+import utils.countryOptions.CountryOptions
+import views.html.individual.IdCardDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NonUkAddressController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: PlaybackRepository,
-                                        @IndividualProtector navigator: Navigator,
-                                        standardActionSets: StandardActionSets,
-                                        nameAction: NameRequiredAction,
-                                        formProvider: NonUkAddressFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: NonUkAddressView,
-                                        val countryOptions: CountryOptionsNonUK
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class IdCardDetailsController @Inject()(
+                                           override val messagesApi: MessagesApi,
+                                           sessionRepository: PlaybackRepository,
+                                           @IndividualProtector navigator: Navigator,
+                                           standardActionSets: StandardActionSets,
+                                           nameAction: NameRequiredAction,
+                                           formProvider: IdCardDetailsFormProvider,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: IdCardDetailsView,
+                                           val countryOptions: CountryOptions
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form = formProvider.withPrefix("individualProtector")
 
   def onPageLoad(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(NonUkAddressPage) match {
+      val preparedForm = request.userAnswers.get(IdCardDetailsPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -67,9 +67,9 @@ class NonUkAddressController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(NonUkAddressPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(IdCardDetailsPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(NonUkAddressPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(IdCardDetailsPage, mode, updatedAnswers))
       )
   }
 }
