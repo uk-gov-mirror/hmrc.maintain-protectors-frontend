@@ -14,8 +14,12 @@ POST       /date-of-birth                                   controllers.individu
 GET        /change-date-of-birth                            controllers.individual.DateOfBirthController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-date-of-birth                            controllers.individual.DateOfBirthController.onSubmit(mode: Mode = CheckMode)
 
+GET        /start-date                                      controllers.individual.StartDateController.onPageLoad()
+POST       /start-date                                      controllers.individual.StartDateController.onSubmit()
+
 GET        /:index/remove                                   controllers.individual.remove.RemoveIndividualProtectorController.onPageLoad(index: Int)
 POST       /:index/remove                                   controllers.individual.remove.RemoveIndividualProtectorController.onSubmit(index: Int)
 
 GET        /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onPageLoad(index: Int)
 POST       /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onSubmit(index: Int)
+
