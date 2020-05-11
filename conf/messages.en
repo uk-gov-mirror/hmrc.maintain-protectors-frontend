@@ -45,6 +45,23 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.inprogress = In Progress
 site.complete = Completed
 
+site.address.uk.title = What is the address?
+site.address.uk.heading = What is {0}’s address?
+site.address.uk.line1 = Address line 1
+site.address.uk.line2 = Address line 2
+site.address.uk.line3 = Address line 3 (optional)
+site.address.uk.line4 = Address line 4 (optional)
+site.address.uk.postcode = Postcode
+site.address.uk.postcode.hint = For example AB1 1AB
+
+address.country.select = Select a country
+site.address.nonUk.title = What is the address?
+site.address.nonUk.heading = What is {0}’s address?
+site.address.nonUk.line1 = Address line 1
+site.address.nonUk.line2 = Address line 2
+site.address.nonUk.line3 = Address line 3 (optional)
+site.address.nonUk.country = Country
+
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
@@ -133,6 +150,20 @@ individualProtector.liveInTheUkYesNo.checkYourAnswersLabel = Does {0} live in th
 individualProtector.liveInTheUkYesNo.title = Does the protector live in the UK?
 individualProtector.liveInTheUkYesNo.heading = Does {0} live in the UK?
 individualProtector.liveInTheUkYesNo.error.required = Select yes if the protector lives in the UK
+
+individualProtector.ukAddress.checkYourAnswersLabel = What is {0}’s address?
+individualProtector.ukAddress.title = What is the protector’s address?
+individualProtector.ukAddress.heading = What is {0}’s address?
+individualProtector.ukAddress.line1 = Address line 1
+individualProtector.ukAddress.line2 = Address line 2
+individualProtector.ukAddress.line3 = Address line 3 (optional)
+individualProtector.ukAddress.line4 = Address line 4 (optional)
+individualProtector.ukAddress.postcode = Postcode
+individualProtector.ukAddress.postcode.hint = For example AB1 1AB
+
+individualProtector.nonUkAddress.checkYourAnswersLabel = What is {0}’s address?
+individualProtector.nonUkAddress.title = What is the protector’s address?
+individualProtector.nonUkAddress.heading = What is {0}’s address?
 
 individualProtector.idCardDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
 individualProtector.idCardDetailsYesNo.title = Do you know the protector’s ID card details?

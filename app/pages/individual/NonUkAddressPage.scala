@@ -16,30 +16,13 @@
 
 package pages.individual
 
-import models.UserAnswers
+import models.NonUkAddress
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-import scala.util.Try
-
-case object AddressYesNoPage extends QuestionPage[Boolean] {
+case object NonUkAddressPage extends QuestionPage[NonUkAddress] {
 
   override def path: JsPath = basePath \ toString
 
-  override def toString: String = "addressYesNo"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(LiveInTheUkYesNoPage)
-          .flatMap(_.remove(UkAddressPage))
-          .flatMap(_.remove(NonUkAddressPage))
-//          .flatMap(_.remove(PassportDetailsYesNoPage))
-//          .flatMap(_.remove(PassportDetailsPage))
-//          .flatMap(_.remove(IdCardDetailsYesNoPage))
-//          .flatMap(_.remove(IdCardDetailsPage))
-      case _ =>
-        super.cleanup(value, userAnswers)
-    }
-  }
+  override def toString: String = "nonUkAddress"
 }
