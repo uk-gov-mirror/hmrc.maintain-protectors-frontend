@@ -33,7 +33,7 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
 
   private def simpleNavigation(mode: Mode): PartialFunction[Page, Call] = {
     case NamePage => rts.DateOfBirthYesNoController.onPageLoad(mode)
-//    case DateOfBirthPage => rts.NationalInsuranceNumberYesNoController.onPageLoad(mode)
+    case DateOfBirthPage => rts.NationalInsuranceNumberYesNoController.onPageLoad(mode)
 //    case UkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
 //    case NonUkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
 //    case StartDatePage => rts.CheckDetailsController.onPageLoad()
@@ -41,7 +41,7 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
 
   private def yesNoNavigation(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
     case DateOfBirthYesNoPage => ua =>
-      yesNoNav(ua, DateOfBirthYesNoPage, rts.DateOfBirthController.onPageLoad(mode), rts.DateOfBirthController.onPageLoad(mode)) // rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
+      yesNoNav(ua, DateOfBirthYesNoPage, rts.DateOfBirthController.onPageLoad(mode), rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
 //    case NationalInsuranceNumberYesNoPage => ua =>
 //      yesNoNav(ua, NationalInsuranceNumberYesNoPage, rts.NationalInsuranceNumberController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
 //    case LiveInTheUkYesNoPage => ua =>
