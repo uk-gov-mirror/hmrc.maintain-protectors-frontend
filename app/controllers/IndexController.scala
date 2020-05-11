@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.TrustConnector
-import controllers.actions.IdentifierAction
+import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.I18nSupport
@@ -25,28 +25,32 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identifierAction: IdentifierAction,
+                                 getData: DataRetrievalAction,
                                  repo : PlaybackRepository,
                                  connector: TrustConnector)
                                (implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(utr: String): Action[AnyContent] =
 
-    identifierAction.async {
+    (identifierAction andThen getData).async {
       implicit request =>
         for {
           details <- connector.getTrustDetails(utr)
-          _ <- repo.set(UserAnswers(
-            internalAuthId = request.user.internalId,
-            utr = utr,
-            whenTrustSetup = details.startDate
+          ua <- Future.successful(request.userAnswers.getOrElse(
+            UserAnswers(
+              internalAuthId = request.user.internalId,
+              utr = utr,
+              whenTrustSetup = details.startDate
+            )
           ))
+          _ <- repo.set(ua)
         } yield {
-            Redirect(controllers.routes.AddAProtectorController.onPageLoad())
+          Redirect(controllers.routes.AddAProtectorController.onPageLoad())
         }
     }
 }
