@@ -107,7 +107,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
     "get protectors returns a trust with empty lists" must {
 
-      "return a default empty list beneficiaries" in {
+      "return a default empty list protectors" in {
 
         val utr = "1000000008"
 
@@ -204,24 +204,26 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
         whenReady(processed) {
           result =>
-            result mustBe Protectors(protector = List(
-              IndividualProtector(
-                name = Name("Carmel", None, "Protector"),
-                dateOfBirth = None,
-                identification = None,
-                address = None,
-                entityStart = LocalDate.parse("2019-09-23"),
-                provisional = false
+            result mustBe
+              Protectors(protector = List(
+                IndividualProtector(
+                  name = Name("Carmel", None, "Protector"),
+                  dateOfBirth = None,
+                  identification = None,
+                  address = None,
+                  entityStart = LocalDate.parse("2019-09-23"),
+                  provisional = false
+                )
+              ),
+              protectorCompany = List(
+                BusinessProtector(
+                  name = "Protector Org 24",
+                  utr = None,
+                  address = None,
+                  entityStart = LocalDate.parse("2019-09-23"),
+                  provisional = false
+                )
               )
-            ), protectorCompany = List(
-              BusinessProtector(
-                name = "Protector Org 24",
-                utr = None,
-                address = None,
-                entityStart = LocalDate.parse("2019-09-23"),
-                provisional = false
-              )
-            )
             )
         }
 

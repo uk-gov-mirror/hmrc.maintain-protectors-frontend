@@ -18,9 +18,10 @@ package connectors
 
 import config.FrontendAppConfig
 import javax.inject.Inject
-import models.TrustDetails
 import models.protectors.Protectors
-import uk.gov.hmrc.http.HeaderCarrier
+import models.{RemoveProtector, TrustDetails}
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,6 +39,12 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def getProtectors(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[Protectors] = {
     http.GET[Protectors](getProtectorsUrl(utr))
+  }
+
+  private def removeProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/protectors/remove"
+
+  def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    http.PUT[JsValue, HttpResponse](removeProtectorUrl(utr), Json.toJson(protector))
   }
 
 }

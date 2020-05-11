@@ -16,6 +16,7 @@
 
 package models
 
+import play.api.libs.json.{JsString, Writes}
 import viewmodels.RadioOption
 
 sealed trait ProtectorType
@@ -36,4 +37,9 @@ object ProtectorType extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[ProtectorType] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
+  val writesToTrusts : Writes[ProtectorType] = Writes {
+    case IndividualProtector => JsString("protector")
+    case BusinessProtector => JsString("protectorCompany")
+  }
 }

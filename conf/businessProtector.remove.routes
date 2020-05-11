@@ -1,0 +1,6 @@
+
+GET        /:index/remove                            controllers.business.remove.RemoveBusinessProtectorController.onPageLoad(index: Int)
+POST       /:index/remove                            controllers.business.remove.RemoveBusinessProtectorController.onSubmit(index: Int)
+
+GET        /:index/when-removed                      controllers.business.remove.WhenRemovedController.onPageLoad(index: Int)
+POST       /:index/when-removed                      controllers.business.remove.WhenRemovedController.onSubmit(index: Int)

@@ -26,17 +26,17 @@
 
 @(inProgressProtectors: Seq[AddRow],
     completeProtectors: Seq[AddRow],
-    size: Int)(implicit request: Request[_], messages: Messages)
+    heading: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("addAProtector.count.heading", size)}"
+    title = heading
     ) {
 
     @formHelper(action = AddAProtectorController.submitComplete(), 'autoComplete -> "off") {
 
         @components.back_link()
 
-        @components.heading(messages("addAProtector.count.heading", size))
+        @components.heading(heading)
 
         @components.data_list(inProgressProtectors, "inprogress")
 
@@ -45,7 +45,7 @@
         @components.details("addAProtector.details")
 
         <ul>
-            <li class="panel-indent"><p>@messages("addAProtector.maxedOut", size)</p></li>
+            <li class="panel-indent"><p>@messages("addAProtector.maxedOut")</p></li>
             <li class="panel-indent"><p>@messages("addAProtector.maxedOut.paragraph")</p></li>
         </ul>
 

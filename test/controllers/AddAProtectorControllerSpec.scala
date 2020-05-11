@@ -22,7 +22,7 @@ import base.SpecBase
 import connectors.TrustStoreConnector
 import forms.AddAProtectorFormProvider
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
-import models.{AddAProtector, CompanyType, Name, NationalInsuranceNumber}
+import models.{AddAProtector, CompanyType, Name, NationalInsuranceNumber, RemoveProtector}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -69,12 +69,21 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
   lazy val featureNotAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   val protectorRows = List(
-    AddRow("First Last", typeLabel = "Individual protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url)),
-    AddRow("Humanitarian Company Ltd", typeLabel = "Business protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url))
+    AddRow("First Last", typeLabel = "Individual protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.individual.remove.routes.RemoveIndividualProtectorController.onPageLoad(0).url)),
+    AddRow("Humanitarian Company Ltd", typeLabel = "Business protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.business.remove.routes.RemoveBusinessProtectorController.onPageLoad(0).url))
   )
 
   class FakeService(data: Protectors) extends TrustService {
     override def getProtectors(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Protectors] = Future.successful(data)
+
+    override def getIndividualProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[IndividualProtector] =
+      Future.successful(individualProtector(false))
+
+    override def getBusinessProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector] =
+      Future.successful(businessProtector(false))
+
+    override def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+      Future.successful(HttpResponse(OK))
   }
 
   "AddAProtector Controller" when {
@@ -251,7 +260,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
           view(
             protectorRows.inProgress,
             protectorRows.complete,
-            25
+            protectors.addToHeading
           )(fakeRequest, messages).toString
         content must include("You cannot enter another protector as you have entered a maximum of 25.")
         content must include("If you have further protectors to add, write to HMRC with their details.")
