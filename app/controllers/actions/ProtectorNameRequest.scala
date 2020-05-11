@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package navigation
+package controllers.actions
 
-import models._
-import pages._
-import play.api.mvc.Call
+import models.UserAnswers
+import models.requests.DataRequest
+import play.api.mvc.WrappedRequest
 
-trait Navigator {
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+case class ProtectorNameRequest[T](request: DataRequest[T], protectorName: String) extends WrappedRequest[T](request){
+  val userAnswers:UserAnswers = request.userAnswers
 }

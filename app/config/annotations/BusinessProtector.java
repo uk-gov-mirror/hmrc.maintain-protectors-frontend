@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package navigation
+package config.annotations;
 
-import models._
-import pages._
-import play.api.mvc.Call
+import com.google.inject.BindingAnnotation;
 
-trait Navigator {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
-}
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
+@BindingAnnotation
+public @interface BusinessProtector {}

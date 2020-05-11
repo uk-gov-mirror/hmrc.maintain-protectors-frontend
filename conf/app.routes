@@ -2,7 +2,7 @@
 
 ->         /individual/remove                           individualProtector.remove.Routes
 
-->         /business/remove                             businessProtector.remove.Routes
+->         /business/remove                             businessProtector.Routes
 
 GET        /add                                         controllers.AddAProtectorController.onPageLoad()
 POST       /add                                         controllers.AddAProtectorController.submit()

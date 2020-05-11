@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-package navigation
+package forms
 
-import models._
-import pages._
-import play.api.mvc.Call
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-trait Navigator {
+class UtrFormProvider @Inject() extends Mappings {
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+  def withPrefix(messagePrefix: String): Form[String] =
+    Form(
+      "value" -> text(s"$messagePrefix.error.required")
+        .verifying(
+          firstError(
+            maxLength(10, s"$messagePrefix.error.length"),
+            minLength(10, s"$messagePrefix.error.length"),
+            regexp(Validation.utrRegex, s"$messagePrefix.error.invalid"),
+            nonEmptyString("value", s"$messagePrefix.error.required")
+          ))
+    )
 }

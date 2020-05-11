@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package navigation
+package utils.countryOptions
 
-import models._
-import pages._
-import play.api.mvc.Call
+import com.google.inject.Inject
+import config.FrontendAppConfig
+import javax.inject.Singleton
+import play.api.Environment
+import utils.InputOption
 
-trait Navigator {
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+@Singleton
+class CountryOptionsNonUK @Inject()(
+                                     environment: Environment,
+                                     config: FrontendAppConfig
+                                   ) extends CountryOptions(environment, config) {
+  override def options: Seq[InputOption] = CountryOptions.getCountries(environment, config.locationCanonicalListNonUK)
 }

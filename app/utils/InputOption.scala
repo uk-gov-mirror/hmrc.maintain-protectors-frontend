@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-package navigation
+package utils
 
-import models._
-import pages._
-import play.api.mvc.Call
-
-trait Navigator {
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
-}
+case class InputOption(value: String, label: String, dataTarget: Option[String] = None)
