@@ -165,6 +165,31 @@ individualProtector.nonUkAddress.checkYourAnswersLabel = What is {0}’s address
 individualProtector.nonUkAddress.title = What is the protector’s address?
 individualProtector.nonUkAddress.heading = What is {0}’s address?
 
+individualProtector.passportDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
+individualProtector.passportDetailsYesNo.title = Do you know the protector’s passport details?
+individualProtector.passportDetailsYesNo.heading = Do you know {0}’s passport details?
+individualProtector.passportDetailsYesNo.error.required = Select yes if you know the protector’s passport details
+
+individualProtector.passportDetails.checkYourAnswersLabel = What are {0}’s passport details?
+individualProtector.passportDetails.title = What are the protector’s passport details?
+individualProtector.passportDetails.heading = What are {0}’s passport details?
+individualProtector.passportDetails.country = Passport country of issue
+individualProtector.passportDetails.country.error.required = Enter the protector’s passport country of issue
+individualProtector.passportDetails.country.error.length = The protector’s passport country must be 100 characters or less
+individualProtector.passportDetails.number = Passport number
+individualProtector.passportDetails.number.hint = For example, 502135326
+individualProtector.passportDetails.number.error.required = Enter the protector’s passport number
+individualProtector.passportDetails.number.error.length = The protector’s passport number must be 30 characters or less
+individualProtector.passportDetails.number.error.invalid = Passport number can only include letters and numbers
+individualProtector.passportDetails.expiryDate = Expiry date
+individualProtector.passportDetails.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980
+individualProtector.passportDetails.expiryDate.error.required.all = Enter the passport expiry date
+individualProtector.passportDetails.expiryDate.error.required.two = Passport expiry date must include a {0} and {1}
+individualProtector.passportDetails.expiryDate.error.required = Passport expiry date must include {0}
+individualProtector.passportDetails.expiryDate.error.invalid = Enter a real date when the individual’s passport expires
+individualProtector.passportDetails.expiryDate.error.future = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+individualProtector.passportDetails.expiryDate.error.past = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+
 individualProtector.idCardDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
 individualProtector.idCardDetailsYesNo.title = Do you know the protector’s ID card details?
 individualProtector.idCardDetailsYesNo.heading = Do you know {0}’s ID card details?

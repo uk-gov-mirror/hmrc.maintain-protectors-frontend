@@ -34,6 +34,16 @@ POST       /has-uk-address                                  controllers.individu
 GET        /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onSubmit(mode: Mode = CheckMode)
 
+GET        /has-passport                                    controllers.individual.PassportDetailsYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-passport                                    controllers.individual.PassportDetailsYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-passport                             controllers.individual.PassportDetailsYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-passport                             controllers.individual.PassportDetailsYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /passport                                        controllers.individual.PassportDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /passport                                        controllers.individual.PassportDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-passport                                 controllers.individual.PassportDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-passport                                 controllers.individual.PassportDetailsController.onSubmit(mode: Mode = CheckMode)
+
 GET        /has-id-card                                     controllers.individual.IdCardDetailsYesNoController.onPageLoad(mode: Mode = NormalMode)
 POST       /has-id-card                                     controllers.individual.IdCardDetailsYesNoController.onSubmit(mode: Mode = NormalMode)
 GET        /change-has-id-card                              controllers.individual.IdCardDetailsYesNoController.onPageLoad(mode: Mode = CheckMode)
