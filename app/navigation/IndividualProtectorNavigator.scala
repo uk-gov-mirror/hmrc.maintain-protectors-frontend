@@ -34,8 +34,8 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   private def simpleNavigation(mode: Mode): PartialFunction[Page, Call] = {
     case NamePage => rts.DateOfBirthYesNoController.onPageLoad(mode)
     case DateOfBirthPage => rts.NationalInsuranceNumberYesNoController.onPageLoad(mode)
-//    case UkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
-//    case NonUkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
+    case UkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
+    case NonUkAddressPage => rts.PassportDetailsYesNoController.onPageLoad(mode)
 //    case StartDatePage => rts.CheckDetailsController.onPageLoad()
   }
 
@@ -46,8 +46,8 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
       yesNoNav(ua, NationalInsuranceNumberYesNoPage, rts.NationalInsuranceNumberController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
     case LiveInTheUkYesNoPage => ua =>
       yesNoNav(ua, LiveInTheUkYesNoPage, rts.UkAddressController.onPageLoad(mode), rts.NonUkAddressController.onPageLoad(mode))
-//    case PassportDetailsYesNoPage => ua =>
-//      yesNoNav(ua, PassportDetailsYesNoPage, rts.PassportDetailsController.onPageLoad(mode), rts.IdCardDetailsYesNoController.onPageLoad(mode))
+    case PassportDetailsYesNoPage => ua =>
+      yesNoNav(ua, PassportDetailsYesNoPage, rts.PassportDetailsController.onPageLoad(mode), rts.IdCardDetailsYesNoController.onPageLoad(mode))
   }
 
   private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
@@ -57,8 +57,8 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
           rts.StartDateController.onPageLoad()
         case AddressYesNoPage => ua =>
           yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
-//        case IdCardDetailsYesNoPage => ua =>
-//          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), rts.StartDateController.onPageLoad())
+        case IdCardDetailsYesNoPage => ua =>
+          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), rts.StartDateController.onPageLoad())
       }
 //      case CheckMode => {
 //        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | PassportDetailsPage | IdCardDetailsPage => ua =>
