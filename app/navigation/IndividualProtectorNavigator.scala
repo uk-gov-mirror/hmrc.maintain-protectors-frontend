@@ -42,8 +42,8 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   private def yesNoNavigation(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
     case DateOfBirthYesNoPage => ua =>
       yesNoNav(ua, DateOfBirthYesNoPage, rts.DateOfBirthController.onPageLoad(mode), rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
-//    case NationalInsuranceNumberYesNoPage => ua =>
-//      yesNoNav(ua, NationalInsuranceNumberYesNoPage, rts.NationalInsuranceNumberController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
+    case NationalInsuranceNumberYesNoPage => ua =>
+      yesNoNav(ua, NationalInsuranceNumberYesNoPage, rts.NationalInsuranceNumberController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
 //    case LiveInTheUkYesNoPage => ua =>
 //      yesNoNav(ua, LiveInTheUkYesNoPage, rts.UkAddressController.onPageLoad(mode), rts.NonUkAddressController.onPageLoad(mode))
 //    case PassportDetailsYesNoPage => ua =>
