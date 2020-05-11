@@ -34,6 +34,11 @@ POST       /has-uk-address                                  controllers.individu
 GET        /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onSubmit(mode: Mode = CheckMode)
 
+GET        /id-card                                         controllers.individual.IdCardDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /id-card                                         controllers.individual.IdCardDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-id-card                                  controllers.individual.IdCardDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-id-card                                  controllers.individual.IdCardDetailsController.onSubmit(mode: Mode = CheckMode)
+
 GET        /start-date                                      controllers.individual.StartDateController.onPageLoad()
 POST       /start-date                                      controllers.individual.StartDateController.onSubmit()
 
