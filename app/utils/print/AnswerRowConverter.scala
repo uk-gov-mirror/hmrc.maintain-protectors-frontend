@@ -19,7 +19,7 @@ package utils.print
 import java.time.LocalDate
 
 import com.google.inject.Inject
-import models.{Address, CompanyType, IdCard, Name, Passport, UserAnswers}
+import models.{Address, IdCard, Name, Passport, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.HtmlFormat
@@ -37,7 +37,7 @@ class AnswerRowConverter @Inject()() {
 
     def nameQuestion(query: Gettable[Name],
                      labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+                     changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel")),
@@ -47,21 +47,9 @@ class AnswerRowConverter @Inject()() {
       }
     }
 
-    def companyTypeQuestion(query: Gettable[CompanyType],
-                            labelKey: String,
-                            changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          HtmlFormat.escape(x.toString),
-          changeUrl
-        )
-      }
-    }
-
     def stringQuestion(query: Gettable[String],
                        labelKey: String,
-                       changeUrl: Option[String]): Option[AnswerRow] = {
+                       changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
@@ -73,7 +61,7 @@ class AnswerRowConverter @Inject()() {
 
     def yesNoQuestion(query: Gettable[Boolean],
                      labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+                     changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
@@ -85,7 +73,7 @@ class AnswerRowConverter @Inject()() {
 
     def dateQuestion(query: Gettable[LocalDate],
                      labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+                     changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
@@ -97,7 +85,7 @@ class AnswerRowConverter @Inject()() {
 
     def ninoQuestion(query: Gettable[String],
                      labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+                     changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
@@ -109,7 +97,7 @@ class AnswerRowConverter @Inject()() {
 
     def addressQuestion[T <: Address](query: Gettable[T],
                                       labelKey: String,
-                                      changeUrl: Option[String])
+                                      changeUrl: String)
                                      (implicit messages:Messages, reads: Reads[T]): Option[AnswerRow] = {
       userAnswers.get(query) map { x =>
         AnswerRow(
@@ -122,7 +110,7 @@ class AnswerRowConverter @Inject()() {
 
     def passportDetailsQuestion(query: Gettable[Passport],
                                 labelKey: String,
-                                changeUrl: Option[String]): Option[AnswerRow] = {
+                                changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
@@ -134,7 +122,7 @@ class AnswerRowConverter @Inject()() {
 
     def idCardDetailsQuestion(query: Gettable[IdCard],
                               labelKey: String,
-                              changeUrl: Option[String]): Option[AnswerRow] = {
+                              changeUrl: String): Option[AnswerRow] = {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),

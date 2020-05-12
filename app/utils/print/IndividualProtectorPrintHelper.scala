@@ -32,36 +32,36 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
     val bound = answerRowConverter.bind(userAnswers, settlorName, countryOptions)
 
     val add: Seq[AnswerRow] = Seq(
-        bound.nameQuestion(NamePage, "individualProtector.name", Some(controllers.individual.routes.NameController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", Some(controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(NormalMode).url)),
-        bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", Some(controllers.individual.routes.DateOfBirthController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", Some(controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url)),
-        bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", Some(controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", Some(controllers.individual.routes.AddressYesNoController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", Some(controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(NormalMode).url)),
-        bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", Some(controllers.individual.routes.UkAddressController.onPageLoad(NormalMode).url)),
-        bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", Some(controllers.individual.routes.NonUkAddressController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", Some(controllers.individual.routes.PassportDetailsYesNoController.onPageLoad(NormalMode).url)),
-        bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", Some(controllers.individual.routes.PassportDetailsController.onPageLoad(NormalMode).url)),
-        bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", Some(controllers.individual.routes.IdCardDetailsYesNoController.onPageLoad(NormalMode).url)),
-        bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", Some(controllers.individual.routes.IdCardDetailsController.onPageLoad(NormalMode).url)),
-        bound.dateQuestion(StartDatePage, "individualProtector.startDate", Some(controllers.individual.routes.StartDateController.onPageLoad().url))
+        bound.nameQuestion(NamePage, "individualProtector.name", controllers.individual.routes.NameController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(NormalMode).url),
+        bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", controllers.individual.routes.DateOfBirthController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url),
+        bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", controllers.individual.routes.AddressYesNoController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(NormalMode).url),
+        bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", controllers.individual.routes.UkAddressController.onPageLoad(NormalMode).url),
+        bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress",controllers.individual.routes.NonUkAddressController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", controllers.individual.routes.PassportDetailsYesNoController.onPageLoad(NormalMode).url),
+        bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", controllers.individual.routes.PassportDetailsController.onPageLoad(NormalMode).url),
+        bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", controllers.individual.routes.IdCardDetailsYesNoController.onPageLoad(NormalMode).url),
+        bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", controllers.individual.routes.IdCardDetailsController.onPageLoad(NormalMode).url),
+        bound.dateQuestion(StartDatePage, "individualProtector.startDate", controllers.individual.routes.StartDateController.onPageLoad().url)
       ).flatten
 
     val amend: Seq[AnswerRow] = Seq(
-      bound.nameQuestion(NamePage, "individualProtector.name", Some(controllers.individual.routes.NameController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", Some(controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(CheckMode).url)),
-      bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", Some(controllers.individual.routes.DateOfBirthController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", Some(controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url)),
-      bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", Some(controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", Some(controllers.individual.routes.AddressYesNoController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", Some(controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(CheckMode).url)),
-      bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", Some(controllers.individual.routes.UkAddressController.onPageLoad(CheckMode).url)),
-      bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", Some(controllers.individual.routes.NonUkAddressController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", Some(controllers.individual.routes.PassportDetailsYesNoController.onPageLoad(CheckMode).url)),
-      bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", Some(controllers.individual.routes.PassportDetailsController.onPageLoad(CheckMode).url)),
-      bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", Some(controllers.individual.routes.IdCardDetailsYesNoController.onPageLoad(CheckMode).url)),
-      bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", Some(controllers.individual.routes.IdCardDetailsController.onPageLoad(CheckMode).url))
+      bound.nameQuestion(NamePage, "individualProtector.name", controllers.individual.routes.NameController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(CheckMode).url),
+      bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", controllers.individual.routes.DateOfBirthController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url),
+      bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", controllers.individual.routes.AddressYesNoController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(CheckMode).url),
+      bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", controllers.individual.routes.UkAddressController.onPageLoad(CheckMode).url),
+      bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", controllers.individual.routes.NonUkAddressController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", controllers.individual.routes.PassportDetailsYesNoController.onPageLoad(CheckMode).url),
+      bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", controllers.individual.routes.PassportDetailsController.onPageLoad(CheckMode).url),
+      bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", controllers.individual.routes.IdCardDetailsYesNoController.onPageLoad(CheckMode).url),
+      bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", controllers.individual.routes.IdCardDetailsController.onPageLoad(CheckMode).url)
     ).flatten
 
     AnswerSection(

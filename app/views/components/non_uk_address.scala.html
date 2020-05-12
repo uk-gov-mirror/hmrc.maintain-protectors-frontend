@@ -17,9 +17,8 @@
 @import utils.InputOption
 
 @(
-form:Form[_], countryOptions: Seq[InputOption]
+    form:Form[_], countryOptions: Seq[InputOption]
 )(implicit messages: Messages)
-
 
 @components.input_text(
   field = form("line1"),

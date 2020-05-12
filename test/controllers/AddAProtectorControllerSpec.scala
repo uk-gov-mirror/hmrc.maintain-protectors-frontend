@@ -45,7 +45,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
   val mockStoreConnector : TrustStoreConnector = mock[TrustStoreConnector]
 
-  val addTrusteeForm = new AddAProtectorFormProvider()()
+  val addProtectorForm = new AddAProtectorFormProvider()()
 
   private def individualProtector(provisional: Boolean) = IndividualProtector(
     name = Name(firstName = "First", middleName = None, lastName = "Last"),
@@ -146,7 +146,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
         contentAsString(result) mustEqual
           view(
-            addTrusteeForm,
+            addProtectorForm,
             Nil,
             protectorRows,
             "The trust has 2 protectors"
@@ -212,7 +212,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
           FakeRequest(POST, submitRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = addTrusteeForm.bind(Map("value" -> "invalid value"))
+        val boundForm = addProtectorForm.bind(Map("value" -> "invalid value"))
 
         val view = application.injector.instanceOf[AddAProtectorView]
 

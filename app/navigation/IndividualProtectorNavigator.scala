@@ -28,9 +28,6 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
     routes(mode)(page)(userAnswers)
 
-  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
-    nextPage(page, NormalMode, userAnswers)
-
   private def simpleNavigation(mode: Mode): PartialFunction[Page, Call] = {
     case NamePage => rts.DateOfBirthYesNoController.onPageLoad(mode)
     case DateOfBirthPage => rts.NationalInsuranceNumberYesNoController.onPageLoad(mode)

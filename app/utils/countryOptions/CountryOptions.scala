@@ -23,7 +23,6 @@ import play.api.Environment
 import play.api.libs.json.Json
 import utils.InputOption
 
-
 @Singleton
 class CountryOptions @Inject()(environment: Environment, config: FrontendAppConfig) {
 

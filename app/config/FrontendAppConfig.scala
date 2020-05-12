@@ -62,4 +62,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   def routeToSwitchLanguage: String => Call =
     (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
+
+  lazy val accessibilityLinkUrl: String = configuration.get[String]("urls.accessibility")
 }

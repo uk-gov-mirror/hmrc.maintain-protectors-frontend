@@ -18,7 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import javax.inject.Inject
-import models.protectors.{IndividualProtector, Protectors}
+import models.protectors.{IndividualProtector, BusinessProtector, Protectors}
 import models.{RemoveProtector, TrustDetails}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -46,7 +46,13 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
   def addIndividualProtector(utr: String, protector: IndividualProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](addIndividualProtectorUrl(utr), Json.toJson(protector))
   }
-  
+
+  private def addBusinessProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/add-business-protector/$utr"
+
+  def addBusinessProtector(utr: String, protector: BusinessProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    http.POST[JsValue, HttpResponse](addBusinessProtectorUrl(utr), Json.toJson(protector))
+  }
+
   private def removeProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/protectors/remove"
 
   def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
