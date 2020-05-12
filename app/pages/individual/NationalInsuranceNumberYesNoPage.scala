@@ -35,10 +35,10 @@ case object NationalInsuranceNumberYesNoPage extends QuestionPage[Boolean] {
           .flatMap(_.remove(LiveInTheUkYesNoPage))
           .flatMap(_.remove(UkAddressPage))
           .flatMap(_.remove(NonUkAddressPage))
-//          .flatMap(_.remove(PassportDetailsYesNoPage))
-//          .flatMap(_.remove(PassportDetailsPage))
-//          .flatMap(_.remove(IdCardDetailsYesNoPage))
-//          .flatMap(_.remove(IdCardDetailsPage))
+          .flatMap(_.remove(PassportDetailsYesNoPage))
+          .flatMap(_.remove(PassportDetailsPage))
+          .flatMap(_.remove(IdCardDetailsYesNoPage))
+          .flatMap(_.remove(IdCardDetailsPage))
       case Some(false) =>
         userAnswers.remove(NationalInsuranceNumberPage)
       case _ =>
