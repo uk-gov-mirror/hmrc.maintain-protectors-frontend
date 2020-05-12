@@ -227,6 +227,9 @@ individualProtector.startDate.error.invalid = Enter a real date
 individualProtector.startDate.error.future = The date the protector was added to the trust must be today or in the past
 individualProtector.startDate.error.past = The date the protector was added to the trust cannot be before the start date of the trust
 
+individualProtector.checkDetails.title = Check individual protector details
+individualProtector.checkDetails.heading = Check individual protector details
+
 removeIndividualProtector.title = Are you sure you want to remove the individual protector?
 removeIndividualProtector.heading = Are you sure you want to remove {0}?
 removeIndividualProtector.error.required = Select yes if you want to remove the individual protector
