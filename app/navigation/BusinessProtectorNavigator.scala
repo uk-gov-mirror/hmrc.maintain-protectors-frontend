@@ -18,7 +18,7 @@ package navigation
 
 import controllers.business.{routes => rts}
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import pages.business._
 import pages.{Page, QuestionPage}
 import play.api.mvc.Call
@@ -46,9 +46,35 @@ class BusinessProtectorNavigator @Inject()() extends Navigator {
       .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
   }
 
+  private def navigationWithCheck(mode: Mode) : PartialFunction[Page, UserAnswers => Call] = {
+    mode match {
+      case NormalMode => {
+        case UtrPage | UkAddressPage | NonUkAddressPage => _ =>
+          rts.StartDateController.onPageLoad()
+        case AddressYesNoPage => ua =>
+          yesNoNav(ua, AddressYesNoPage, rts.AddressUkYesNoController.onPageLoad(mode), yesNoNav(ua, AddressYesNoPage, rts.AddressUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad()))
+      }
+      case CheckMode => {
+        case UtrPage | UkAddressPage | NonUkAddressPage => ua =>
+          checkDetailsRoute(ua)
+        case AddressYesNoPage => ua =>
+          yesNoNav(ua, AddressYesNoPage, rts.AddressUkYesNoController.onPageLoad(mode), checkDetailsRoute(ua))
+      }
+    }
+  }
+
+  private def checkDetailsRoute(answers: UserAnswers) : Call = {
+    answers.get(IndexPage) match {
+      case None =>
+        controllers.routes.SessionExpiredController.onPageLoad()
+      case Some(_) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+    }
+  }
+
   private def routes(mode: Mode): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation(mode) andThen (c => (_: UserAnswers) => c) orElse
-      yesNoNavigation(mode)
-
+      yesNoNavigation(mode) orElse
+      navigationWithCheck(mode)
 }
 
