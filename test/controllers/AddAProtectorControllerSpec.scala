@@ -69,7 +69,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
   lazy val featureNotAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   val protectorRows = List(
-    AddRow("First Last", typeLabel = "Individual protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.individual.remove.routes.RemoveIndividualProtectorController.onPageLoad(0).url)),
+    AddRow("First Last", typeLabel = "Individual protector", "Change details", Some(controllers.individual.amend.routes.CheckDetailsController.extractAndRender(0).url), "Remove", Some(controllers.individual.remove.routes.RemoveIndividualProtectorController.onPageLoad(0).url)),
     AddRow("Humanitarian Company Ltd", typeLabel = "Business protector", "Change details", Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url), "Remove", Some(controllers.business.remove.routes.RemoveBusinessProtectorController.onPageLoad(0).url))
   )
 

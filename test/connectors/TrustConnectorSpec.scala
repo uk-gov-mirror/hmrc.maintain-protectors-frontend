@@ -230,5 +230,87 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         application.stop()
       }
     }
+
+    "amending an individual protector" must {
+
+      def amendIndividualProtectorUrl(utr: String, index: Int) =
+        s"/trusts/amend-individual-protector/$utr/$index"
+
+      "Return OK when the request is successful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(amendIndividualProtectorUrl(utr, index)))
+            .willReturn(ok)
+        )
+
+        val individual = IndividualProtector(
+          name = Name(
+            firstName = "First",
+            middleName = None,
+            lastName = "Last"
+          ),
+          dateOfBirth = None,
+          identification = None,
+          address = None,
+          entityStart = LocalDate.parse("2020-03-27"),
+          provisional = false
+        )
+
+        val result = connector.amendIndividualProtector(utr, index, individual)
+
+        result.futureValue.status mustBe OK
+
+        application.stop()
+      }
+
+      "return Bad Request when the request is unsuccessful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(amendIndividualProtectorUrl(utr, index)))
+            .willReturn(badRequest)
+        )
+
+        val individual = IndividualProtector(
+          name = Name(
+            firstName = "First",
+            middleName = None,
+            lastName = "Last"
+          ),
+          dateOfBirth = None,
+          identification = None,
+          address = None,
+          entityStart = LocalDate.parse("2020-03-27"),
+          provisional = false
+        )
+
+        val result = connector.amendIndividualProtector(utr, index, individual)
+
+        result.map(response => response.status mustBe BAD_REQUEST)
+
+        application.stop()
+      }
+
+    }
+
   }
 }

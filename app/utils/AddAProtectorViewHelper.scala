@@ -16,6 +16,7 @@
 
 package utils
 
+import models.CheckMode
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
 import play.api.i18n.Messages
 import viewmodels.addAnother.{AddRow, AddToRows}
@@ -27,7 +28,7 @@ class AddAProtectorViewHelper(protectors: Protectors)(implicit messages: Message
       name = protector.name.displayName,
       typeLabel = messages("entities.protector.individual"),
       changeLabel = messages("site.change.details"),
-      changeUrl = Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url),
+      changeUrl = Some(controllers.individual.amend.routes.CheckDetailsController.extractAndRender(index).url),
       removeLabel =  messages("site.delete"),
       removeUrl = Some(controllers.individual.remove.routes.RemoveIndividualProtectorController.onPageLoad(index).url)
     )
