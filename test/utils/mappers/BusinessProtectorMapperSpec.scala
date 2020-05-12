@@ -30,7 +30,7 @@ class BusinessProtectorMapperSpec extends SpecBase {
   private val ukAddress = UkAddress("line1", "line2", Some("line3"), Some("line4"), "POSTCODE")
   private val nonUkAddress = NonUkAddress("line1", "line2", Some("line3"), "country")
 
-  "BusinessSettlorMapper" when {
+  "BusinessProtectorMapper" when {
 
     val mapper = injector.instanceOf[BusinessProtectorMapper]
 
