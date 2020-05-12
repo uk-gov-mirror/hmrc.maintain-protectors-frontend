@@ -122,10 +122,10 @@ businessProtector.addressYesNo.title = Do you know the protector’s address?
 businessProtector.addressYesNo.heading = Do you know {0}’s address?
 businessProtector.addressYesNo.error.required = Select yes if you know the protector’s address
 
-businessProtector.liveInTheUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
-businessProtector.liveInTheUkYesNo.title = Is the protector’s address in the UK?
-businessProtector.liveInTheUkYesNo.heading = Is {0}’s address in the UK?
-businessProtector.liveInTheUkYesNo.error.required = Select yes if the protector’s address is in the UK
+businessProtector.addressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+businessProtector.addressUkYesNo.title = Is the protector’s address in the UK?
+businessProtector.addressUkYesNo.heading = Is {0}’s address in the UK?
+businessProtector.addressUkYesNo.error.required = Select yes if the protector’s address is in the UK
 
 businessProtector.ukAddress.checkYourAnswersLabel = What is {0}’s address?
 businessProtector.ukAddress.title = What is the protector’s address?
