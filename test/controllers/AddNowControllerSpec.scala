@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.AddProtectorTypeFormProvider
-import models.ProtectorType
+import models.{NormalMode, ProtectorType}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.AddNowPage
 import play.api.data.Form
@@ -102,7 +102,7 @@ class AddNowControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.FeatureNotAvailableController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.business.routes.NameController.onPageLoad(NormalMode).url
 
       application.stop()
     }

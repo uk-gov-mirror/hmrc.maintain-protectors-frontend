@@ -27,9 +27,9 @@ class BusinessProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConver
                                              countryOptions: CountryOptions
                                           ) {
 
-  def apply(userAnswers: UserAnswers, provisional: Boolean, settlorName: String)(implicit messages: Messages): AnswerSection = {
+  def apply(userAnswers: UserAnswers, provisional: Boolean, protectorName: String)(implicit messages: Messages): AnswerSection = {
 
-    val bound = answerRowConverter.bind(userAnswers, settlorName, countryOptions)
+    val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
 
     val add: Seq[AnswerRow] = Seq(
         bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(NormalMode).url),

@@ -17,7 +17,9 @@
 package config
 
 import com.google.inject.AbstractModule
+import config.annotations.BusinessProtector
 import controllers.actions._
+import navigation.{BusinessProtectorNavigator, Navigator}
 import repositories.{MongoRepository, PlaybackRepository}
 import services.{AuthenticationService, AuthenticationServiceImpl}
 
@@ -34,6 +36,6 @@ class Module extends AbstractModule {
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
     bind(classOf[AuthenticationService]).to(classOf[AuthenticationServiceImpl]).asEagerSingleton()
 
-//    bind(classOf[Navigator]).annotatedWith(classOf[BusinessProtector]).to(classOf[BusinessSettlorNavigator]).asEagerSingleton()
+    bind(classOf[Navigator]).annotatedWith(classOf[BusinessProtector]).to(classOf[BusinessProtectorNavigator]).asEagerSingleton()
   }
 }
