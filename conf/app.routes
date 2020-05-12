@@ -21,8 +21,6 @@ POST       /what-kind                                   controllers.AddNowContro
 
 GET        /logout                                      controllers.LogoutController.logout()
 
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /:utr                                        controllers.IndexController.onPageLoad(utr: String)
