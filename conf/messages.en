@@ -19,8 +19,8 @@ error.integer = Give an answer in whole numbers
 error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
+error.invalid = Please enter a valid value
 error.summary.title = There is a problem
-error.postcode.invalid = Enter a real postcode
 
 index.title = maintain-protectors-frontend
 index.heading = maintain-protectors-frontend

@@ -137,7 +137,7 @@ class UkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "postcode"
     val requiredKey = "ukAddress.error.postcode.required"
-    val invalidKey = "error.postcode.invalid"
+    val invalidKey = "ukAddress.error.postcode.invalidCharacters"
 
     behave like fieldWithRegexpWithGenerator(
       form,
