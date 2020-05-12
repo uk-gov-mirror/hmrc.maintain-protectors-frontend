@@ -67,8 +67,8 @@ class BusinessProtectorNavigator @Inject()() extends Navigator {
     answers.get(IndexPage) match {
       case None =>
         controllers.routes.SessionExpiredController.onPageLoad()
-      case Some(x) =>
-        controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
+      case Some(index) =>
+        controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(index)
     }
   }
 
