@@ -20,7 +20,7 @@ import controllers.individual.{routes => rts}
 import javax.inject.Inject
 import models.{CheckMode, Mode, NormalMode, TypeOfTrust, UserAnswers}
 import pages.individual._
-import pages.{Page, QuestionPage}
+import pages.{Page, QuestionPage, individual}
 import play.api.mvc.Call
 
 class IndividualProtectorNavigator @Inject()() extends Navigator {
@@ -53,7 +53,7 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
     mode match {
       case NormalMode => {
-        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | IdCardDetailsPage => _ => // | PassportDetailsPage  => _ =>
+        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | IdCardDetailsPage | PassportDetailsPage  => _ =>
           rts.StartDateController.onPageLoad()
         case AddressYesNoPage => ua =>
           yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
