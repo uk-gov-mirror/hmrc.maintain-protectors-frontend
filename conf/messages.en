@@ -46,6 +46,46 @@ site.sign_out = Sign out
 site.inprogress = In Progress
 site.complete = Completed
 
+site.address.uk.title = What is the address?
+site.address.uk.heading = What is {0}’s address?
+site.address.uk.line1 = Address line 1
+site.address.uk.line2 = Address line 2
+site.address.uk.line3 = Address line 3 (optional)
+site.address.uk.line4 = Address line 4 (optional)
+site.address.uk.postcode = Postcode
+site.address.uk.postcode.hint = For example AB1 1AB
+
+address.country.select = Select a country
+site.address.nonUk.title = What is the address?
+site.address.nonUk.heading = What is {0}’s address?
+site.address.nonUk.line1 = Address line 1
+site.address.nonUk.line2 = Address line 2
+site.address.nonUk.line3 = Address line 3 (optional)
+site.address.nonUk.country = Country
+
+ukAddress.error.line1.required = Enter address line 1
+ukAddress.error.line2.required = Enter address line 2
+ukAddress.error.postcode.required = Enter a postcode
+ukAddress.error.line1.length = Address line 1 must be 35 characters or less
+ukAddress.error.line2.length = Address line 2 must be 35 characters or less
+ukAddress.error.line3.length = Address line 3 must be 35 characters or less
+ukAddress.error.line4.length = Address line 4 must be 35 characters or less
+ukAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.postcode.invalidCharacters = Enter a real postcode
+
+nonUkAddress.error.line1.required = Enter address line 1
+nonUkAddress.error.line2.required = Enter address line 2
+nonUkAddress.error.country.required = Select a country
+nonUkAddress.error.line1.length = Address line 1 must be 35 characters or less
+nonUkAddress.error.line2.length = Address line 2 must be 35 characters or less
+nonUkAddress.error.line3.length = Address line 3 must be 35 characters or less
+nonUkAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+nonUkAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+nonUkAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
@@ -91,6 +131,63 @@ individualProtector.whenRemoved.error.required = The date the individual protect
 individualProtector.whenRemoved.error.invalid = Enter a real date when the individual protector was removed from the trust
 individualProtector.whenRemoved.error.future = The date the individual protector was removed from the trust must be today or in the past
 individualProtector.whenRemoved.error.past = The date the individual protector was removed must be on or after the date they were added
+
+businessProtector.name.default = the business protector
+
+businessProtector.name.checkYourAnswersLabel = What is the business’s name?
+businessProtector.name.title = What is the business’s name?
+businessProtector.name.heading = What is the business’s name?
+businessProtector.name.error.required = Enter the business’s name
+businessProtector.name.error.length = Business’s name must be 105 characters or less
+businessProtector.name.error.invalidFormat = Business’s name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+businessProtector.utrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR)?
+businessProtector.utrYesNo.title = Do you know the protector’s Unique Taxpayer Reference (UTR)?
+businessProtector.utrYesNo.heading = Do you know {0}’s Unique Taxpayer Reference (UTR)?
+businessProtector.utrYesNo.error.required = Select yes if you know the protector’s Unique Taxpayer Reference (UTR)?
+
+businessProtector.utr.checkYourAnswersLabel = What is {0} Unique Taxpayer Reference (UTR)?
+businessProtector.utr.title = What is the protector’s Unique Taxpayer Reference (UTR)?
+businessProtector.utr.heading = What is {0}’s Unique Taxpayer Reference (UTR)?
+businessProtector.utr.hint = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’.
+businessProtector.utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’.
+businessProtector.utr.p1 = You can
+businessProtector.utr.link = find a lost UTR number (opens in a new window or tab)
+businessProtector.utr.error.required = Enter the protector’s Unique Taxpayer Reference
+businessProtector.utr.error.length = Unique Taxpayer Reference must be a 10 digit number
+businessProtector.utr.error.invalid = Enter the protector’s Unique Taxpayer Reference in the correct format
+
+businessProtector.addressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+businessProtector.addressYesNo.title = Do you know the protector’s address?
+businessProtector.addressYesNo.heading = Do you know {0}’s address?
+businessProtector.addressYesNo.error.required = Select yes if you know the protector’s address
+
+businessProtector.addressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+businessProtector.addressUkYesNo.title = Is the protector’s address in the UK?
+businessProtector.addressUkYesNo.heading = Is {0}’s address in the UK?
+businessProtector.addressUkYesNo.error.required = Select yes if the protector’s address is in the UK
+
+businessProtector.ukAddress.checkYourAnswersLabel = What is {0}’s address?
+businessProtector.ukAddress.title = What is the protector’s address?
+businessProtector.ukAddress.heading = What is {0}’s address?
+
+businessProtector.nonUkAddress.checkYourAnswersLabel = What is {0}’s address?
+businessProtector.nonUkAddress.title = What is the protector’s address?
+businessProtector.nonUkAddress.heading = What is {0}’s address?
+
+businessProtector.startDate.checkYourAnswersLabel = When was {0} added as a protector?
+businessProtector.startDate.title = When was the protector added to the trust?
+businessProtector.startDate.heading = When was {0} added as a protector?
+businessProtector.startDate.hint = Check the trust deed or the power of appointment document. For example, 31 3 1980
+businessProtector.startDate.error.required.all = Enter the date the protector was added to the trust
+businessProtector.startDate.error.required.two = The date the protector was added to the trust must include a {0} and a {1}
+businessProtector.startDate.error.required = The date the protector was added to the trust must include a {0}
+businessProtector.startDate.error.invalid = Enter a real date
+businessProtector.startDate.error.future = The date the protector was added to the trust must be today or in the past
+businessProtector.startDate.error.past = The date the protector was added to the trust cannot be before the start date of the trust
+
+businessProtector.checkDetails.title = Check business protector details
+businessProtector.checkDetails.heading = Check business protector details
 
 removeBusinessProtector.title = Are you sure you want to remove the business protector?
 removeBusinessProtector.heading = Are you sure you want to remove {0}?
