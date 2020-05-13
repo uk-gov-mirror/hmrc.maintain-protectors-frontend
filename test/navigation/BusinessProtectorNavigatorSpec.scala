@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.business._
 
@@ -65,7 +65,7 @@ class BusinessProtectorNavigatorSpec extends SpecBase with ScalaCheckPropertyChe
           .mustBe(controllers.business.routes.AddressUkYesNoController.onPageLoad(mode))
       }
 
-      "Do you know address page -> No -> Start Date page" in {
+      "Do you know address page -> No -> Start date page" in {
         val answers = emptyUserAnswers
           .set(AddressYesNoPage, false).success.value
 
@@ -102,6 +102,83 @@ class BusinessProtectorNavigatorSpec extends SpecBase with ScalaCheckPropertyChe
       "Start date page -> Check details page" in {
         navigator.nextPage(StartDatePage, mode, emptyUserAnswers)
           .mustBe(controllers.business.add.routes.CheckDetailsController.onPageLoad())
+      }
+    }
+
+    "amend journey navigation" must {
+
+      val index = 0
+      val mode = CheckMode
+
+      val baseAnswers = emptyUserAnswers
+        .set(IndexPage, index).success.value
+
+      "Name page -> Do you know UTR page" in {
+        navigator.nextPage(NamePage, mode, baseAnswers)
+          .mustBe(controllers.business.routes.UtrYesNoController.onPageLoad(mode))
+      }
+
+      "Do you know UTR page -> Yes -> UTR page" in {
+        val answers = baseAnswers
+          .set(UtrYesNoPage, true).success.value
+
+        navigator.nextPage(UtrYesNoPage, mode, answers)
+          .mustBe(controllers.business.routes.UtrController.onPageLoad(mode))
+      }
+
+      "UTR page -> Check details page" in {
+        navigator.nextPage(UtrPage, mode, baseAnswers)
+          .mustBe(controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(index))
+      }
+
+      "Do you know UTR page -> No -> Do you know address page" in {
+        val answers = baseAnswers
+          .set(UtrYesNoPage, false).success.value
+
+        navigator.nextPage(UtrYesNoPage, mode, answers)
+          .mustBe(controllers.business.routes.AddressYesNoController.onPageLoad(mode))
+      }
+
+      "Do you know address page -> Yes -> Is address in UK page" in {
+        val answers = baseAnswers
+          .set(AddressYesNoPage, true).success.value
+
+        navigator.nextPage(AddressYesNoPage, mode, answers)
+          .mustBe(controllers.business.routes.AddressUkYesNoController.onPageLoad(mode))
+      }
+
+      "Do you know address page -> No -> Check details page" in {
+        val answers = baseAnswers
+          .set(AddressYesNoPage, false).success.value
+
+        navigator.nextPage(AddressYesNoPage, mode, answers)
+          .mustBe(controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(index))
+      }
+
+      "Is address in UK page -> Yes -> UK address page" in {
+        val answers = baseAnswers
+          .set(AddressUkYesNoPage, true).success.value
+
+        navigator.nextPage(AddressUkYesNoPage, mode, answers)
+          .mustBe(controllers.business.routes.UkAddressController.onPageLoad(mode))
+      }
+
+      "Is address in UK page -> No -> Non-UK address page" in {
+        val answers = baseAnswers
+          .set(AddressUkYesNoPage, false).success.value
+
+        navigator.nextPage(AddressUkYesNoPage, mode, answers)
+          .mustBe(controllers.business.routes.NonUkAddressController.onPageLoad(mode))
+      }
+
+      "UK address page -> Check details page" in {
+        navigator.nextPage(UkAddressPage, mode, baseAnswers)
+          .mustBe(controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(index))
+      }
+
+      "Non-UK address page -> Check details page" in {
+        navigator.nextPage(NonUkAddressPage, mode, baseAnswers)
+          .mustBe(controllers.business.amend.routes.CheckDetailsController.renderFromUserAnswers(index))
       }
     }
   }

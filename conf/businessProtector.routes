@@ -1,3 +1,4 @@
+
 GET        /name                                            controllers.business.NameController.onPageLoad(mode: Mode = NormalMode)
 POST       /name                                            controllers.business.NameController.onSubmit(mode: Mode = NormalMode)
 GET        /change-name                                     controllers.business.NameController.onPageLoad(mode: Mode = CheckMode)
@@ -38,6 +39,10 @@ POST       /start-date                                      controllers.business
 
 GET        /check-details                                   controllers.business.add.CheckDetailsController.onPageLoad()
 POST       /check-details                                   controllers.business.add.CheckDetailsController.onSubmit()
+
+GET        /:index/check-details                            controllers.business.amend.CheckDetailsController.extractAndRender(index: Int)
+GET        /:index/updated-details                          controllers.business.amend.CheckDetailsController.renderFromUserAnswers(index: Int)
+POST       /:index/check-details                            controllers.business.amend.CheckDetailsController.onSubmit(index: Int)
 
 GET        /:index/remove                                   controllers.business.remove.RemoveBusinessProtectorController.onPageLoad(index: Int)
 POST       /:index/remove                                   controllers.business.remove.RemoveBusinessProtectorController.onSubmit(index: Int)

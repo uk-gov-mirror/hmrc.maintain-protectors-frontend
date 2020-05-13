@@ -24,10 +24,10 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import generators.Generators
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
-import models.{CompanyType, Name, TrustDetails, TypeOfTrust}
+import models.{Name, TrustDetails, TypeOfTrust}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
-import play.api.libs.json.{JsBoolean, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -229,6 +229,132 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
         application.stop()
       }
+    }
+
+    "add business protector" must {
+
+      def addBusinessProtectorUrl(utr: String) =
+        s"/trusts/add-business-protector/$utr"
+
+      val protector = BusinessProtector(
+        name = "Name",
+        utr = None,
+        address = None,
+        entityStart = LocalDate.parse("2020-03-27"),
+        provisional = false
+      )
+
+      "Return OK when the request is successful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(addBusinessProtectorUrl(utr)))
+            .willReturn(ok)
+        )
+
+        val result = connector.addBusinessProtector(utr, protector)
+
+        result.futureValue.status mustBe OK
+
+        application.stop()
+      }
+
+      "return Bad Request when the request is unsuccessful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(addBusinessProtectorUrl(utr)))
+            .willReturn(badRequest)
+        )
+
+        val result = connector.addBusinessProtector(utr, protector)
+
+        result.map(response => response.status mustBe BAD_REQUEST)
+
+        application.stop()
+      }
+
+    }
+
+    "amending a business protector" must {
+
+      def amendBusinessProtectorUrl(utr: String, index: Int) =
+        s"/trusts/amend-business-protector/$utr/$index"
+
+      val protector = BusinessProtector(
+        name = "Name",
+        utr = None,
+        address = None,
+        entityStart = LocalDate.parse("2020-03-27"),
+        provisional = false
+      )
+
+      "Return OK when the request is successful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(amendBusinessProtectorUrl(utr, index)))
+            .willReturn(ok)
+        )
+
+        val result = connector.amendBusinessProtector(utr, index, protector)
+
+        result.futureValue.status mustBe OK
+
+        application.stop()
+      }
+
+      "return Bad Request when the request is unsuccessful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(amendBusinessProtectorUrl(utr, index)))
+            .willReturn(badRequest)
+        )
+
+        val result = connector.amendBusinessProtector(utr, index, protector)
+
+        result.map(response => response.status mustBe BAD_REQUEST)
+
+        application.stop()
+      }
+
     }
   }
 }
