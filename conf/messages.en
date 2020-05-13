@@ -64,23 +64,6 @@ site.address.nonUk.line2 = Address line 2
 site.address.nonUk.line3 = Address line 3 (optional)
 site.address.nonUk.country = Country
 
-site.address.uk.title = What is the address?
-site.address.uk.heading = What is {0}’s address?
-site.address.uk.line1 = Address line 1
-site.address.uk.line2 = Address line 2
-site.address.uk.line3 = Address line 3 (optional)
-site.address.uk.line4 = Address line 4 (optional)
-site.address.uk.postcode = Postcode
-site.address.uk.postcode.hint = For example AB1 1AB
-
-address.country.select = Select a country
-site.address.nonUk.title = What is the address?
-site.address.nonUk.heading = What is {0}’s address?
-site.address.nonUk.line1 = Address line 1
-site.address.nonUk.line2 = Address line 2
-site.address.nonUk.line3 = Address line 3 (optional)
-site.address.nonUk.country = Country
-
 ukAddress.error.line1.required = Enter address line 1
 ukAddress.error.line2.required = Enter address line 2
 ukAddress.error.postcode.required = Enter a postcode

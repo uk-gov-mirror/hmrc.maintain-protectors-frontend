@@ -47,7 +47,7 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
     http.POST[JsValue, HttpResponse](addIndividualProtectorUrl(utr), Json.toJson(protector))
   }
 
-  private def amendIndividualProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/amend-individual-protector/$utr/$index"
+  private def amendIndividualProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/protectors/amend-individual/$utr/$index"
 
   def amendIndividualProtector(utr: String, index: Int, individual: IndividualProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](amendIndividualProtectorUrl(utr, index), Json.toJson(individual))(implicitly[Writes[JsValue]], HttpReads.readRaw, hc, ec)
