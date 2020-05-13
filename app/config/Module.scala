@@ -17,8 +17,10 @@
 package config
 
 import com.google.inject.AbstractModule
+import config.annotations.IndividualProtector
 import config.annotations.BusinessProtector
 import controllers.actions._
+import navigation.{IndividualProtectorNavigator, Navigator}
 import navigation.{BusinessProtectorNavigator, Navigator}
 import repositories.{MongoRepository, PlaybackRepository}
 import services.{AuthenticationService, AuthenticationServiceImpl}
@@ -35,6 +37,8 @@ class Module extends AbstractModule {
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
     bind(classOf[AuthenticationService]).to(classOf[AuthenticationServiceImpl]).asEagerSingleton()
+
+    bind(classOf[Navigator]).annotatedWith(classOf[IndividualProtector]).to(classOf[IndividualProtectorNavigator]).asEagerSingleton()
 
     bind(classOf[Navigator]).annotatedWith(classOf[BusinessProtector]).to(classOf[BusinessProtectorNavigator]).asEagerSingleton()
   }

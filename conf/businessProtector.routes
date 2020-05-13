@@ -1,4 +1,3 @@
-
 GET        /name                                            controllers.business.NameController.onPageLoad(mode: Mode = NormalMode)
 POST       /name                                            controllers.business.NameController.onSubmit(mode: Mode = NormalMode)
 GET        /change-name                                     controllers.business.NameController.onPageLoad(mode: Mode = CheckMode)
@@ -37,8 +36,8 @@ POST       /change-non-uk-address                           controllers.business
 GET        /start-date                                      controllers.business.StartDateController.onPageLoad()
 POST       /start-date                                      controllers.business.StartDateController.onSubmit()
 
-GET         /check-details                                  controllers.business.add.CheckDetailsController.onPageLoad()
-POST        /check-details                                  controllers.business.add.CheckDetailsController.onSubmit()
+GET        /check-details                                   controllers.business.add.CheckDetailsController.onPageLoad()
+POST       /check-details                                   controllers.business.add.CheckDetailsController.onSubmit()
 
 GET        /:index/remove                                   controllers.business.remove.RemoveBusinessProtectorController.onPageLoad(index: Int)
 POST       /:index/remove                                   controllers.business.remove.RemoveBusinessProtectorController.onSubmit(index: Int)
