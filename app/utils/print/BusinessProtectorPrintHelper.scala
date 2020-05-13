@@ -32,15 +32,15 @@ class BusinessProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConver
     val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
 
     val add: Seq[AnswerRow] = Seq(
-        bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(NormalMode).url),
-        bound.yesNoQuestion(UtrYesNoPage, "businessProtector.utrYesNo", controllers.business.routes.UtrYesNoController.onPageLoad(NormalMode).url),
-        bound.stringQuestion(UtrPage, "businessProtector.utr", controllers.business.routes.UtrController.onPageLoad(NormalMode).url),
-        bound.yesNoQuestion(AddressYesNoPage, "businessProtector.addressYesNo", controllers.business.routes.AddressYesNoController.onPageLoad(NormalMode).url),
-        bound.yesNoQuestion(AddressUkYesNoPage, "businessProtector.addressUkYesNo", controllers.business.routes.AddressUkYesNoController.onPageLoad(NormalMode).url),
-        bound.addressQuestion(UkAddressPage, "businessProtector.ukAddress", controllers.business.routes.UkAddressController.onPageLoad(NormalMode).url),
-        bound.addressQuestion(NonUkAddressPage, "businessProtector.nonUkAddress", controllers.business.routes.NonUkAddressController.onPageLoad(NormalMode).url),
-        bound.dateQuestion(StartDatePage, "businessProtector.startDate", controllers.business.routes.StartDateController.onPageLoad().url)
-      ).flatten
+      bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(NormalMode).url),
+      bound.yesNoQuestion(UtrYesNoPage, "businessProtector.utrYesNo", controllers.business.routes.UtrYesNoController.onPageLoad(NormalMode).url),
+      bound.stringQuestion(UtrPage, "businessProtector.utr", controllers.business.routes.UtrController.onPageLoad(NormalMode).url),
+      bound.yesNoQuestion(AddressYesNoPage, "businessProtector.addressYesNo", controllers.business.routes.AddressYesNoController.onPageLoad(NormalMode).url),
+      bound.yesNoQuestion(AddressUkYesNoPage, "businessProtector.addressUkYesNo", controllers.business.routes.AddressUkYesNoController.onPageLoad(NormalMode).url),
+      bound.addressQuestion(UkAddressPage, "businessProtector.ukAddress", controllers.business.routes.UkAddressController.onPageLoad(NormalMode).url),
+      bound.addressQuestion(NonUkAddressPage, "businessProtector.nonUkAddress", controllers.business.routes.NonUkAddressController.onPageLoad(NormalMode).url),
+      bound.dateQuestion(StartDatePage, "businessProtector.startDate", controllers.business.routes.StartDateController.onPageLoad().url)
+    ).flatten
 
     val amend: Seq[AnswerRow] = Seq(
       bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(CheckMode).url),

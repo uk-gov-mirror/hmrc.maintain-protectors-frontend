@@ -27,16 +27,16 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
                                                countryOptions: CountryOptions
                                             ) {
 
-  def apply(userAnswers: UserAnswers, provisional: Boolean, settlorName: String)(implicit messages: Messages) = {
+  def apply(userAnswers: UserAnswers, provisional: Boolean, protectorName: String)(implicit messages: Messages) = {
 
-    val bound = answerRowConverter.bind(userAnswers, settlorName, countryOptions)
+    val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
 
     val add: Seq[AnswerRow] = Seq(
         bound.nameQuestion(NamePage, "individualProtector.name", controllers.individual.routes.NameController.onPageLoad(NormalMode).url),
         bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(NormalMode).url),
         bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", controllers.individual.routes.DateOfBirthController.onPageLoad(NormalMode).url),
         bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url),
-        bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url),
+        bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberController.onPageLoad(NormalMode).url),
         bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", controllers.individual.routes.AddressYesNoController.onPageLoad(NormalMode).url),
         bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(NormalMode).url),
         bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", controllers.individual.routes.UkAddressController.onPageLoad(NormalMode).url),
@@ -53,7 +53,7 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
       bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", controllers.individual.routes.DateOfBirthYesNoController.onPageLoad(CheckMode).url),
       bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", controllers.individual.routes.DateOfBirthController.onPageLoad(CheckMode).url),
       bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url),
-      bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberYesNoController.onPageLoad(CheckMode).url),
+      bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", controllers.individual.routes.NationalInsuranceNumberController.onPageLoad(CheckMode).url),
       bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", controllers.individual.routes.AddressYesNoController.onPageLoad(CheckMode).url),
       bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", controllers.individual.routes.LiveInTheUkYesNoController.onPageLoad(CheckMode).url),
       bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", controllers.individual.routes.UkAddressController.onPageLoad(CheckMode).url),

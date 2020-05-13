@@ -59,6 +59,12 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
     http.POST[JsValue, HttpResponse](addBusinessProtectorUrl(utr), Json.toJson(protector))
   }
 
+  private def amendBusinessProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/amend-business-protector/$utr/$index"
+
+  def amendBusinessProtector(utr: String, index: Int, protector: BusinessProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    http.POST[JsValue, HttpResponse](amendBusinessProtectorUrl(utr, index), Json.toJson(protector))
+  }
+
   private def removeProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/protectors/remove"
 
   def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {

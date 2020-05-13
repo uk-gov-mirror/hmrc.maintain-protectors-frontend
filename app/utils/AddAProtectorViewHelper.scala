@@ -39,7 +39,7 @@ class AddAProtectorViewHelper(protectors: Protectors)(implicit messages: Message
       name = protector.name,
       typeLabel = messages("entities.protector.business"),
       changeLabel = messages("site.change.details"),
-      changeUrl = Some(controllers.routes.FeatureNotAvailableController.onPageLoad().url),
+      changeUrl = Some(controllers.business.amend.routes.CheckDetailsController.extractAndRender(index).url),
       removeLabel =  messages("site.delete"),
       removeUrl = Some(controllers.business.remove.routes.RemoveBusinessProtectorController.onPageLoad(index).url)
     )
