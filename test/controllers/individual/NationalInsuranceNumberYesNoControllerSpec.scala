@@ -39,7 +39,7 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("individualProtector.nationalInsuranceNumberYesNo")
-  val trusteeName = "FirstName LastName"
+  val protectorName = "FirstName LastName"
   val name = Name("FirstName", None, "LastName")
 
   override val emptyUserAnswers = UserAnswers("id", "UTRUTRUTR", LocalDate.now())
@@ -62,7 +62,7 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, trusteeName, NormalMode)(fakeRequest, messages).toString
+        view(form, protectorName, NormalMode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -82,7 +82,7 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), trusteeName, NormalMode)(fakeRequest, messages).toString
+        view(form.fill(true), protectorName, NormalMode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -127,7 +127,7 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, trusteeName, NormalMode)(fakeRequest, messages).toString
+        view(boundForm, protectorName, NormalMode)(fakeRequest, messages).toString
 
       application.stop()
     }
