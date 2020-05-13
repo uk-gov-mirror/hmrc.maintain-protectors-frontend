@@ -56,15 +56,6 @@ site.address.uk.line4 = Address line 4 (optional)
 site.address.uk.postcode = Postcode
 site.address.uk.postcode.hint = For example AB1 1AB
 
-site.address.uk.title = What is the address?
-site.address.uk.heading = What is {0}’s address?
-site.address.uk.line1 = Address line 1
-site.address.uk.line2 = Address line 2
-site.address.uk.line3 = Address line 3 (optional)
-site.address.uk.line4 = Address line 4 (optional)
-site.address.uk.postcode = Postcode
-site.address.uk.postcode.hint = For example AB1 1AB
-
 address.country.select = Select a country
 site.address.nonUk.title = What is the address?
 site.address.nonUk.heading = What is {0}’s address?
@@ -161,7 +152,7 @@ individualProtector.dateOfBirth.error.future = Date of birth must be today or in
 individualProtector.dateOfBirth.error.past = Date of birth must be after 31 December 1499
 
 individualProtector.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
-individualProtector.nationalInsuranceNumberYesNo.title = Do you know the individual’s National Insurance number?
+individualProtector.nationalInsuranceNumberYesNo.title = Do you know the protector’s National Insurance number?
 individualProtector.nationalInsuranceNumberYesNo.heading = Do you know {0}’s National Insurance number?
 individualProtector.nationalInsuranceNumberYesNo.error.required = Select yes if you know the protector’s National Insurance number
 
@@ -217,7 +208,7 @@ individualProtector.passportDetails.expiryDate.hint = Expiry date can be in the 
 individualProtector.passportDetails.expiryDate.error.required.all = Enter the passport expiry date
 individualProtector.passportDetails.expiryDate.error.required.two = Passport expiry date must include a {0} and {1}
 individualProtector.passportDetails.expiryDate.error.required = Passport expiry date must include {0}
-individualProtector.passportDetails.expiryDate.error.invalid = Enter a real date when the individual’s passport expires
+individualProtector.passportDetails.expiryDate.error.invalid = Enter a real expiry date
 individualProtector.passportDetails.expiryDate.error.future = Passport expiry date must be after 31 December 1499 and before 01 January 2100
 individualProtector.passportDetails.expiryDate.error.past = Passport expiry date must be after 31 December 1499 and before 01 January 2100
 
@@ -242,7 +233,7 @@ individualProtector.idCardDetails.expiryDate.hint = Expiry date can be in the pa
 individualProtector.idCardDetails.expiryDate.error.required.all = Enter the ID card expiry date
 individualProtector.idCardDetails.expiryDate.error.required.two = ID card expiry date must include a {0} and {1}
 individualProtector.idCardDetails.expiryDate.error.required = ID card expiry date must include a {0}
-individualProtector.idCardDetails.expiryDate.error.invalid = Enter a real date when the individual’s ID card expires
+individualProtector.idCardDetails.expiryDate.error.invalid = Enter a real expiry date
 individualProtector.idCardDetails.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
 individualProtector.idCardDetails.expiryDate.error.past = ID card
 
