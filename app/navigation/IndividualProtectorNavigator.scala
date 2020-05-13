@@ -50,7 +50,7 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
     mode match {
       case NormalMode => {
-        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | IdCardDetailsPage | PassportDetailsPage  => _ =>
+        case NationalInsuranceNumberPage | PassportDetailsPage | IdCardDetailsPage  => _ =>
           rts.StartDateController.onPageLoad()
         case AddressYesNoPage => ua =>
           yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
@@ -58,7 +58,7 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
           yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), rts.StartDateController.onPageLoad())
       }
       case CheckMode => {
-        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | PassportDetailsPage | IdCardDetailsPage => ua =>
+        case NationalInsuranceNumberPage | PassportDetailsPage | IdCardDetailsPage => ua =>
           checkDetailsRoute(ua)
         case AddressYesNoPage => ua =>
           yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), checkDetailsRoute(ua))
