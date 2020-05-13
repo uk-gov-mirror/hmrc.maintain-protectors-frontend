@@ -66,7 +66,7 @@ class AddNowController @Inject()(
             _ <- repository.set(updatedAnswers)
           } yield {
             value match {
-              case IndividualProtector => Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+              case IndividualProtector => Redirect(controllers.individual.routes.NameController.onPageLoad(NormalMode))
               case _ => Redirect(controllers.business.routes.NameController.onPageLoad(NormalMode))
             }
           }

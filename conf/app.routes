@@ -1,6 +1,6 @@
 # microservice specific routes
 
-->         /individual/remove                           individualProtector.remove.Routes
+->         /individual                                  individualProtector.Routes
 
 ->         /business                                    businessProtector.Routes
 
@@ -20,8 +20,6 @@ GET        /what-kind                                   controllers.AddNowContro
 POST       /what-kind                                   controllers.AddNowController.onSubmit()
 
 GET        /logout                                      controllers.LogoutController.logout()
-
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
