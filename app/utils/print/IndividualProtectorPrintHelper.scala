@@ -27,9 +27,9 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
                                                countryOptions: CountryOptions
                                             ) {
 
-  def apply(userAnswers: UserAnswers, provisional: Boolean, settlorName: String)(implicit messages: Messages) = {
+  def apply(userAnswers: UserAnswers, provisional: Boolean, protectorName: String)(implicit messages: Messages) = {
 
-    val bound = answerRowConverter.bind(userAnswers, settlorName, countryOptions)
+    val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
 
     val add: Seq[AnswerRow] = Seq(
         bound.nameQuestion(NamePage, "individualProtector.name", controllers.individual.routes.NameController.onPageLoad(NormalMode).url),
