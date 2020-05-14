@@ -20,8 +20,8 @@ import config.FrontendAppConfig
 import javax.inject.Inject
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
 import models.{RemoveProtector, TrustDetails}
-import play.api.libs.json.{JsValue, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -50,7 +50,7 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
   private def amendIndividualProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/protectors/amend-individual/$utr/$index"
 
   def amendIndividualProtector(utr: String, index: Int, individual: IndividualProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    http.POST[JsValue, HttpResponse](amendIndividualProtectorUrl(utr, index), Json.toJson(individual))(implicitly[Writes[JsValue]], HttpReads.readRaw, hc, ec)
+    http.POST[JsValue, HttpResponse](amendIndividualProtectorUrl(utr, index), Json.toJson(individual))
   }
   
   private def addBusinessProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/protectors/add-business/$utr"
