@@ -41,25 +41,31 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
     http.GET[Protectors](getProtectorsUrl(utr))
   }
 
-  private def addIndividualProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/add-individual-protector/$utr"
+  private def addIndividualProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/protectors/add-individual/$utr"
 
   def addIndividualProtector(utr: String, protector: IndividualProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](addIndividualProtectorUrl(utr), Json.toJson(protector))
   }
 
-  private def addBusinessProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/add-business-protector/$utr"
+  private def amendIndividualProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/protectors/amend-individual/$utr/$index"
+
+  def amendIndividualProtector(utr: String, index: Int, individual: IndividualProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    http.POST[JsValue, HttpResponse](amendIndividualProtectorUrl(utr, index), Json.toJson(individual))
+  }
+  
+  private def addBusinessProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/protectors/add-business/$utr"
 
   def addBusinessProtector(utr: String, protector: BusinessProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](addBusinessProtectorUrl(utr), Json.toJson(protector))
   }
 
-  private def amendBusinessProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/amend-business-protector/$utr/$index"
+  private def amendBusinessProtectorUrl(utr: String, index: Int) = s"${config.trustsUrl}/trusts/protectors/amend-business/$utr/$index"
 
   def amendBusinessProtector(utr: String, index: Int, protector: BusinessProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](amendBusinessProtectorUrl(utr, index), Json.toJson(protector))
   }
 
-  private def removeProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/protectors/remove"
+  private def removeProtectorUrl(utr: String) = s"${config.trustsUrl}/trusts/protectors/$utr/remove"
 
   def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.PUT[JsValue, HttpResponse](removeProtectorUrl(utr), Json.toJson(protector))

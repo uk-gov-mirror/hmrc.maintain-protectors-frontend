@@ -50,21 +50,21 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
   private def navigationWithCheck(mode: Mode): PartialFunction[Page, UserAnswers => Call] = {
     mode match {
       case NormalMode => {
-        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | IdCardDetailsPage | PassportDetailsPage  => _ =>
+        case NationalInsuranceNumberPage | PassportDetailsPage | IdCardDetailsPage  => _ =>
           rts.StartDateController.onPageLoad()
         case AddressYesNoPage => ua =>
           yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), rts.StartDateController.onPageLoad())
         case IdCardDetailsYesNoPage => ua =>
           yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), rts.StartDateController.onPageLoad())
       }
-//      case CheckMode => {
-//        case NationalInsuranceNumberPage | UkAddressPage | NonUkAddressPage | PassportDetailsPage | IdCardDetailsPage => ua =>
-//          checkDetailsRoute(ua)
-//        case AddressYesNoPage => ua =>
-//          yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), checkDetailsRoute(ua))
-//        case IdCardDetailsYesNoPage => ua =>
-//          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), checkDetailsRoute(ua))
-//      }
+      case CheckMode => {
+        case NationalInsuranceNumberPage | PassportDetailsPage | IdCardDetailsPage => ua =>
+          checkDetailsRoute(ua)
+        case AddressYesNoPage => ua =>
+          yesNoNav(ua, AddressYesNoPage, rts.LiveInTheUkYesNoController.onPageLoad(mode), checkDetailsRoute(ua))
+        case IdCardDetailsYesNoPage => ua =>
+          yesNoNav(ua, IdCardDetailsYesNoPage, rts.IdCardDetailsController.onPageLoad(mode), checkDetailsRoute(ua))
+      }
     }
   }
 
@@ -74,13 +74,13 @@ class IndividualProtectorNavigator @Inject()() extends Navigator {
       .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
   }
 
-//  def checkDetailsRoute(answers: UserAnswers): Call = {
-//    answers.get(IndexPage) match {
-//      case None => controllers.routes.SessionExpiredController.onPageLoad()
-//      case Some(x) =>
-//        controllers.individual.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
-//    }
-//  }
+  def checkDetailsRoute(answers: UserAnswers): Call = {
+    answers.get(IndexPage) match {
+      case None => controllers.routes.SessionExpiredController.onPageLoad()
+      case Some(x) =>
+        controllers.individual.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
+    }
+  }
 
   def routes(mode: Mode): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation(mode) andThen (c => (_: UserAnswers) => c) orElse
