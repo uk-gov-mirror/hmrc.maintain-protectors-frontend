@@ -19,10 +19,9 @@ package controllers
 import config.FrontendAppConfig
 import connectors.TrustStoreConnector
 import controllers.actions.StandardActionSets
-import forms.AddAProtectorFormProvider
+import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import javax.inject.Inject
 import models.AddAProtector
-import models.requests.DataRequest
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,7 +29,7 @@ import repositories.PlaybackRepository
 import services.TrustService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.AddAProtectorViewHelper
-import views.html.{AddAProtectorView, MaxedOutProtectorsView}
+import views.html.{AddAProtectorView, AddAProtectorYesNoView, MaxedOutProtectorsView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,12 +41,16 @@ class AddAProtectorController @Inject()(
                                        trustStoreConnector: TrustStoreConnector,
                                        trustService: TrustService,
                                        addAnotherFormProvider: AddAProtectorFormProvider,
+                                       yesNoFormProvider: YesNoFormProvider,
                                        repository: PlaybackRepository,
                                        addAnotherView: AddAProtectorView,
+                                       yesNoView: AddAProtectorYesNoView,
                                        completeView: MaxedOutProtectorsView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val addAnotherForm : Form[AddAProtector] = addAnotherFormProvider()
+
+  val yesNoForm: Form[Boolean] = yesNoFormProvider.withPrefix("addAProtectorYesNo")
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
@@ -59,24 +62,51 @@ class AddAProtectorController @Inject()(
       } yield {
         val protectorRows = new AddAProtectorViewHelper(protectors).rows
 
-        if (protectors.isMaxedOut) {
-          Ok(completeView(
-            inProgressProtectors = protectorRows.inProgress,
-            completeProtectors = protectorRows.complete,
-            heading = protectors.addToHeading
-          ))
-        } else {
-          Ok(addAnotherView(
-            form = addAnotherForm,
-            inProgressProtectors = protectorRows.inProgress,
-            completeProtectors = protectorRows.complete,
-            heading = protectors.addToHeading
-          ))
+        protectors.size match {
+          case 0 =>
+            Ok(yesNoView(yesNoForm))
+          case _ if protectors.isNotMaxedOut =>
+            Ok(addAnotherView(
+              form = addAnotherForm,
+              inProgressProtectors = protectorRows.inProgress,
+              completeProtectors = protectorRows.complete,
+              heading = protectors.addToHeading
+            ))
+          case _ if protectors.isMaxedOut =>
+            Ok(completeView(
+              inProgressProtectors = protectorRows.inProgress,
+              completeProtectors = protectorRows.complete,
+              heading = protectors.addToHeading
+            ))
         }
       }
   }
 
-  def submit(): Action[AnyContent] = standardActionSets.identifiedUserWithData.async {
+  def submitOne(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+    implicit request =>
+
+      yesNoForm.bindFromRequest().fold(
+        (formWithErrors: Form[_]) => {
+          Future.successful(BadRequest(yesNoView(formWithErrors)))
+        },
+        addNow => {
+          if (addNow) {
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
+              _ <- repository.set(updatedAnswers)
+            } yield Redirect(controllers.routes.AddNowController.onPageLoad())
+          } else {
+            for {
+              _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
+            } yield {
+              Redirect(appConfig.maintainATrustOverview)
+            }
+          }
+        }
+      )
+  }
+
+  def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
       trustService.getProtectors(request.userAnswers.utr).flatMap { protectors =>
@@ -115,7 +145,7 @@ class AddAProtectorController @Inject()(
       }
   }
 
-  def submitComplete(): Action[AnyContent] = standardActionSets.identifiedUserWithData.async {
+  def submitComplete(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
       for {
