@@ -20,9 +20,9 @@ import java.time.LocalDate
 
 import base.SpecBase
 import connectors.TrustStoreConnector
-import forms.AddAProtectorFormProvider
+import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
-import models.{AddAProtector, CompanyType, Name, NationalInsuranceNumber, RemoveProtector}
+import models.{AddAProtector, Name, NationalInsuranceNumber, RemoveProtector}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -33,19 +33,21 @@ import services.TrustService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.AddAProtectorViewHelper
 import viewmodels.addAnother.AddRow
-import views.html.{AddAProtectorView, MaxedOutProtectorsView}
+import views.html.{AddAProtectorView, AddAProtectorYesNoView, MaxedOutProtectorsView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
   lazy val getRoute : String = controllers.routes.AddAProtectorController.onPageLoad().url
-  lazy val submitRoute : String = controllers.routes.AddAProtectorController.submit().url
+  lazy val submitOneRoute : String = controllers.routes.AddAProtectorController.submitOne().url
+  lazy val submitAnotherRoute : String = controllers.routes.AddAProtectorController.submitAnother().url
   lazy val submitCompleteRoute : String = controllers.routes.AddAProtectorController.submitComplete().url
 
   val mockStoreConnector : TrustStoreConnector = mock[TrustStoreConnector]
 
   val addProtectorForm = new AddAProtectorFormProvider()()
+  val addProtectorYesNoForm = new YesNoFormProvider().withPrefix("addAProtectorYesNo")
 
   private def individualProtector(provisional: Boolean) = IndividualProtector(
     name = Name(firstName = "First", middleName = None, lastName = "Last"),
@@ -88,7 +90,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
   "AddAProtector Controller" when {
 
-    "no data" must {
+    "no protectors" must {
 
       "redirect to Session Expired for a GET if no existing data is found" in {
 
@@ -113,7 +115,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         val application = applicationBuilder(userAnswers = None).build()
 
         val request =
-          FakeRequest(POST, submitRoute)
+          FakeRequest(POST, submitAnotherRoute)
             .withFormUrlEncodedBody(("value", AddAProtector.values.head.toString))
 
         val result = route(application, request).value
@@ -124,6 +126,81 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
         application.stop()
       }
+
+      "return OK and the correct view for a GET" in {
+
+        val fakeService = new FakeService(Protectors(Nil, Nil))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(Seq(
+          bind(classOf[TrustService]).toInstance(fakeService)
+        )).build()
+
+        val request = FakeRequest(GET, getRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AddAProtectorYesNoView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(
+            addProtectorYesNoForm
+          )(fakeRequest, messages).toString
+
+        application.stop()
+      }
+
+      "redirect to the maintain task list when the user answers no" in {
+
+        val fakeService = new FakeService(Protectors(Nil, Nil))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(Seq(
+          bind(classOf[TrustService]).toInstance(fakeService),
+          bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+        )).build()
+
+        val request =
+          FakeRequest(POST, submitOneRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        when(mockStoreConnector.setTaskComplete(any())(any(), any()))
+          .thenReturn(Future.successful(HttpResponse.apply(200)))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "http://localhost:9788/maintain-a-trust/overview"
+
+        application.stop()
+      }
+
+      "redirect to the what type (add now) when the user answers yes" in {
+
+        val fakeService = new FakeService(Protectors(Nil, Nil))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(Seq(
+            bind(classOf[TrustService]).toInstance(fakeService),
+            bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+          )).build()
+
+        val request =
+          FakeRequest(POST, submitOneRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.routes.AddNowController.onPageLoad().url
+
+        application.stop()
+      }
+
     }
 
     "there are protectors" must {
@@ -165,7 +242,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         )).build()
 
         val request =
-          FakeRequest(POST, submitRoute)
+          FakeRequest(POST, submitAnotherRoute)
             .withFormUrlEncodedBody(("value", AddAProtector.NoComplete.toString))
 
         when(mockStoreConnector.setTaskComplete(any())(any(), any())).thenReturn(Future.successful(HttpResponse.apply(200)))
@@ -188,7 +265,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         )).build()
 
         val request =
-          FakeRequest(POST, submitRoute)
+          FakeRequest(POST, submitAnotherRoute)
             .withFormUrlEncodedBody(("value", AddAProtector.YesLater.toString))
 
         val result = route(application, request).value
@@ -196,6 +273,29 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual "http://localhost:9788/maintain-a-trust/overview"
+
+        application.stop()
+      }
+
+      "redirect to the what type (add now) when the user answers yes now" in {
+
+        val fakeService = new FakeService(protectors)
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(Seq(
+            bind(classOf[TrustService]).toInstance(fakeService),
+            bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+          )).build()
+
+        val request =
+          FakeRequest(POST, submitAnotherRoute)
+            .withFormUrlEncodedBody(("value", AddAProtector.YesNow.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.routes.AddNowController.onPageLoad().url
 
         application.stop()
       }
@@ -209,7 +309,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         )).build()
 
         val request =
-          FakeRequest(POST, submitRoute)
+          FakeRequest(POST, submitAnotherRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = addProtectorForm.bind(Map("value" -> "invalid value"))

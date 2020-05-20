@@ -109,6 +109,10 @@ addAProtector.error.required = Select yes if you want to add a new protector
 addAProtector.maxedOut = You cannot enter another protector as you have entered a maximum of 25.
 addAProtector.maxedOut.paragraph = Check the protectors you have added. If you have further protectors to add, write to HMRC with their details.
 
+addAProtectorYesNo.title = Do you want to add a protector?
+addAProtectorYesNo.heading = Do you want to add a protector?
+addAProtectorYesNo.error.required = Select yes if you want to add a protector
+
 addNow.heading = Is the protector an individual or a business?
 addNow.title = Is the protector an individual or a business?
 addNow.error.required = Select if the protector is an individual or a business

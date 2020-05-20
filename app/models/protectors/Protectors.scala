@@ -40,6 +40,8 @@ case class Protectors(protector: List[IndividualProtector],
     (protector ++ protectorCompany).size >= 25
   }
 
+  val isNotMaxedOut = !isMaxedOut
+
 }
 
 object Protectors {
