@@ -48,6 +48,7 @@ site.sign_out = Sign out
 site.inprogress = In Progress
 site.complete = Completed
 site.date.hint = For example, 31 3 1980
+site.error = Error:
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
