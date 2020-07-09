@@ -37,17 +37,20 @@
 
         @components.input_text(
             field = form("firstName"),
-            label = messages("individualProtector.name.firstName")
+            label = messages("individualProtector.name.firstName"),
+            autocomplete = Some("given-name")
         )
 
         @components.input_text(
             field = form("middleName"),
-            label = messages("individualProtector.name.middleName")
+            label = messages("individualProtector.name.middleName"),
+            autocomplete = Some("additional-name")
         )
 
         @components.input_text(
             field = form("lastName"),
-            label = messages("individualProtector.name.lastName")
+            label = messages("individualProtector.name.lastName"),
+            autocomplete = Some("family-name")
         )
 
         @components.submit_button()
