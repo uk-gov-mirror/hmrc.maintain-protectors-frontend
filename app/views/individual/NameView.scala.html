@@ -27,7 +27,7 @@
     title = s"${errorPrefix(form)} ${messages("individualProtector.name.title")}"
 ) {
 
-    @formHelper(action = NameController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = NameController.onSubmit(mode), 'autoComplete -> "on") {
 
         @components.back_link()
 
