@@ -30,15 +30,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: StandardActionSets,
-                                 sessionRepository: ActiveSessionRepository,
                                  cacheRepository : PlaybackRepository,
                                  connector: TrustConnector)
                                (implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(utr: String): Action[AnyContent] = actions.authWithSession.async {
+  def onPageLoad(utr: String): Action[AnyContent] = (actions.auth andThen actions.saveSession(utr) andThen actions.getData).async {
       implicit request =>
-
-        val session = UtrSession(request.user.internalId, utr)
 
         for {
           details <- connector.getTrustDetails(utr)
@@ -51,7 +48,6 @@ class IndexController @Inject()(
               )
             }
           )
-          _ <- sessionRepository.set(session)
           _ <- cacheRepository.set(ua)
         } yield {
           Redirect(controllers.routes.AddAProtectorController.onPageLoad())
