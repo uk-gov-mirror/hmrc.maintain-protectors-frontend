@@ -24,7 +24,7 @@
 @(form: Form[_], index: Int, name: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("removeIndividualProtector.title")}"
+    title = s"${errorPrefix(form)}${messages("removeIndividualProtector.title")}"
 ) {
 
     @formHelper(action = RemoveIndividualProtectorController.onSubmit(index), 'autoComplete -> "off") {
