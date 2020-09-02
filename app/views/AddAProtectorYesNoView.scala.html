@@ -24,7 +24,7 @@ formHelper: FormWithCSRF
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = s"${errorPrefix(form)} ${messages("addAProtectorYesNo.title")}"
+title = s"${errorPrefix(form)}${messages("addAProtectorYesNo.title")}"
 ) {
 
     @formHelper(action = AddAProtectorController.submitOne(), 'autoComplete -> "off") {
