@@ -85,7 +85,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(form, index, name)(fakeRequest, messages).toString
+      contentAsString(result) mustEqual view(form, index, name)(request, messages).toString
 
       application.stop()
     }
@@ -109,7 +109,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), 0, name)(fakeRequest, messages).toString
+        view(form.fill(true), 0, name)(request, messages).toString
 
       application.stop()
     }
@@ -214,7 +214,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, index, name)(fakeRequest, messages).toString
+        view(boundForm, index, name)(request, messages).toString
 
       application.stop()
     }
