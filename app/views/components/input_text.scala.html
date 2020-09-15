@@ -58,7 +58,10 @@
             @if(autocomplete.nonEmpty){
                 autocomplete="@{autocomplete.get}"
             }
-                @if(inputMode.nonEmpty){inputmode="@inputMode"}@if(field.hasErrors || hint.nonEmpty){aria-describedby="@if(field.hasErrors){error-message-@{field.id}-input}@if(field.hasErrors && hint.nonEmpty){ }@if(hint.nonEmpty){hint-@{field.id}}"}
+            @if(inputMode.nonEmpty){inputmode="@inputMode"}
+            @if(field.hasErrors || hint.nonEmpty){
+                aria-describedby="@if(hint.nonEmpty){hint-@{field.id}}@if(field.hasErrors && hint.nonEmpty){ }@if(field.hasErrors){error-message-@{field.id}-input}"
+            }
         />
     </div>
 </div>
