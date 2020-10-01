@@ -18,7 +18,7 @@ package pages.business
 
 import java.time.LocalDate
 
-import models.{NonUkAddress, TypeOfTrust, UkAddress, UserAnswers}
+import models.{UkAddress, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 

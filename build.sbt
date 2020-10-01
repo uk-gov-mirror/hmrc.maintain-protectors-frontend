@@ -11,12 +11,12 @@ lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin, SbtArtifactory)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    scalaVersion := "2.12.12",
     SilencerSettings(),
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
     SbtDistributablesPlugin.publishingSettings,
     inConfig(Test)(testSettings),
+    scalaVersion := "2.12.12",
     majorVersion := 0,
     name := appName,
     RoutesKeys.routesImport += "models._",
