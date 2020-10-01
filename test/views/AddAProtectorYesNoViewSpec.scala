@@ -18,7 +18,7 @@ package views
 
 import controllers.routes
 import forms.YesNoFormProvider
-import models.{Name, NormalMode}
+import models.Name
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours

@@ -29,7 +29,6 @@ import services.TrustService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.individual.remove.RemoveIndividualProtectorView
 
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveIndividualProtectorController @Inject()(
