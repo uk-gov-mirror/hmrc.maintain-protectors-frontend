@@ -18,9 +18,9 @@ package navigation
 
 import controllers.individual.{routes => rts}
 import javax.inject.Inject
-import models.{CheckMode, Mode, NormalMode, TypeOfTrust, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import pages.individual._
-import pages.{Page, QuestionPage, individual}
+import pages.{Page, QuestionPage}
 import play.api.mvc.Call
 
 class IndividualProtectorNavigator @Inject()() extends Navigator {

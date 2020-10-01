@@ -31,7 +31,7 @@ import pages.individual.RemoveYesNoPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import views.html.individual.remove.RemoveIndividualProtectorView
 
 import scala.concurrent.Future
@@ -69,8 +69,6 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
     "return OK and the correct view for a GET" in {
 
       val index = 0
-
-      implicit val hc : HeaderCarrier = HeaderCarrier()
 
       when(mockConnector.getProtectors(any())(any(), any()))
         .thenReturn(Future.successful(Protectors(protectors, Nil)))

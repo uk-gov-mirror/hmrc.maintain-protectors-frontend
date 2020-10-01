@@ -16,11 +16,11 @@
 
 package forms.behaviours
 
-import org.scalacheck.Gen
 import forms.Validation
+import org.scalacheck.Gen
 import play.api.data.{Form, FormError}
-import wolfendale.scalacheck.regexp.RegexpGen
 import uk.gov.hmrc.domain.Nino
+import wolfendale.scalacheck.regexp.RegexpGen
 
 trait StringFieldBehaviours extends FieldBehaviours with OptionalFieldBehaviours {
 

@@ -16,7 +16,6 @@
 
 package utils
 
-import models.CheckMode
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
 import play.api.i18n.Messages
 import viewmodels.addAnother.{AddRow, AddToRows}
