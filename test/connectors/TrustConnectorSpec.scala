@@ -24,7 +24,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import generators.Generators
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
-import models.{IndividualIdentification, Name, TrustDetails, TypeOfTrust}
+import models.{Name, TrustDetails, TypeOfTrust}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
 import play.api.libs.json.Json

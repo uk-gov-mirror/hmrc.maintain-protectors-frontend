@@ -21,7 +21,6 @@ import java.time.{LocalDate, ZoneOffset}
 import base.SpecBase
 import connectors.TrustConnector
 import forms.DateRemovedFromTrustFormProvider
-import models.CompanyType
 import models.protectors.{BusinessProtector, Protectors}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when

@@ -21,7 +21,7 @@ import java.time.LocalDate
 import base.SpecBase
 import config.annotations.IndividualProtector
 import forms.NonUkAddressFormProvider
-import models.{Name, NonUkAddress, NormalMode, TypeOfTrust, UserAnswers}
+import models.{Name, NonUkAddress, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when

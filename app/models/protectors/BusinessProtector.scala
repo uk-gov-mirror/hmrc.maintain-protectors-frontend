@@ -18,7 +18,7 @@ package models.protectors
 
 import java.time.LocalDate
 
-import models.{Address, CompanyType}
+import models.Address
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

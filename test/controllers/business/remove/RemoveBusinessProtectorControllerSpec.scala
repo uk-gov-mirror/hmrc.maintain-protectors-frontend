@@ -30,7 +30,7 @@ import pages.business.RemoveYesNoPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import views.html.business.remove.RemoveBusinessProtectorView
 
 import scala.concurrent.Future
@@ -67,8 +67,6 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
     "return OK and the correct view for a GET" in {
 
       val index = 0
-
-      implicit val hc : HeaderCarrier = HeaderCarrier()
 
       when(mockConnector.getProtectors(any())(any(), any()))
         .thenReturn(Future.successful(Protectors(Nil, protectors)))

@@ -21,7 +21,7 @@ import java.time.{LocalDate, ZoneOffset}
 import base.SpecBase
 import config.annotations.BusinessProtector
 import forms.DateAddedToTrustFormProvider
-import models.{TypeOfTrust, UserAnswers}
+import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when

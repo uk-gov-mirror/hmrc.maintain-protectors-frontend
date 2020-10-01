@@ -22,10 +22,11 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 @Singleton
-class LogoutController @Inject()(appConfig: FrontendAppConfig, val controllerComponents: MessagesControllerComponents) extends FrontendBaseController {
+class LogoutController @Inject()(appConfig: FrontendAppConfig,
+                                 val controllerComponents: MessagesControllerComponents
+                                ) extends FrontendBaseController {
 
   def logout: Action[AnyContent] = Action {
-    implicit request =>
       Redirect(appConfig.logoutUrl).withNewSession
   }
 }
