@@ -22,6 +22,7 @@ import controllers.actions.StandardActionSets
 import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import javax.inject.Inject
 import models.AddAProtector
+import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,6 +31,7 @@ import services.TrustService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.AddAProtectorViewHelper
 import views.html.{AddAProtectorView, AddAProtectorYesNoView, MaxedOutProtectorsView}
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,6 +49,8 @@ class AddAProtectorController @Inject()(
                                        yesNoView: AddAProtectorYesNoView,
                                        completeView: MaxedOutProtectorsView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+
+  private val logger: Logger = Logger(getClass)
 
   val addAnotherForm : Form[AddAProtector] = addAnotherFormProvider()
 
@@ -151,6 +155,8 @@ class AddAProtectorController @Inject()(
       for {
         _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
       } yield {
+        logger.info(s"[Session ID: ${Session.id(hc)}]" +
+          s" user has finished maintaining protectors and is returning to the task list")
         Redirect(appConfig.maintainATrustOverview)
       }
   }
