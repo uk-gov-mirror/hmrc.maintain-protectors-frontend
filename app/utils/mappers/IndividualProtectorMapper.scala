@@ -20,14 +20,14 @@ import java.time.LocalDate
 
 import models.protectors.IndividualProtector
 import models.{Address, IdCard, IndividualIdentification, Name, NationalInsuranceNumber, NonUkAddress, Passport, UkAddress, UserAnswers}
-import org.slf4j.LoggerFactory
 import pages.individual._
-import play.api.libs.json.{JsError, JsSuccess, Reads}
+import play.api.Logger
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsError, JsSuccess, Reads}
 
 class IndividualProtectorMapper {
 
-  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
+  private val logger: Logger = Logger(getClass)
 
   def apply(answers: UserAnswers): Option[IndividualProtector] = {
     val readFromUserAnswers: Reads[IndividualProtector] =
@@ -44,7 +44,7 @@ class IndividualProtectorMapper {
       case JsSuccess(value, _) =>
         Some(value)
       case JsError(errors) =>
-        logger.error(s"Failed to rehydrate IndividualProtector from UserAnswers due to $errors")
+        logger.error(s"[UTR: ${answers.utr}] Failed to rehydrate IndividualProtector from UserAnswers due to $errors")
         None
     }
   }
