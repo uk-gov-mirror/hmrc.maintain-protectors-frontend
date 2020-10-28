@@ -48,6 +48,8 @@ site.inprogress = In Progress
 site.complete = Completed
 site.date.hint = For example, 31 3 1980.
 site.error = Error:
+site.cannotRemove = Cannot remove
+site.cannotRemove-hidden = Cannot remove {0}
 
 #timeout dialog
 timeout.title=Your application will time out soon
