@@ -27,6 +27,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import play.api.inject.bind
+import play.api.mvc.Headers
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.TrustService
@@ -390,6 +391,37 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
         application.stop()
 
+      }
+    }
+
+    "toggling language from an error state" must {
+
+      "redirect to GET /add-another" in {
+
+        val fakeService = new FakeService(Protectors(Nil, Nil))
+
+        val submitRoute = submitAnotherRoute
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(Seq(
+          bind(classOf[TrustService]).toInstance(fakeService)
+        )).build()
+
+        val submitEmptyFormRequest = FakeRequest(POST, submitRoute).withFormUrlEncodedBody(("value", ""))
+        val submitEmptyFormResult = route(application, submitEmptyFormRequest).value
+        status(submitEmptyFormResult) mustEqual BAD_REQUEST
+
+        val toggleLanguageRoute: String = routes.LanguageSwitchController.switchToLanguage("cymraeg").url
+        val headers: Headers = new Headers(Seq(("Referer", submitRoute)))
+        val toggleLanguageRequest = FakeRequest(GET, toggleLanguageRoute).withHeaders(headers)
+        val toggleLanguageResult = route(application, toggleLanguageRequest).value
+        status(toggleLanguageResult) mustEqual SEE_OTHER
+
+        val referrerRoute = redirectLocation(toggleLanguageResult).value
+        val referrerRequest = FakeRequest(GET, referrerRoute)
+        val referrerResult = route(application, referrerRequest).value
+        status(referrerResult) mustEqual OK
+
+        application.stop()
       }
     }
   }

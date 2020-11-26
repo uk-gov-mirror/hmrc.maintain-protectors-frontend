@@ -36,19 +36,19 @@ import utils.Session
 import scala.concurrent.{ExecutionContext, Future}
 
 class AddAProtectorController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       standardActionSets: StandardActionSets,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       val appConfig: FrontendAppConfig,
-                                       trustStoreConnector: TrustStoreConnector,
-                                       trustService: TrustService,
-                                       addAnotherFormProvider: AddAProtectorFormProvider,
-                                       yesNoFormProvider: YesNoFormProvider,
-                                       repository: PlaybackRepository,
-                                       addAnotherView: AddAProtectorView,
-                                       yesNoView: AddAProtectorYesNoView,
-                                       completeView: MaxedOutProtectorsView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         override val messagesApi: MessagesApi,
+                                         standardActionSets: StandardActionSets,
+                                         val controllerComponents: MessagesControllerComponents,
+                                         val appConfig: FrontendAppConfig,
+                                         trustStoreConnector: TrustStoreConnector,
+                                         trustService: TrustService,
+                                         addAnotherFormProvider: AddAProtectorFormProvider,
+                                         yesNoFormProvider: YesNoFormProvider,
+                                         repository: PlaybackRepository,
+                                         addAnotherView: AddAProtectorView,
+                                         yesNoView: AddAProtectorYesNoView,
+                                         completeView: MaxedOutProtectorsView
+                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val logger: Logger = Logger(getClass)
 
