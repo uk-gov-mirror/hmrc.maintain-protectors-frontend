@@ -6,6 +6,7 @@
 
 GET        /add                                         controllers.AddAProtectorController.onPageLoad()
 POST       /add                                         controllers.AddAProtectorController.submitOne()
+GET        /add-another                                 controllers.AddAProtectorController.onPageLoad()
 POST       /add-another                                 controllers.AddAProtectorController.submitAnother()
 POST       /complete                                    controllers.AddAProtectorController.submitComplete()
 
