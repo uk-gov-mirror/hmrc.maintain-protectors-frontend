@@ -17,6 +17,7 @@
 package config
 
 import java.net.{URI, URLEncoder}
+import java.time.LocalDate
 
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
@@ -74,4 +75,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
     val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
     s"$accessibilityBaseLinkUrl?userAction=$userAction"
   }
+
+  private val minDay: Int = configuration.get[Int]("dates.minimum.day")
+  private val minMonth: Int = configuration.get[Int]("dates.minimum.month")
+  private val minYear: Int = configuration.get[Int]("dates.minimum.year")
+  lazy val minDate: LocalDate = LocalDate.of(minYear, minMonth, minDay)
+
+  private val maxDay: Int = configuration.get[Int]("dates.maximum.day")
+  private val maxMonth: Int = configuration.get[Int]("dates.maximum.month")
+  private val maxYear: Int = configuration.get[Int]("dates.maximum.year")
+  lazy val maxDate: LocalDate = LocalDate.of(maxYear, maxMonth, maxDay)
 }
