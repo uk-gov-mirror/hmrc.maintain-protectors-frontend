@@ -19,8 +19,8 @@ package navigation
 import controllers.business.{routes => rts}
 import javax.inject.Inject
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
+import pages.Page
 import pages.business._
-import pages.{Page, QuestionPage}
 import play.api.mvc.Call
 
 class BusinessProtectorNavigator @Inject()() extends Navigator {
@@ -38,12 +38,6 @@ class BusinessProtectorNavigator @Inject()() extends Navigator {
       yesNoNav(ua, UtrYesNoPage, rts.UtrController.onPageLoad(mode), rts.AddressYesNoController.onPageLoad(mode))
     case AddressUkYesNoPage => ua =>
       yesNoNav(ua, AddressUkYesNoPage, rts.UkAddressController.onPageLoad(mode), rts.NonUkAddressController.onPageLoad(mode))
-  }
-
-  private def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
-    ua.get(fromPage)
-      .map(if (_) yesCall else noCall)
-      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
   }
 
   private def navigationWithCheck(mode: Mode) : PartialFunction[Page, UserAnswers => Call] = {
