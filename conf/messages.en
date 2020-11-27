@@ -250,6 +250,30 @@ individualProtector.idCardDetails.expiryDate.error.invalid = Enter a real expiry
 individualProtector.idCardDetails.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
 individualProtector.idCardDetails.expiryDate.error.past = ID card
 
+individualProtector.passportOrIdCardDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+individualProtector.passportOrIdCardDetailsYesNo.title = Do you know the protector’s passport or ID card details?
+individualProtector.passportOrIdCardDetailsYesNo.heading = Do you know {0}’s passport or ID card details?
+individualProtector.passportOrIdCardDetailsYesNo.error.required = Select yes if you know the protector’s passport or ID card details
+
+individualProtector.passportOrIdCardDetails.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+individualProtector.passportOrIdCardDetails.title = What are the protector’s passport or ID card details?
+individualProtector.passportOrIdCardDetails.heading = What are {0}’s passport or ID card details?
+individualProtector.passportOrIdCardDetails.country = ID card country of issue
+individualProtector.passportOrIdCardDetails.country.error.required = Enter the protector’s ID card country of issue
+individualProtector.passportOrIdCardDetails.country.error.length = The protector’s ID card country must be 100 characters or less
+individualProtector.passportOrIdCardDetails.number = ID card number
+individualProtector.passportOrIdCardDetails.number.error.required = Enter the protector’s ID card number
+individualProtector.passportOrIdCardDetails.number.error.length = The protector’s ID card number must be 30 characters or less
+individualProtector.passportOrIdCardDetails.number.error.invalid = ID card number can only include letters and numbers
+individualProtector.passportOrIdCardDetails.expiryDate.title = Expiry date
+individualProtector.passportOrIdCardDetails.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980.
+individualProtector.passportOrIdCardDetails.expiryDate.error.required.all = Enter the ID card expiry date
+individualProtector.passportOrIdCardDetails.expiryDate.error.required.two = ID card expiry date must include a {0} and {1}
+individualProtector.passportOrIdCardDetails.expiryDate.error.required = ID card expiry date must include a {0}
+individualProtector.passportOrIdCardDetails.expiryDate.error.invalid = Enter a real date when the protector’s ID card expires
+individualProtector.passportOrIdCardDetails.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+individualProtector.passportOrIdCardDetails.expiryDate.error.past = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+
 individualProtector.startDate.checkYourAnswersLabel = When was {0} added as a protector?
 individualProtector.startDate.title = When was the protector added to the trust?
 individualProtector.startDate.heading = When was {0} added as a protector?
