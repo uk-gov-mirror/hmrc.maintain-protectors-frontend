@@ -14,38 +14,39 @@
  * limitations under the License.
  */
 
-package controllers.individual
+package controllers.individual.add
 
 import config.annotations.IndividualProtector
 import controllers.actions._
 import controllers.actions.individual.NameRequiredAction
 import forms.YesNoFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.NormalMode
 import navigation.Navigator
 import pages.individual.PassportDetailsYesNoPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.individual.PassportDetailsYesNoView
+import views.html.individual.add.PassportDetailsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class PassportDetailsYesNoController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: PlaybackRepository,
-                                         @IndividualProtector navigator: Navigator,
-                                         standardActionSets: StandardActionSets,
-                                         nameAction: NameRequiredAction,
-                                         formProvider: YesNoFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: PassportDetailsYesNoView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                override val messagesApi: MessagesApi,
+                                                sessionRepository: PlaybackRepository,
+                                                @IndividualProtector navigator: Navigator,
+                                                standardActionSets: StandardActionSets,
+                                                nameAction: NameRequiredAction,
+                                                formProvider: YesNoFormProvider,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: PassportDetailsYesNoView
+                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider.withPrefix("individualProtector.passportDetailsYesNo")
+  private val form: Form[Boolean] = formProvider.withPrefix("individualProtector.passportDetailsYesNo")
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(PassportDetailsYesNoPage) match {
@@ -53,21 +54,21 @@ class PassportDetailsYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.protectorName, mode))
+      Ok(view(preparedForm, request.protectorName))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.protectorName, mode))),
+          Future.successful(BadRequest(view(formWithErrors, request.protectorName))),
 
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PassportDetailsYesNoPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(PassportDetailsYesNoPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(PassportDetailsYesNoPage, NormalMode, updatedAnswers))
       )
   }
 }

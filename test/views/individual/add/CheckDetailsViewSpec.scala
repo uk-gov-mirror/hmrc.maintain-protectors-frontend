@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.individual
+package views.individual.add
 
 /*
  * Copyright 2020 HM Revenue & Customs
@@ -35,7 +35,7 @@ package views.individual
 import play.twirl.api.HtmlFormat
 import viewmodels.AnswerSection
 import views.behaviours.ViewBehaviours
-import views.html.individual.CheckDetailsView
+import views.html.individual.add.CheckDetailsView
 
 class CheckDetailsViewSpec extends ViewBehaviours {
 

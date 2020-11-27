@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package views.individual
+package views.individual.add
 
-import controllers.individual.routes
+import controllers.individual.add.routes
 import forms.YesNoFormProvider
-import models.{Name, NormalMode}
+import models.Name
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.individual.IdCardDetailsYesNoView
+import views.html.individual.add.IdCardDetailsYesNoView
 
 class IdCardDetailsYesNoViewSpec extends YesNoViewBehaviours {
 
@@ -36,13 +36,13 @@ class IdCardDetailsYesNoViewSpec extends YesNoViewBehaviours {
     val view = viewFor[IdCardDetailsYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, name.displayName, NormalMode)(fakeRequest, messages)
+      view.apply(form, name.displayName)(fakeRequest, messages)
 
     behave like dynamicTitlePage(applyView(form), messageKeyPrefix, name.displayName)
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name.displayName), routes.IdCardDetailsYesNoController.onSubmit(NormalMode).url)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name.displayName), routes.IdCardDetailsYesNoController.onSubmit().url)
 
     behave like pageWithASubmitButton(applyView(form))
   }

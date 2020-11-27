@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.individual
+package controllers.individual.add
 
 import config.annotations.IndividualProtector
 import controllers.actions.StandardActionSets
@@ -28,7 +28,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.individual.StartDateView
+import views.html.individual.add.StartDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 

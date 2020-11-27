@@ -14,29 +14,30 @@
  * limitations under the License.
  *@
 
-@import controllers.individual.routes._
+@import controllers.individual.add.routes._
 
 @this(
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
 )
 
-@(form: Form[_], name: String, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], name: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("individualProtector.idCardDetailsYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("individualProtector.startDate.title", name)}"
 ) {
 
-    @formHelper(action = IdCardDetailsYesNoController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = StartDateController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
         @components.error_summary(form.errors)
 
-        @components.input_yes_no(
+        @components.input_date(
             field = form("value"),
-            legend = messages("individualProtector.idCardDetailsYesNo.heading", name),
-            headingIsLegend = true
+            legend = messages("individualProtector.startDate.heading", name),
+            headingIsLegend = true,
+            hint = Some(messages("individualProtector.startDate.hint"))
         )
 
         @components.submit_button()

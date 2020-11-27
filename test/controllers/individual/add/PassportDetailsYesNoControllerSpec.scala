@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.individual
+package controllers.individual.add
 
 import java.time.LocalDate
 
 import base.SpecBase
 import config.annotations.IndividualProtector
 import forms.YesNoFormProvider
-import models.{Name, NormalMode, UserAnswers}
+import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -32,7 +32,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import views.html.individual.PassportDetailsYesNoView
+import views.html.individual.add.PassportDetailsYesNoView
 
 import scala.concurrent.Future
 
@@ -47,7 +47,7 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
   override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", LocalDate.now())
     .set(NamePage, name).success.value
 
-  val passportDetailsYesNoRoute: String = routes.PassportDetailsYesNoController.onPageLoad(NormalMode).url
+  val passportDetailsYesNoRoute: String = routes.PassportDetailsYesNoController.onPageLoad().url
 
   val getRequest = FakeRequest(GET, passportDetailsYesNoRoute)
 
@@ -64,7 +64,7 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, name.displayName, NormalMode)(getRequest, messages).toString
+        view(form, name.displayName)(getRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +84,7 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), name.displayName, NormalMode)(getRequest, messages).toString
+        view(form.fill(true), name.displayName)(getRequest, messages).toString
 
       application.stop()
     }
@@ -132,7 +132,7 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, name.displayName, NormalMode)(request, messages).toString
+        view(boundForm, name.displayName)(request, messages).toString
 
       application.stop()
     }

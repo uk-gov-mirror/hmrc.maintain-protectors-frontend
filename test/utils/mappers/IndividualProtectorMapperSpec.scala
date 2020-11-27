@@ -22,7 +22,7 @@ import base.SpecBase
 import models.{IdCard, Name, NationalInsuranceNumber, NonUkAddress, Passport, UkAddress}
 import pages.individual._
 
-class AddIndividualProtectorMapperSpec extends SpecBase {
+class IndividualProtectorMapperSpec extends SpecBase {
 
   private val name = Name("First", None, "Last")
   private val dateOfBirth = LocalDate.parse("2010-02-03")

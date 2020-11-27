@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.individual
+package views.individual.add
 
 import java.time.LocalDate
 
@@ -23,7 +23,7 @@ import models.Name
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.QuestionViewBehaviours
-import views.html.individual.StartDateView
+import views.html.individual.add.StartDateView
 
 class StartDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 
