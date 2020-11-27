@@ -34,6 +34,16 @@ POST       /has-uk-address                                  controllers.individu
 GET        /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-has-uk-address                           controllers.individual.LiveInTheUkYesNoController.onSubmit(mode: Mode = CheckMode)
 
+GET        /uk-address                                      controllers.individual.UkAddressController.onPageLoad(mode: Mode = NormalMode)
+POST       /uk-address                                      controllers.individual.UkAddressController.onSubmit(mode: Mode = NormalMode)
+GET        /change-uk-address                               controllers.individual.UkAddressController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-uk-address                               controllers.individual.UkAddressController.onSubmit(mode: Mode = CheckMode)
+
+GET        /non-uk-address                                  controllers.individual.NonUkAddressController.onPageLoad(mode: Mode = NormalMode)
+POST       /non-uk-address                                  controllers.individual.NonUkAddressController.onSubmit(mode: Mode = NormalMode)
+GET        /change-non-uk-address                           controllers.individual.NonUkAddressController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-non-uk-address                           controllers.individual.NonUkAddressController.onSubmit(mode: Mode = CheckMode)
+
 GET        /has-passport                                    controllers.individual.add.PassportDetailsYesNoController.onPageLoad()
 POST       /has-passport                                    controllers.individual.add.PassportDetailsYesNoController.onSubmit()
 
@@ -46,21 +56,17 @@ POST       /has-id-card                                     controllers.individu
 GET        /id-card                                         controllers.individual.add.IdCardDetailsController.onPageLoad()
 POST       /id-card                                         controllers.individual.add.IdCardDetailsController.onSubmit()
 
-GET        /uk-address                                      controllers.individual.UkAddressController.onPageLoad(mode: Mode = NormalMode)
-POST       /uk-address                                      controllers.individual.UkAddressController.onSubmit(mode: Mode = NormalMode)
-GET        /change-uk-address                               controllers.individual.UkAddressController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-uk-address                               controllers.individual.UkAddressController.onSubmit(mode: Mode = CheckMode)
+GET        /change-has-passport-or-id-card                  controllers.individual.amend.PassportOrIdCardDetailsYesNoController.onPageLoad()
+POST       /change-has-passport-or-id-card                  controllers.individual.amend.PassportOrIdCardDetailsYesNoController.onSubmit()
 
-GET        /non-uk-address                                  controllers.individual.NonUkAddressController.onPageLoad(mode: Mode = NormalMode)
-POST       /non-uk-address                                  controllers.individual.NonUkAddressController.onSubmit(mode: Mode = NormalMode)
-GET        /change-non-uk-address                           controllers.individual.NonUkAddressController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-non-uk-address                           controllers.individual.NonUkAddressController.onSubmit(mode: Mode = CheckMode)
+GET        /change-passport-or-id-card                      controllers.individual.amend.PassportOrIdCardDetailsController.onPageLoad()
+POST       /change-passport-or-id-card                      controllers.individual.amend.PassportOrIdCardDetailsController.onSubmit()
 
 GET        /start-date                                      controllers.individual.add.StartDateController.onPageLoad()
 POST       /start-date                                      controllers.individual.add.StartDateController.onSubmit()
 
-GET         /check-details                                  controllers.individual.add.CheckDetailsController.onPageLoad()
-POST        /check-details                                  controllers.individual.add.CheckDetailsController.onSubmit()
+GET        /check-details                                  controllers.individual.add.CheckDetailsController.onPageLoad()
+POST       /check-details                                  controllers.individual.add.CheckDetailsController.onSubmit()
 
 GET        /:index/check-details                            controllers.individual.amend.CheckDetailsController.extractAndRender(index: Int)
 GET        /:index/updated-details                          controllers.individual.amend.CheckDetailsController.renderFromUserAnswers(index: Int)
