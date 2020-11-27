@@ -25,7 +25,7 @@ import play.api.data.{Form, FormError}
 
 class CombinedPassportOrIdCardDetailsFormProviderSpec extends PassportOrIdCardFieldBehaviours with FakeTrustsApp {
 
-  val prefix = "livingSettlor.passportOrIdCardDetails"
+  val prefix = "individualProtector.passportOrIdCardDetails"
 
   val requiredKey = s"$prefix.country.error.required"
   val lengthKey = s"$prefix.country.error.length"
