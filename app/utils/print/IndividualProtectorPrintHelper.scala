@@ -17,6 +17,7 @@
 package utils.print
 import com.google.inject.Inject
 import controllers.individual.add.{routes => addRts}
+import controllers.individual.amend.{routes => amendRts}
 import controllers.individual.{routes => rts}
 import models.{CheckMode, NormalMode, UserAnswers}
 import pages.individual._
@@ -32,7 +33,7 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
 
     val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
 
-    val add: Seq[AnswerRow] = Seq(
+    lazy val add: Seq[AnswerRow] = Seq(
       bound.nameQuestion(NamePage, "individualProtector.name", rts.NameController.onPageLoad(NormalMode).url),
       bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", rts.DateOfBirthYesNoController.onPageLoad(NormalMode).url),
       bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", rts.DateOfBirthController.onPageLoad(NormalMode).url),
@@ -49,7 +50,7 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
       bound.dateQuestion(StartDatePage, "individualProtector.startDate", addRts.StartDateController.onPageLoad().url)
     ).flatten
 
-    val amend: Seq[AnswerRow] = Seq(
+    lazy val amend: Seq[AnswerRow] = Seq(
       bound.nameQuestion(NamePage, "individualProtector.name", rts.NameController.onPageLoad(CheckMode).url),
       bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", rts.DateOfBirthYesNoController.onPageLoad(CheckMode).url),
       bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", rts.DateOfBirthController.onPageLoad(CheckMode).url),
@@ -59,10 +60,8 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
       bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", rts.LiveInTheUkYesNoController.onPageLoad(CheckMode).url),
       bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", rts.UkAddressController.onPageLoad(CheckMode).url),
       bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", rts.NonUkAddressController.onPageLoad(CheckMode).url),
-      bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", addRts.PassportDetailsYesNoController.onPageLoad().url),
-      bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", addRts.PassportDetailsController.onPageLoad().url),
-      bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", addRts.IdCardDetailsYesNoController.onPageLoad().url),
-      bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", addRts.IdCardDetailsController.onPageLoad().url)
+      bound.yesNoQuestion(PassportOrIdCardDetailsYesNoPage, "individualProtector.passportOrIdCardDetailsYesNo", amendRts.PassportOrIdCardDetailsYesNoController.onPageLoad().url),
+      bound.passportOrIdCardDetailsQuestion(PassportOrIdCardDetailsPage, "individualProtector.passportOrIdCardDetails", amendRts.PassportOrIdCardDetailsController.onPageLoad().url)
     ).flatten
 
     AnswerSection(
