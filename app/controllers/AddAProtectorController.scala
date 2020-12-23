@@ -22,13 +22,13 @@ import controllers.actions.StandardActionSets
 import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import javax.inject.Inject
 import models.AddAProtector
-import play.api.Logger
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.TrustService
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.AddAProtectorViewHelper
 import views.html.{AddAProtectorView, AddAProtectorYesNoView, MaxedOutProtectorsView}
 import utils.Session
@@ -48,9 +48,7 @@ class AddAProtectorController @Inject()(
                                          addAnotherView: AddAProtectorView,
                                          yesNoView: AddAProtectorYesNoView,
                                          completeView: MaxedOutProtectorsView
-                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  private val logger: Logger = Logger(getClass)
+                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   val addAnotherForm : Form[AddAProtector] = addAnotherFormProvider()
 

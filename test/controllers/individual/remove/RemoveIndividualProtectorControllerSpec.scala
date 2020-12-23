@@ -179,7 +179,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
           .thenReturn(Future.successful(Protectors(protectors, Nil)))
 
         when(mockConnector.removeProtector(any(), any())(any(), any()))
-          .thenReturn(Future.successful(HttpResponse(200)))
+          .thenReturn(Future.successful(HttpResponse(OK, "")))
 
         val request =
           FakeRequest(POST, routes.RemoveIndividualProtectorController.onSubmit(index).url)

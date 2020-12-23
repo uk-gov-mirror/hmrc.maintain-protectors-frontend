@@ -21,13 +21,11 @@ import java.time.LocalDate
 import models.protectors.BusinessProtector
 import models.{Address, NonUkAddress, UkAddress, UserAnswers}
 import pages.business._
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 
-class BusinessProtectorMapper {
-
-  private val logger: Logger = Logger(getClass)
+class BusinessProtectorMapper extends Logging {
 
   def apply(answers: UserAnswers): Option[BusinessProtector] = {
     val readFromUserAnswers: Reads[BusinessProtector] =
