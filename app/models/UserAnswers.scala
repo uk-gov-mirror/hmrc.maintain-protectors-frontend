@@ -19,7 +19,7 @@ package models
 import java.time.{LocalDate, LocalDateTime}
 
 import pages.AddNowPage
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 
@@ -31,9 +31,7 @@ final case class UserAnswers(
                               whenTrustSetup: LocalDate,
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
-                            ) {
-
-  private val logger: Logger = Logger(getClass)
+                            ) extends Logging {
 
   def cleanup : Try[UserAnswers] = {
     this

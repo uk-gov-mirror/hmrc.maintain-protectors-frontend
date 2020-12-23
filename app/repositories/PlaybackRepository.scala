@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
 import models.{MongoDateTimeFormats, UserAnswers}
 import play.api.libs.json._
-import play.api.{Configuration, Logger}
+import play.api.{Configuration, Logging}
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -33,9 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PlaybackRepositoryImpl @Inject()(mongo: MongoDriver,
                                        config: Configuration
-                                      )(implicit ec: ExecutionContext) extends PlaybackRepository {
-
-  private val logger: Logger = Logger(getClass)
+                                      )(implicit ec: ExecutionContext) extends PlaybackRepository with Logging {
 
   private val collectionName: String = "user-answers"
 

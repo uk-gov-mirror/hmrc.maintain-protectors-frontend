@@ -177,7 +177,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
           .thenReturn(Future.successful(Protectors(Nil, protectors)))
 
         when(mockConnector.removeProtector(any(), any())(any(), any()))
-          .thenReturn(Future.successful(HttpResponse(200)))
+          .thenReturn(Future.successful(HttpResponse(OK, "")))
 
         val request =
           FakeRequest(POST, routes.RemoveBusinessProtectorController.onSubmit(index).url)

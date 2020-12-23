@@ -21,13 +21,11 @@ import java.time.LocalDate
 import models.protectors.IndividualProtector
 import models.{Address, CombinedPassportOrIdCard, IdCard, IndividualIdentification, Name, NationalInsuranceNumber, NonUkAddress, Passport, UkAddress, UserAnswers}
 import pages.individual._
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 
-class IndividualProtectorMapper {
-
-  private val logger: Logger = Logger(getClass)
+class IndividualProtectorMapper extends Logging {
 
   def apply(answers: UserAnswers): Option[IndividualProtector] = {
     val readFromUserAnswers: Reads[IndividualProtector] =
