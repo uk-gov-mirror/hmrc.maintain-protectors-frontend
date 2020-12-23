@@ -85,8 +85,6 @@ class TrustsStoreConnectorSpec extends SpecBase
           .willReturn(serverError())
       )
 
-      val futureResult = connector.setTaskComplete("123456789")
-
       connector.setTaskComplete("123456789") map { response =>
         response.status mustBe 500
       }
