@@ -18,8 +18,10 @@ package controllers.business.remove
 
 import controllers.actions.StandardActionSets
 import forms.DateRemovedFromTrustFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{ProtectorType, RemoveProtector}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.TrustService
@@ -35,8 +37,8 @@ class WhenRemovedController @Inject()(
                                        trust: TrustService,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: WhenRemovedView,
-                                       trustService: TrustService
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                       trustService: TrustService,
+                                       errorHandler: ErrorHandler)(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
@@ -45,6 +47,17 @@ class WhenRemovedController @Inject()(
         protector =>
           val form = formProvider.withPrefixAndEntityStartDate("businessProtector.whenRemoved", protector.entityStart)
           Ok(view(form, index, protector.name))
+      } recoverWith {
+        case iobe: IndexOutOfBoundsException =>
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting business protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
+
+          Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
+        case e =>
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting business protector $index from trusts service ${e.getMessage}")
+
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }
 
