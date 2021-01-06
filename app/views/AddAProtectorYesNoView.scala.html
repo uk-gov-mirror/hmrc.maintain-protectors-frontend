@@ -29,8 +29,6 @@ title = s"${errorPrefix(form)}${messages("addAProtectorYesNo.title")}"
 
     @formHelper(action = AddAProtectorController.submitOne(), 'autoComplete -> "off") {
 
-    @components.back_link()
-
     @components.error_summary(form.errors)
 
     @components.input_yes_no(

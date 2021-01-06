@@ -18,9 +18,11 @@ package controllers.business.remove
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{ProtectorType, RemoveProtector}
 import pages.business.RemoveYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,8 +40,9 @@ class RemoveBusinessProtectorController @Inject()(
                                                    trustService: TrustService,
                                                    formProvider: YesNoFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: RemoveBusinessProtectorView
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                   view: RemoveBusinessProtectorView,
+                                                   errorHandler: ErrorHandler
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val messagesPrefix: String = "removeBusinessProtector"
 
@@ -56,6 +59,17 @@ class RemoveBusinessProtectorController @Inject()(
       trustService.getBusinessProtector(request.userAnswers.utr, index).map {
         protector =>
           Ok(view(preparedForm, index, protector.name))
+      } recoverWith {
+        case iobe: IndexOutOfBoundsException =>
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting business protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
+
+          Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
+        case e =>
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting business protector $index from trusts service ${e.getMessage}")
+
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
 
   }

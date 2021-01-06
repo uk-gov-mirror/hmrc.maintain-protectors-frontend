@@ -40,8 +40,6 @@ class AddAProtectorYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 
-    behave like pageWithBackLink(applyView(form))
-
     behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AddAProtectorController.submitOne().url)
 
     behave like pageWithASubmitButton(applyView(form))

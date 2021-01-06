@@ -160,5 +160,33 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
 
       application.stop()
     }
+
+    "redirect to the add protectors page if we get an Index Not Found Exception" in {
+      when(mockConnector.getProtectors(any())(any(), any()))
+        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+
+      val result = route(application, getRequest()).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.AddAProtectorController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to the Service down page if we get a RunTimeException" in {
+      when(mockConnector.getProtectors(any())(any(), any()))
+        .thenReturn(Future.failed(new RuntimeException("")))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+
+      val result = route(application, getRequest()).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+
+      application.stop()
+    }
   }
 }
