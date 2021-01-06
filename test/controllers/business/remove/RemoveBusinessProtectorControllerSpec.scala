@@ -88,6 +88,27 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
       application.stop()
     }
 
+    "redirect to the add protector page if we get an Index Not Found Exception" in {
+
+      val userAnswers = emptyUserAnswers
+        .set(RemoveYesNoPage, true).success.value
+
+      when(mockConnector.getProtectors(any())(any(), any()))
+        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+
+      val request = FakeRequest(GET, routes.RemoveBusinessProtectorController.onPageLoad(0).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.AddAProtectorController.onPageLoad().url
+
+      application.stop()
+    }
+
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers

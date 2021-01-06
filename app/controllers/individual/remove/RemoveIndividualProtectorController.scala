@@ -18,9 +18,11 @@ package controllers.individual.remove
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{ProtectorType, RemoveProtector}
 import pages.individual.RemoveYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,8 +40,9 @@ class RemoveIndividualProtectorController @Inject()(
                                                      trustService: TrustService,
                                                      formProvider: YesNoFormProvider,
                                                      val controllerComponents: MessagesControllerComponents,
-                                                     view: RemoveIndividualProtectorView
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                     view: RemoveIndividualProtectorView,
+                                                     errorHandler: ErrorHandler
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val messagesPrefix: String = "removeIndividualProtector"
 
@@ -56,6 +59,17 @@ class RemoveIndividualProtectorController @Inject()(
       trustService.getIndividualProtector(request.userAnswers.utr, index).map {
         protector =>
           Ok(view(preparedForm, index, protector.name.displayName))
+      } recoverWith {
+        case iobe: IndexOutOfBoundsException =>
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting individual protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
+
+          Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
+        case e =>
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+            s" error getting individual protector $index from trusts service ${e.getMessage}")
+
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
 
   }
