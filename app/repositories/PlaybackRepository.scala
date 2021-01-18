@@ -31,11 +31,13 @@ import reactivemongo.play.json.collection.JSONCollection
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PlaybackRepositoryImpl @Inject()(mongo: MongoDriver,
-                                       config: Configuration
-                                      )(implicit ec: ExecutionContext) extends PlaybackRepository with Logging {
+class PlaybackRepositoryImpl @Inject()(override val mongo: MongoDriver,
+                                       override val config: Configuration
+                                      )(override implicit val ec: ExecutionContext)
+  extends PlaybackRepository
+    with IndexManager {
 
-  private val collectionName: String = "user-answers"
+  override val collectionName: String = "user-answers"
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
