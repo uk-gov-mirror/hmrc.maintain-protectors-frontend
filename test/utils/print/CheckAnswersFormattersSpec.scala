@@ -17,9 +17,9 @@
 package utils.print
 
 import java.time.LocalDate
-
 import base.SpecBase
 import play.api.i18n.{Lang, MessagesImpl}
+import play.twirl.api.Html
 
 class CheckAnswersFormattersSpec extends SpecBase {
 
