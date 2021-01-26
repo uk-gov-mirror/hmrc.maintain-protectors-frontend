@@ -17,8 +17,8 @@
 package utils.print
 
 import java.time.{LocalDate => JavaDate}
-
 import org.joda.time.{LocalDate => JodaDate}
+
 import javax.inject.Inject
 import models.{Address, CombinedPassportOrIdCard, IdCard, NonUkAddress, Passport, UkAddress}
 import play.api.i18n.Messages
@@ -26,6 +26,8 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
 import utils.countryOptions.CountryOptions
 import uk.gov.hmrc.play.language.LanguageUtils
+
+import scala.util.Try
 
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils) {
 
@@ -42,7 +44,10 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils) {
     }
   }
 
-  def formatNino(nino: String): Html = HtmlFormat.escape(Nino(nino).formatted)
+  def formatNino(nino: String): Html = {
+    val formatted = Try(Nino(nino).formatted).getOrElse(nino)
+    HtmlFormat.escape(formatted)
+  }
 
   def formatAddress(address: Address, countryOptions: CountryOptions)(implicit messages: Messages): Html = {
     address match {

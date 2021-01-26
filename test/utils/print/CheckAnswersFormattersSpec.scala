@@ -52,6 +52,22 @@ class CheckAnswersFormattersSpec extends SpecBase {
         }
       }
     }
+
+    ".formatNino" must {
+
+      "format a nino with prefix and suffix" in {
+        val nino = "JP121212A"
+        val result = checkAnswersFormatters.formatNino(nino)
+        result mustBe Html("JP 12 12 12 A")
+      }
+
+      "suppress IllegalArgumentException and not format nino" in {
+        val nino = "JP121212"
+        val result = checkAnswersFormatters.formatNino(nino)
+        result mustBe Html("JP121212")
+      }
+
+    }
   }
 
 }
