@@ -16,20 +16,21 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import generators.Generators
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
-import models.{Name, TrustDetails, TypeOfTrust}
+import models.{Name, ProtectorType, RemoveProtector, TrustDetails, TypeOfTrust}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
+
+import java.time.LocalDate
 
 class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
   with Inside with BeforeAndAfterAll with BeforeAndAfterEach with IntegrationPatience {
@@ -57,16 +58,42 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
   val description = "description"
   val date: LocalDate = LocalDate.parse("2019-02-03")
 
+  private val trustsUrl: String = "/trusts"
+  private val protectorsUrl: String = s"$trustsUrl/protectors"
+
+  private def getTrustDetailsUrl(utr: String) = s"$trustsUrl/$utr/trust-details"
+  private def getProtectorsUrl(utr: String) = s"$protectorsUrl/$utr/transformed"
+  private def addBusinessProtectorUrl(utr: String) = s"$protectorsUrl/add-business/$utr"
+  private def amendBusinessProtectorUrl(utr: String, index: Int) = s"$protectorsUrl/amend-business/$utr/$index"
+  private def addIndividualProtectorUrl(utr: String) = s"$protectorsUrl/add-individual/$utr"
+  private def amendIndividualProtectorUrl(utr: String, index: Int) = s"/trusts/protectors/amend-individual/$utr/$index"
+  private def removeProtectorUrl(utr: String) = s"$protectorsUrl/$utr/remove"
+
+  private val individual = IndividualProtector(
+    name = Name("Carmel", None, "Protector"),
+    dateOfBirth = None,
+    identification = None,
+    address = None,
+    entityStart = date,
+    provisional = false
+  )
+
+  private val business = BusinessProtector(
+    name = "Protector Org 24",
+    utr = None,
+    address = None,
+    entityStart = date,
+    provisional = false
+  )
+
   "trust connector" when {
 
-    "get trusts details" in {
-
-      val utr = "1000000008"
+    "getTrustsDetails" in {
 
       val json = Json.parse(
         """
           |{
-          | "startDate": "1920-03-28",
+          | "startDate": "2019-02-03",
           | "lawCountry": "AD",
           | "administrationCountry": "GB",
           | "residentialStatus": {
@@ -92,7 +119,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
       val connector = application.injector.instanceOf[TrustConnector]
 
       server.stubFor(
-        get(urlEqualTo(s"/trusts/$utr/trust-details"))
+        get(urlEqualTo(getTrustDetailsUrl(utr)))
           .willReturn(okJson(json.toString))
       )
 
@@ -100,149 +127,121 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
       whenReady(processed) {
         r =>
-          r mustBe TrustDetails(startDate = LocalDate.parse("1920-03-28"), typeOfTrust = TypeOfTrust.WillTrustOrIntestacyTrust)
+          r mustBe TrustDetails(startDate = date, typeOfTrust = TypeOfTrust.WillTrustOrIntestacyTrust)
       }
 
     }
 
-    "get protectors returns a trust with empty lists" must {
+    "getProtectors" when {
 
-      "return a default empty list protectors" in {
+      "there are no protectors" must {
 
-        val utr = "1000000008"
+        "return a default empty list of protectors" in {
 
-        val json = Json.parse(
-          """
-            |{
-            | "protectors": {
-            | }
-            |}
-            |""".stripMargin)
+          val json = Json.parse(
+            """
+              |{
+              | "protectors": {
+              | }
+              |}
+              |""".stripMargin)
 
-        val application = applicationBuilder()
-          .configure(
-            Seq(
-              "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
-            ): _*
-          ).build()
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+          val connector = application.injector.instanceOf[TrustConnector]
 
-        server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/protectors"))
-            .willReturn(okJson(json.toString))
-        )
+          server.stubFor(
+            get(urlEqualTo(getProtectorsUrl(utr)))
+              .willReturn(okJson(json.toString))
+          )
 
-        val processed = connector.getProtectors(utr)
+          val processed = connector.getProtectors(utr)
 
-        whenReady(processed) {
-          result =>
-            result mustBe Protectors(protector = Nil, protectorCompany = Nil)
+          whenReady(processed) {
+            result =>
+              result mustBe Protectors(protector = Nil, protectorCompany = Nil)
+          }
+
+          application.stop()
         }
-
-        application.stop()
       }
 
-    }
+      "there are protectors" must {
 
-    "get protectors" must {
+        "parse the response and return the protectors" in {
 
-      "parse the response and return the protectors" in {
-        val utr = "1000000008"
+          val json = Json.parse(
+            """
+              |{
+              | "protectors" : {
+              |   "protector" : [
+              |     {
+              |       "lineNo" : "79",
+              |       "name" : {
+              |         "firstName" : "Carmel",
+              |         "lastName" : "Protector"
+              |       },
+              |       "entityStart" : "2019-02-03"
+              |     }
+              |   ],
+              |   "protectorCompany" : [
+              |     {
+              |       "lineNo" : "110",
+              |       "bpMatchStatus" : "98",
+              |       "name" : "Protector Org 24",
+              |       "companyType" : "Investment",
+              |       "companyTime" : false,
+              |       "entityStart" : "2019-02-03"
+              |     }
+              |   ],
+              |    "deceased" : {
+              |       "name" : {
+              |         "firstName" : "Carmel",
+              |         "lastName" : "Protector"
+              |       }
+              |     }
+              | }
+              |}
+              |""".stripMargin)
 
-        val json = Json.parse(
-          """
-            |{
-            | "protectors" : {
-            |   "protector" : [
-            |     {
-            |       "lineNo" : "79",
-            |       "name" : {
-            |         "firstName" : "Carmel",
-            |         "lastName" : "Protector"
-            |       },
-            |       "entityStart" : "2019-09-23"
-            |     }
-            |   ],
-            |   "protectorCompany" : [
-            |     {
-            |       "lineNo" : "110",
-            |       "bpMatchStatus" : "98",
-            |       "name" : "Protector Org 24",
-            |       "companyType" : "Investment",
-            |       "companyTime" : false,
-            |       "entityStart" : "2019-09-23"
-            |     }
-            |   ],
-            |    "deceased" : {
-            |       "name" : {
-            |         "firstName" : "Carmel",
-            |         "lastName" : "Protector"
-            |       }
-            |     }
-            | }
-            |}
-            |""".stripMargin)
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
 
-        val application = applicationBuilder()
-          .configure(
-            Seq(
-              "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
-            ): _*
-          ).build()
+          val connector = application.injector.instanceOf[TrustConnector]
 
-        val connector = application.injector.instanceOf[TrustConnector]
+          server.stubFor(
+            get(urlEqualTo(getProtectorsUrl(utr)))
+              .willReturn(okJson(json.toString))
+          )
 
-        server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/protectors"))
-            .willReturn(okJson(json.toString))
-        )
+          val processed = connector.getProtectors(utr)
 
-        val processed = connector.getProtectors(utr)
-
-        whenReady(processed) {
-          result =>
-            result mustBe
-              Protectors(protector = List(
-                IndividualProtector(
-                  name = Name("Carmel", None, "Protector"),
-                  dateOfBirth = None,
-                  identification = None,
-                  address = None,
-                  entityStart = LocalDate.parse("2019-09-23"),
-                  provisional = false
+          whenReady(processed) {
+            result =>
+              result mustBe
+                Protectors(protector = List(individual),
+                  protectorCompany = List(business)
                 )
-              ),
-              protectorCompany = List(
-                BusinessProtector(
-                  name = "Protector Org 24",
-                  utr = None,
-                  address = None,
-                  entityStart = LocalDate.parse("2019-09-23"),
-                  provisional = false
-                )
-              )
-            )
+          }
+
+          application.stop()
         }
-
-        application.stop()
       }
+
     }
 
-    "add business protector" must {
-
-      def addBusinessProtectorUrl(utr: String) =
-        s"/trusts/protectors/add-business/$utr"
-
-      val protector = BusinessProtector(
-        name = "Name",
-        utr = None,
-        address = None,
-        entityStart = LocalDate.parse("2020-03-27"),
-        provisional = false
-      )
+    "addBusinessProtector" must {
 
       "Return OK when the request is successful" in {
 
@@ -261,7 +260,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(ok)
         )
 
-        val result = connector.addBusinessProtector(utr, protector)
+        val result = connector.addBusinessProtector(utr, business)
 
         result.futureValue.status mustBe OK
 
@@ -285,7 +284,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(badRequest)
         )
 
-        val result = connector.addBusinessProtector(utr, protector)
+        val result = connector.addBusinessProtector(utr, business)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -294,18 +293,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
     }
 
-    "amending a business protector" must {
-
-      def amendBusinessProtectorUrl(utr: String, index: Int) =
-        s"/trusts/protectors/amend-business/$utr/$index"
-
-      val protector = BusinessProtector(
-        name = "Name",
-        utr = None,
-        address = None,
-        entityStart = LocalDate.parse("2020-03-27"),
-        provisional = false
-      )
+    "amendBusinessProtector" must {
 
       "Return OK when the request is successful" in {
 
@@ -324,7 +312,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(ok)
         )
 
-        val result = connector.amendBusinessProtector(utr, index, protector)
+        val result = connector.amendBusinessProtector(utr, index, business)
 
         result.futureValue.status mustBe OK
 
@@ -348,7 +336,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(badRequest)
         )
 
-        val result = connector.amendBusinessProtector(utr, index, protector)
+        val result = connector.amendBusinessProtector(utr, index, business)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -357,23 +345,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
     }
 
-    "add individual protector" must {
-
-      def addIndividualProtectorUrl(utr: String) =
-        s"/trusts/protectors/add-individual/$utr"
-
-      val protector = IndividualProtector(
-        name = Name(
-          firstName = "First",
-          middleName = None,
-          lastName = "Last"
-        ),
-        dateOfBirth = None,
-        identification = None,
-        address = None,
-        entityStart = LocalDate.parse("2020-03-27"),
-        provisional = false
-      )
+    "addIndividualProtector" must {
 
       "Return OK when the request is successful" in {
 
@@ -392,7 +364,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(ok)
         )
 
-        val result = connector.addIndividualProtector(utr, protector)
+        val result = connector.addIndividualProtector(utr, individual)
 
         result.futureValue.status mustBe OK
 
@@ -416,7 +388,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(badRequest)
         )
 
-        val result = connector.addIndividualProtector(utr, protector)
+        val result = connector.addIndividualProtector(utr, individual)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -425,10 +397,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
     }
     
-    "amending an individual protector" must {
-
-      def amendIndividualProtectorUrl(utr: String, index: Int) =
-        s"/trusts/protectors/amend-individual/$utr/$index"
+    "amendIndividualProtector" must {
 
       "Return OK when the request is successful" in {
 
@@ -445,19 +414,6 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         server.stubFor(
           post(urlEqualTo(amendIndividualProtectorUrl(utr, index)))
             .willReturn(ok)
-        )
-
-        val individual = IndividualProtector(
-          name = Name(
-            firstName = "First",
-            middleName = None,
-            lastName = "Last"
-          ),
-          dateOfBirth = None,
-          identification = None,
-          address = None,
-          entityStart = LocalDate.parse("2020-03-27"),
-          provisional = false
         )
 
         val result = connector.amendIndividualProtector(utr, index, individual)
@@ -484,24 +440,73 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             .willReturn(badRequest)
         )
 
-        val individual = IndividualProtector(
-          name = Name(
-            firstName = "First",
-            middleName = None,
-            lastName = "Last"
-          ),
-          dateOfBirth = None,
-          identification = None,
-          address = None,
-          entityStart = LocalDate.parse("2020-03-27"),
-          provisional = false
-        )
-
         val result = connector.amendIndividualProtector(utr, index, individual)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
         application.stop()
+      }
+
+    }
+
+    "removeSettlor" must {
+
+      def removeSettlor(protectorType: ProtectorType): RemoveProtector = RemoveProtector(protectorType, index, date)
+
+      "Return OK when the request is successful" in {
+
+        forAll(arbitraryProtectorType) {
+          protectorType =>
+
+            val application = applicationBuilder()
+              .configure(
+                Seq(
+                  "microservice.services.trusts.port" -> server.port(),
+                  "auditing.enabled" -> false
+                ): _*
+              ).build()
+
+            val connector = application.injector.instanceOf[TrustConnector]
+
+            server.stubFor(
+              put(urlEqualTo(removeProtectorUrl(utr)))
+                .willReturn(ok)
+            )
+
+            val result = connector.removeProtector(utr, removeSettlor(protectorType))
+
+            result.futureValue.status mustBe OK
+
+            application.stop()
+        }
+      }
+
+      "return Bad Request when the request is unsuccessful" in {
+
+        forAll(arbitraryProtectorType) {
+          settlorType =>
+
+            val application = applicationBuilder()
+              .configure(
+                Seq(
+                  "microservice.services.trusts.port" -> server.port(),
+                  "auditing.enabled" -> false
+                ): _*
+              ).build()
+
+            val connector = application.injector.instanceOf[TrustConnector]
+
+            server.stubFor(
+              put(urlEqualTo(removeProtectorUrl(utr)))
+                .willReturn(badRequest)
+            )
+
+            val result = connector.removeProtector(utr, removeSettlor(settlorType))
+
+            result.map(response => response.status mustBe BAD_REQUEST)
+
+            application.stop()
+        }
       }
 
     }
