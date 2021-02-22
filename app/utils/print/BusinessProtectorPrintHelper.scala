@@ -20,16 +20,13 @@ import com.google.inject.Inject
 import models.{CheckMode, NormalMode, UserAnswers}
 import pages.business._
 import play.api.i18n.Messages
-import utils.countryOptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 
-class BusinessProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConverter,
-                                             countryOptions: CountryOptions
-                                          ) {
+class BusinessProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) {
 
   def apply(userAnswers: UserAnswers, provisional: Boolean, protectorName: String)(implicit messages: Messages): AnswerSection = {
 
-    val bound = answerRowConverter.bind(userAnswers, protectorName, countryOptions)
+    val bound = answerRowConverter.bind(userAnswers, protectorName)
 
     val add: Seq[AnswerRow] = Seq(
       bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(NormalMode).url),
