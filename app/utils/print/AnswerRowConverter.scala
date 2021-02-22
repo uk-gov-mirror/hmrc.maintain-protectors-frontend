@@ -72,7 +72,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     def addressQuestion[T <: Address](query: Gettable[T],
                                       labelKey: String,
                                       changeUrl: String)
-                                     (implicit messages:Messages, reads: Reads[T]): Option[AnswerRow] = {
+                                     (implicit reads: Reads[T]): Option[AnswerRow] = {
       val format = (x: T) => checkAnswersFormatters.formatAddress(x)
       question(query, labelKey, format, changeUrl)
     }
