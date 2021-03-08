@@ -26,7 +26,7 @@ import models.{Name, ProtectorType, RemoveProtector, TrustDetails, TypeOfTrust}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
-import play.api.libs.json.Json
+import play.api.libs.json.{JsBoolean, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -53,7 +53,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
     server.stop()
   }
 
-  val utr = "1000000008"
+  val identifier = "1000000008"
   val index = 0
   val description = "description"
   val date: LocalDate = LocalDate.parse("2019-02-03")
@@ -61,13 +61,14 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
   private val trustsUrl: String = "/trusts"
   private val protectorsUrl: String = s"$trustsUrl/protectors"
 
-  private def getTrustDetailsUrl(utr: String) = s"$trustsUrl/$utr/trust-details"
-  private def getProtectorsUrl(utr: String) = s"$protectorsUrl/$utr/transformed"
-  private def addBusinessProtectorUrl(utr: String) = s"$protectorsUrl/add-business/$utr"
-  private def amendBusinessProtectorUrl(utr: String, index: Int) = s"$protectorsUrl/amend-business/$utr/$index"
-  private def addIndividualProtectorUrl(utr: String) = s"$protectorsUrl/add-individual/$utr"
-  private def amendIndividualProtectorUrl(utr: String, index: Int) = s"/trusts/protectors/amend-individual/$utr/$index"
-  private def removeProtectorUrl(utr: String) = s"$protectorsUrl/$utr/remove"
+  private def getTrustDetailsUrl(identifier: String) = s"$trustsUrl/$identifier/trust-details"
+  private def getProtectorsUrl(identifier: String) = s"$protectorsUrl/$identifier/transformed"
+  private def addBusinessProtectorUrl(identifier: String) = s"$protectorsUrl/add-business/$identifier"
+  private def amendBusinessProtectorUrl(identifier: String, index: Int) = s"$protectorsUrl/amend-business/$identifier/$index"
+  private def addIndividualProtectorUrl(identifier: String) = s"$protectorsUrl/add-individual/$identifier"
+  private def amendIndividualProtectorUrl(identifier: String, index: Int) = s"/trusts/protectors/amend-individual/$identifier/$index"
+  private def removeProtectorUrl(identifier: String) = s"$protectorsUrl/$identifier/remove"
+  private def isTrust5mldUrl(identifier: String) = s"$trustsUrl/$identifier/is-trust-5mld"
 
   private val individual = IndividualProtector(
     name = Name("Carmel", None, "Protector"),
@@ -119,11 +120,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
       val connector = application.injector.instanceOf[TrustConnector]
 
       server.stubFor(
-        get(urlEqualTo(getTrustDetailsUrl(utr)))
+        get(urlEqualTo(getTrustDetailsUrl(identifier)))
           .willReturn(okJson(json.toString))
       )
 
-      val processed = connector.getTrustDetails(utr)
+      val processed = connector.getTrustDetails(identifier)
 
       whenReady(processed) {
         r =>
@@ -157,11 +158,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
           val connector = application.injector.instanceOf[TrustConnector]
 
           server.stubFor(
-            get(urlEqualTo(getProtectorsUrl(utr)))
+            get(urlEqualTo(getProtectorsUrl(identifier)))
               .willReturn(okJson(json.toString))
           )
 
-          val processed = connector.getProtectors(utr)
+          val processed = connector.getProtectors(identifier)
 
           whenReady(processed) {
             result =>
@@ -221,11 +222,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
           val connector = application.injector.instanceOf[TrustConnector]
 
           server.stubFor(
-            get(urlEqualTo(getProtectorsUrl(utr)))
+            get(urlEqualTo(getProtectorsUrl(identifier)))
               .willReturn(okJson(json.toString))
           )
 
-          val processed = connector.getProtectors(utr)
+          val processed = connector.getProtectors(identifier)
 
           whenReady(processed) {
             result =>
@@ -256,11 +257,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(addBusinessProtectorUrl(utr)))
+          post(urlEqualTo(addBusinessProtectorUrl(identifier)))
             .willReturn(ok)
         )
 
-        val result = connector.addBusinessProtector(utr, business)
+        val result = connector.addBusinessProtector(identifier, business)
 
         result.futureValue.status mustBe OK
 
@@ -280,11 +281,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(addBusinessProtectorUrl(utr)))
+          post(urlEqualTo(addBusinessProtectorUrl(identifier)))
             .willReturn(badRequest)
         )
 
-        val result = connector.addBusinessProtector(utr, business)
+        val result = connector.addBusinessProtector(identifier, business)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -308,11 +309,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(amendBusinessProtectorUrl(utr, index)))
+          post(urlEqualTo(amendBusinessProtectorUrl(identifier, index)))
             .willReturn(ok)
         )
 
-        val result = connector.amendBusinessProtector(utr, index, business)
+        val result = connector.amendBusinessProtector(identifier, index, business)
 
         result.futureValue.status mustBe OK
 
@@ -332,11 +333,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(amendBusinessProtectorUrl(utr, index)))
+          post(urlEqualTo(amendBusinessProtectorUrl(identifier, index)))
             .willReturn(badRequest)
         )
 
-        val result = connector.amendBusinessProtector(utr, index, business)
+        val result = connector.amendBusinessProtector(identifier, index, business)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -360,11 +361,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(addIndividualProtectorUrl(utr)))
+          post(urlEqualTo(addIndividualProtectorUrl(identifier)))
             .willReturn(ok)
         )
 
-        val result = connector.addIndividualProtector(utr, individual)
+        val result = connector.addIndividualProtector(identifier, individual)
 
         result.futureValue.status mustBe OK
 
@@ -384,11 +385,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(addIndividualProtectorUrl(utr)))
+          post(urlEqualTo(addIndividualProtectorUrl(identifier)))
             .willReturn(badRequest)
         )
 
-        val result = connector.addIndividualProtector(utr, individual)
+        val result = connector.addIndividualProtector(identifier, individual)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -396,7 +397,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
       }
 
     }
-    
+
     "amendIndividualProtector" must {
 
       "Return OK when the request is successful" in {
@@ -412,11 +413,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(amendIndividualProtectorUrl(utr, index)))
+          post(urlEqualTo(amendIndividualProtectorUrl(identifier, index)))
             .willReturn(ok)
         )
 
-        val result = connector.amendIndividualProtector(utr, index, individual)
+        val result = connector.amendIndividualProtector(identifier, index, individual)
 
         result.futureValue.status mustBe OK
 
@@ -436,11 +437,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(amendIndividualProtectorUrl(utr, index)))
+          post(urlEqualTo(amendIndividualProtectorUrl(identifier, index)))
             .willReturn(badRequest)
         )
 
-        val result = connector.amendIndividualProtector(utr, index, individual)
+        val result = connector.amendIndividualProtector(identifier, index, individual)
 
         result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -469,11 +470,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             val connector = application.injector.instanceOf[TrustConnector]
 
             server.stubFor(
-              put(urlEqualTo(removeProtectorUrl(utr)))
+              put(urlEqualTo(removeProtectorUrl(identifier)))
                 .willReturn(ok)
             )
 
-            val result = connector.removeProtector(utr, removeSettlor(protectorType))
+            val result = connector.removeProtector(identifier, removeSettlor(protectorType))
 
             result.futureValue.status mustBe OK
 
@@ -497,11 +498,11 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             val connector = application.injector.instanceOf[TrustConnector]
 
             server.stubFor(
-              put(urlEqualTo(removeProtectorUrl(utr)))
+              put(urlEqualTo(removeProtectorUrl(identifier)))
                 .willReturn(badRequest)
             )
 
-            val result = connector.removeProtector(utr, removeSettlor(settlorType))
+            val result = connector.removeProtector(identifier, removeSettlor(settlorType))
 
             result.map(response => response.status mustBe BAD_REQUEST)
 
@@ -509,6 +510,67 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
         }
       }
 
+    }
+
+    "isTrust5mld" must {
+
+      "return true" when {
+        "untransformed data is 5mld" in {
+
+          val json = JsBoolean(true)
+
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
+
+          val connector = application.injector.instanceOf[TrustConnector]
+
+          server.stubFor(
+            get(urlEqualTo(isTrust5mldUrl(identifier)))
+              .willReturn(okJson(json.toString))
+          )
+
+          val processed = connector.isTrust5mld(identifier)
+
+          whenReady(processed) {
+            r =>
+              r mustBe true
+          }
+        }
+      }
+
+      "return false" when {
+        "untransformed data is 4mld" in {
+
+          val json = JsBoolean(false)
+
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
+
+          val connector = application.injector.instanceOf[TrustConnector]
+
+          server.stubFor(
+            get(urlEqualTo(isTrust5mldUrl(identifier)))
+              .willReturn(okJson(json.toString))
+          )
+
+          val processed = connector.isTrust5mld(identifier)
+
+          whenReady(processed) {
+            r =>
+              r mustBe false
+          }
+        }
+      }
     }
 
   }
