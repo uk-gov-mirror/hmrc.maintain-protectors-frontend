@@ -43,18 +43,18 @@ class WhenRemovedController @Inject()(
   def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
-      trust.getBusinessProtector(request.userAnswers.utr, index).map {
+      trust.getBusinessProtector(request.userAnswers.identifier, index).map {
         protector =>
           val form = formProvider.withPrefixAndEntityStartDate("businessProtector.whenRemoved", protector.entityStart)
           Ok(view(form, index, protector.name))
       } recoverWith {
         case iobe: IndexOutOfBoundsException =>
-          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
 
           Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
         case e =>
-          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${e.getMessage}")
 
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
@@ -64,7 +64,7 @@ class WhenRemovedController @Inject()(
   def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
-      trust.getBusinessProtector(request.userAnswers.utr, index).flatMap {
+      trust.getBusinessProtector(request.userAnswers.identifier, index).flatMap {
         protector =>
           val form = formProvider.withPrefixAndEntityStartDate("businessProtector.whenRemoved", protector.entityStart)
           form.bindFromRequest().fold(
@@ -72,7 +72,7 @@ class WhenRemovedController @Inject()(
               Future.successful(BadRequest(view(formWithErrors, index, protector.name)))
             },
             value =>
-              trustService.removeProtector(request.userAnswers.utr, RemoveProtector(ProtectorType.BusinessProtector, index, value)).map(_ =>
+              trustService.removeProtector(request.userAnswers.identifier, RemoveProtector(ProtectorType.BusinessProtector, index, value)).map(_ =>
                 Redirect(controllers.routes.AddAProtectorController.onPageLoad())
               )
           )

@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.TrustStoreConnector
+import connectors.TrustsStoreConnector
 import controllers.actions.StandardActionSets
 import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class AddAProtectorController @Inject()(
                                          standardActionSets: StandardActionSets,
                                          val controllerComponents: MessagesControllerComponents,
                                          val appConfig: FrontendAppConfig,
-                                         trustStoreConnector: TrustStoreConnector,
+                                         trustStoreConnector: TrustsStoreConnector,
                                          trustService: TrustService,
                                          addAnotherFormProvider: AddAProtectorFormProvider,
                                          yesNoFormProvider: YesNoFormProvider,
@@ -58,7 +58,7 @@ class AddAProtectorController @Inject()(
     implicit request =>
 
       for {
-        protectors <- trustService.getProtectors(request.userAnswers.utr)
+        protectors <- trustService.getProtectors(request.userAnswers.identifier)
         updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
         _ <- repository.set(updatedAnswers)
       } yield {
@@ -99,7 +99,7 @@ class AddAProtectorController @Inject()(
             } yield Redirect(controllers.routes.AddNowController.onPageLoad())
           } else {
             for {
-              _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
+              _ <- trustStoreConnector.setTaskComplete(request.userAnswers.identifier)
             } yield {
               Redirect(appConfig.maintainATrustOverview)
             }
@@ -111,7 +111,7 @@ class AddAProtectorController @Inject()(
   def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
-      trustService.getProtectors(request.userAnswers.utr).flatMap { protectors =>
+      trustService.getProtectors(request.userAnswers.identifier).flatMap { protectors =>
         addAnotherForm.bindFromRequest().fold(
           (formWithErrors: Form[_]) => {
 
@@ -138,7 +138,7 @@ class AddAProtectorController @Inject()(
 
             case AddAProtector.NoComplete =>
               for {
-                _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
+                _ <- trustStoreConnector.setTaskComplete(request.userAnswers.identifier)
               } yield {
                 Redirect(appConfig.maintainATrustOverview)
               }
@@ -151,7 +151,7 @@ class AddAProtectorController @Inject()(
     implicit request =>
 
       for {
-        _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
+        _ <- trustStoreConnector.setTaskComplete(request.userAnswers.identifier)
       } yield {
         logger.info(s"[Session ID: ${Session.id(hc)}]" +
           s" user has finished maintaining protectors and is returning to the task list")

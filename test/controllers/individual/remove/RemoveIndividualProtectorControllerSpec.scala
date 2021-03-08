@@ -19,7 +19,7 @@ package controllers.individual.remove
 import java.time.LocalDate
 
 import base.SpecBase
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import forms.YesNoFormProvider
 import models.protectors.{IndividualProtector, Protectors}
 import models.{Name, NationalInsuranceNumber}
@@ -45,7 +45,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
 
   lazy val name : String = "Name 1"
 
-  val mockConnector: TrustConnector = mock[TrustConnector]
+  val mockConnector: TrustsConnector = mock[TrustsConnector]
 
   def individualProtector(id: Int, provisional : Boolean) = IndividualProtector(
     name = Name(firstName = "Name", middleName = None, lastName = s"$id"),
@@ -74,7 +74,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
         .thenReturn(Future.successful(Protectors(protectors, Nil)))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .overrides(bind[TrustsConnector].toInstance(mockConnector))
         .build()
 
       val request = FakeRequest(GET, routes.RemoveIndividualProtectorController.onPageLoad(index).url)
@@ -96,7 +96,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
         .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .overrides(bind[TrustsConnector].toInstance(mockConnector))
         .build()
 
       val request = FakeRequest(GET, routes.RemoveIndividualProtectorController.onPageLoad(0).url)
@@ -118,7 +118,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
       when(mockConnector.getProtectors(any())(any(), any()))
         .thenReturn(Future.successful(Protectors(protectors, Nil)))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustsConnector].toInstance(mockConnector)).build()
 
       val request = FakeRequest(GET, routes.RemoveIndividualProtectorController.onPageLoad(0).url)
 
@@ -141,7 +141,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
         val index = 0
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         val request =
@@ -168,7 +168,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
           .thenReturn(Future.successful(Protectors(protectors, Nil)))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         val request =
@@ -192,7 +192,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
         val index = 2
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         when(mockConnector.getProtectors(any())(any(), any()))
@@ -219,7 +219,7 @@ class RemoveIndividualProtectorControllerSpec extends SpecBase with ScalaCheckPr
 
       val index = 0
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustsConnector].toInstance(mockConnector)).build()
 
       val request =
         FakeRequest(POST, routes.RemoveIndividualProtectorController.onSubmit(index).url)

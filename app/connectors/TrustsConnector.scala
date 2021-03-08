@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class TrustsConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private val trustsUrl: String = s"${config.trustsUrl}/trusts"
   private val protectorsUrl: String = s"$trustsUrl/protectors"

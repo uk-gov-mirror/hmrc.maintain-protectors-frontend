@@ -17,7 +17,7 @@
 package controllers.individual.amend
 
 import config.FrontendAppConfig
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import controllers.actions._
 import controllers.actions.individual.NameRequiredAction
 import extractors.IndividualProtectorExtractor
@@ -42,7 +42,7 @@ class CheckDetailsController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
                                         service: TrustService,
-                                        connector: TrustConnector,
+                                        connector: TrustsConnector,
                                         val appConfig: FrontendAppConfig,
                                         playbackRepository: PlaybackRepository,
                                         printHelper: IndividualProtectorPrintHelper,
@@ -64,7 +64,7 @@ class CheckDetailsController @Inject()(
   def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
     implicit request =>
 
-      service.getIndividualProtector(request.userAnswers.utr, index) flatMap {
+      service.getIndividualProtector(request.userAnswers.identifier, index) flatMap {
         trust =>
           for {
             extractedF <- Future.fromTry(extractor(request.userAnswers, trust, index))
@@ -85,7 +85,7 @@ class CheckDetailsController @Inject()(
 
       mapper(request.userAnswers).map {
         individual =>
-          connector.amendIndividualProtector(request.userAnswers.utr, index, individual).map(_ =>
+          connector.amendIndividualProtector(request.userAnswers.identifier, index, individual).map(_ =>
             Redirect(controllers.routes.AddAProtectorController.onPageLoad())
           )
       }.getOrElse(Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate)))

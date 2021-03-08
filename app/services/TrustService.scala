@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.ImplementedBy
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import javax.inject.Inject
 import models.RemoveProtector
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustServiceImpl @Inject()(connector: TrustConnector) extends TrustService {
+class TrustServiceImpl @Inject()(connector: TrustsConnector) extends TrustService {
 
   override def getProtectors(utr: String)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[Protectors] =
     connector.getProtectors(utr)

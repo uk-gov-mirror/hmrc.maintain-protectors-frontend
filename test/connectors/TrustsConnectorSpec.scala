@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 
-class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
+class TrustsConnectorSpec extends SpecBase with Generators with ScalaFutures
   with Inside with BeforeAndAfterAll with BeforeAndAfterEach with IntegrationPatience {
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -117,7 +117,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
           ): _*
         ).build()
 
-      val connector = application.injector.instanceOf[TrustConnector]
+      val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
         get(urlEqualTo(getTrustDetailsUrl(identifier)))
@@ -128,7 +128,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
       whenReady(processed) {
         r =>
-          r mustBe TrustDetails(startDate = date, typeOfTrust = TypeOfTrust.WillTrustOrIntestacyTrust)
+          r mustBe TrustDetails(startDate = date, typeOfTrust = Some(TypeOfTrust.WillTrustOrIntestacyTrust), trustTaxable = None)
       }
 
     }
@@ -155,7 +155,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
               ): _*
             ).build()
 
-          val connector = application.injector.instanceOf[TrustConnector]
+          val connector = application.injector.instanceOf[TrustsConnector]
 
           server.stubFor(
             get(urlEqualTo(getProtectorsUrl(identifier)))
@@ -219,7 +219,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
               ): _*
             ).build()
 
-          val connector = application.injector.instanceOf[TrustConnector]
+          val connector = application.injector.instanceOf[TrustsConnector]
 
           server.stubFor(
             get(urlEqualTo(getProtectorsUrl(identifier)))
@@ -254,7 +254,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(addBusinessProtectorUrl(identifier)))
@@ -278,7 +278,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(addBusinessProtectorUrl(identifier)))
@@ -306,7 +306,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(amendBusinessProtectorUrl(identifier, index)))
@@ -330,7 +330,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(amendBusinessProtectorUrl(identifier, index)))
@@ -358,7 +358,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(addIndividualProtectorUrl(identifier)))
@@ -382,7 +382,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(addIndividualProtectorUrl(identifier)))
@@ -410,7 +410,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(amendIndividualProtectorUrl(identifier, index)))
@@ -434,7 +434,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
             ): _*
           ).build()
 
-        val connector = application.injector.instanceOf[TrustConnector]
+        val connector = application.injector.instanceOf[TrustsConnector]
 
         server.stubFor(
           post(urlEqualTo(amendIndividualProtectorUrl(identifier, index)))
@@ -467,7 +467,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
                 ): _*
               ).build()
 
-            val connector = application.injector.instanceOf[TrustConnector]
+            val connector = application.injector.instanceOf[TrustsConnector]
 
             server.stubFor(
               put(urlEqualTo(removeProtectorUrl(identifier)))
@@ -495,7 +495,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
                 ): _*
               ).build()
 
-            val connector = application.injector.instanceOf[TrustConnector]
+            val connector = application.injector.instanceOf[TrustsConnector]
 
             server.stubFor(
               put(urlEqualTo(removeProtectorUrl(identifier)))
@@ -527,7 +527,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
               ): _*
             ).build()
 
-          val connector = application.injector.instanceOf[TrustConnector]
+          val connector = application.injector.instanceOf[TrustsConnector]
 
           server.stubFor(
             get(urlEqualTo(isTrust5mldUrl(identifier)))
@@ -556,7 +556,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
               ): _*
             ).build()
 
-          val connector = application.injector.instanceOf[TrustConnector]
+          val connector = application.injector.instanceOf[TrustsConnector]
 
           server.stubFor(
             get(urlEqualTo(isTrust5mldUrl(identifier)))

@@ -17,7 +17,7 @@
 package controllers.individual.add
 
 import config.FrontendAppConfig
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import controllers.actions._
 import controllers.actions.individual.NameRequiredAction
 import handlers.ErrorHandler
@@ -37,7 +37,7 @@ class CheckDetailsController @Inject()(
                                         standardActionSets: StandardActionSets,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
-                                        connector: TrustConnector,
+                                        connector: TrustsConnector,
                                         val appConfig: FrontendAppConfig,
                                         printHelper: IndividualProtectorPrintHelper,
                                         mapper: IndividualProtectorMapper,
@@ -59,7 +59,7 @@ class CheckDetailsController @Inject()(
         case None =>
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         case Some(protector) =>
-          connector.addIndividualProtector(request.userAnswers.utr, protector).map(_ =>
+          connector.addIndividualProtector(request.userAnswers.identifier, protector).map(_ =>
             Redirect(controllers.routes.AddAProtectorController.onPageLoad())
           )
       }

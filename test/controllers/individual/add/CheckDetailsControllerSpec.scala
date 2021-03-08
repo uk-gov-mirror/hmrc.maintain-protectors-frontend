@@ -19,7 +19,7 @@ package controllers.individual.add
 import java.time.LocalDate
 
 import base.SpecBase
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import models.Name
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -77,11 +77,11 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
     "redirect to the 'add a protector' page when submitted" in {
 
-      val mockTrustConnector = mock[TrustConnector]
+      val mockTrustConnector = mock[TrustsConnector]
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
-          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockTrustConnector))
           .build()
 
       when(mockTrustConnector.addIndividualProtector(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))

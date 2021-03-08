@@ -19,7 +19,7 @@ package controllers.business.remove
 import java.time.LocalDate
 
 import base.SpecBase
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import forms.YesNoFormProvider
 import models.protectors.{BusinessProtector, Protectors}
 import org.mockito.Matchers.any
@@ -44,7 +44,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
 
   lazy val name : String = "Some Name 1"
 
-  val mockConnector: TrustConnector = mock[TrustConnector]
+  val mockConnector: TrustsConnector = mock[TrustsConnector]
 
   def businessProtector(id: Int, provisional : Boolean) = BusinessProtector(
     name = s"Some Name $id",
@@ -72,7 +72,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
         .thenReturn(Future.successful(Protectors(Nil, protectors)))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .overrides(bind[TrustsConnector].toInstance(mockConnector))
         .build()
 
       val request = FakeRequest(GET, routes.RemoveBusinessProtectorController.onPageLoad(index).url)
@@ -96,7 +96,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
       when(mockConnector.getProtectors(any())(any(), any()))
         .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustsConnector].toInstance(mockConnector)).build()
 
       val request = FakeRequest(GET, routes.RemoveBusinessProtectorController.onPageLoad(0).url)
 
@@ -117,7 +117,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
       when(mockConnector.getProtectors(any())(any(), any()))
         .thenReturn(Future.successful(Protectors(Nil, protectors)))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustsConnector].toInstance(mockConnector)).build()
 
       val request = FakeRequest(GET, routes.RemoveBusinessProtectorController.onPageLoad(0).url)
 
@@ -140,7 +140,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
         val index = 0
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         val request =
@@ -167,7 +167,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
           .thenReturn(Future.successful(Protectors(Nil, protectors)))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         val request =
@@ -191,7 +191,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
         val index = 2
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .overrides(bind[TrustsConnector].toInstance(mockConnector))
           .build()
 
         when(mockConnector.getProtectors(any())(any(), any()))
@@ -218,7 +218,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
 
       val index = 0
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustsConnector].toInstance(mockConnector)).build()
 
       val request =
         FakeRequest(POST, routes.RemoveBusinessProtectorController.onSubmit(index).url)
