@@ -44,13 +44,15 @@ class IndividualProtectorMapper extends Mapper[IndividualProtector] {
   }
 
   private def readPassportOrIdCard: Reads[Option[IndividualIdentification]] = {
-    (for {
+    val identification = for {
       hasNino <- NationalInsuranceNumberYesNoPage.path.readWithDefault(false)
       hasAddress <- AddressYesNoPage.path.readWithDefault(false)
       hasPassport <- PassportDetailsYesNoPage.path.readWithDefault(false)
       hasIdCard <- IdCardDetailsYesNoPage.path.readWithDefault(false)
       hasPassportOrIdCard <- PassportOrIdCardDetailsYesNoPage.path.readWithDefault(false)
-    } yield (hasNino, hasAddress, hasPassport, hasIdCard, hasPassportOrIdCard)).flatMap[Option[IndividualIdentification]] {
+    } yield (hasNino, hasAddress, hasPassport, hasIdCard, hasPassportOrIdCard)
+
+    identification.flatMap[Option[IndividualIdentification]] {
       case (false, true, true, false, _) => PassportDetailsPage.path.read[Passport].map(Some(_))
       case (false, true, false, true, _) => IdCardDetailsPage.path.read[IdCard].map(Some(_))
       case (false, true, false, false, true) => PassportOrIdCardDetailsPage.path.read[CombinedPassportOrIdCard].map(Some(_))
