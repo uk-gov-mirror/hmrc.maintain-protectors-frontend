@@ -54,7 +54,7 @@ class AddAProtectorController @Inject()(
 
   val yesNoForm: Form[Boolean] = yesNoFormProvider.withPrefix("addAProtectorYesNo")
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       for {
@@ -84,7 +84,7 @@ class AddAProtectorController @Inject()(
       }
   }
 
-  def submitOne(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def submitOne(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       yesNoForm.bindFromRequest().fold(
@@ -108,7 +108,7 @@ class AddAProtectorController @Inject()(
       )
   }
 
-  def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       trustService.getProtectors(request.userAnswers.identifier).flatMap { protectors =>
@@ -147,7 +147,7 @@ class AddAProtectorController @Inject()(
       }
   }
 
-  def submitComplete(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def submitComplete(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       for {

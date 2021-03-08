@@ -61,12 +61,12 @@ class RemoveIndividualProtectorController @Inject()(
           Ok(view(preparedForm, index, protector.name.displayName))
       } recoverWith {
         case iobe: IndexOutOfBoundsException =>
-          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting individual protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
 
           Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
         case e =>
-          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting individual protector $index from trusts service ${e.getMessage}")
 
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))

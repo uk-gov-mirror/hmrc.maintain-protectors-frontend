@@ -60,7 +60,7 @@ class CheckDetailsController @Inject()(
     Ok(view(section, index))
   }
 
-  def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       service.getBusinessProtector(request.userAnswers.identifier, index) flatMap {
@@ -74,12 +74,12 @@ class CheckDetailsController @Inject()(
       }
   }
 
-  def renderFromUserAnswers(index: Int) : Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def renderFromUserAnswers(index: Int) : Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
       render(request.userAnswers, index, request.protectorName)
   }
 
-  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       mapper(request.userAnswers).map {

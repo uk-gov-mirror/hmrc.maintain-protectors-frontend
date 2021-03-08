@@ -41,7 +41,7 @@ class IndexController @Inject()(
 
   def onPageLoad(identifier: String): Action[AnyContent] = (actions.auth andThen actions.saveSession(identifier) andThen actions.getData).async {
       implicit request =>
-        logger.info(s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier]" +
+        logger.info(s"[Session ID: ${Session.id(hc)}][UTR/URN/URN: $identifier]" +
           s" user has started to maintain protectors")
         for {
           details <- connector.getTrustDetails(identifier)

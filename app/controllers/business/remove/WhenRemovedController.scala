@@ -40,7 +40,7 @@ class WhenRemovedController @Inject()(
                                        trustService: TrustService,
                                        errorHandler: ErrorHandler)(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       trust.getBusinessProtector(request.userAnswers.identifier, index).map {
@@ -49,19 +49,19 @@ class WhenRemovedController @Inject()(
           Ok(view(form, index, protector.name))
       } recoverWith {
         case iobe: IndexOutOfBoundsException =>
-          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
 
           Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
         case e =>
-          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${e.getMessage}")
 
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }
 
-  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       trust.getBusinessProtector(request.userAnswers.identifier, index).flatMap {

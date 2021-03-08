@@ -46,7 +46,7 @@ class IdCardDetailsYesNoController @Inject()(
 
   private val form: Form[Boolean] = formProvider.withPrefix("individualProtector.idCardDetailsYesNo")
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IdCardDetailsYesNoPage) match {
@@ -57,7 +57,7 @@ class IdCardDetailsYesNoController @Inject()(
       Ok(view(preparedForm, request.protectorName))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(

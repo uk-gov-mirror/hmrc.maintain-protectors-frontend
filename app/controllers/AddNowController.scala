@@ -42,7 +42,7 @@ class AddNowController @Inject()(
 
   val form: Form[ProtectorType] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AddNowPage) match {
@@ -53,7 +53,7 @@ class AddNowController @Inject()(
       Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       form.bindFromRequest().fold(
