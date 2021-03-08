@@ -26,7 +26,7 @@ final case class BusinessProtector(name: String,
                                    utr: Option[String],
                                    address: Option[Address],
                                    entityStart: LocalDate,
-                                   provisional : Boolean) extends Protector
+                                   provisional: Boolean) extends Protector
 
 object BusinessProtector extends ProtectorReads {
 

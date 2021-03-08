@@ -16,36 +16,25 @@
 
 package utils.mappers
 
+import models._
+import models.protectors.IndividualProtector
+import pages.QuestionPage
+import pages.individual._
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsSuccess, Reads}
+
 import java.time.LocalDate
 
-import models.protectors.IndividualProtector
-import models.{Address, CombinedPassportOrIdCard, IdCard, IndividualIdentification, Name, NationalInsuranceNumber, NonUkAddress, Passport, UkAddress, UserAnswers}
-import pages.individual._
-import play.api.Logging
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsError, JsSuccess, Reads}
+class IndividualProtectorMapper extends Mapper[IndividualProtector] {
 
-class IndividualProtectorMapper extends Logging {
-
-  def apply(answers: UserAnswers): Option[IndividualProtector] = {
-    val readFromUserAnswers: Reads[IndividualProtector] =
-      (
-        NamePage.path.read[Name] and
-        DateOfBirthPage.path.readNullable[LocalDate] and
-        readIdentification and
-        readAddress and
-        StartDatePage.path.read[LocalDate] and
-        Reads(_ => JsSuccess(true))
-      ) (IndividualProtector.apply _)
-
-    answers.data.validate[IndividualProtector](readFromUserAnswers) match {
-      case JsSuccess(value, _) =>
-        Some(value)
-      case JsError(errors) =>
-        logger.error(s"[UTR: ${answers.utr}] Failed to rehydrate IndividualProtector from UserAnswers due to $errors")
-        None
-    }
-  }
+  override val reads: Reads[IndividualProtector] = (
+    NamePage.path.read[Name] and
+      DateOfBirthPage.path.readNullable[LocalDate] and
+      readIdentification and
+      readAddress and
+      StartDatePage.path.read[LocalDate] and
+      Reads(_ => JsSuccess(true))
+    )(IndividualProtector.apply _)
 
   private def readIdentification: Reads[Option[IndividualIdentification]] = {
     NationalInsuranceNumberYesNoPage.path.read[Boolean].flatMap[Option[IndividualIdentification]] {
@@ -69,21 +58,9 @@ class IndividualProtectorMapper extends Logging {
     }
   }
 
-  private def readAddress: Reads[Option[Address]] = {
-    NationalInsuranceNumberYesNoPage.path.read[Boolean].flatMap {
-      case true => Reads(_ => JsSuccess(None))
-      case false => AddressYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
-        case true => readUkOrNonUkAddress
-        case false => Reads(_ => JsSuccess(None))
-      }
-    }
-  }
-
-  private def readUkOrNonUkAddress: Reads[Option[Address]] = {
-    LiveInTheUkYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
-      case true => UkAddressPage.path.read[UkAddress].map(Some(_))
-      case false => NonUkAddressPage.path.read[NonUkAddress].map(Some(_))
-    }
-  }
-
+  override def addressDeciderPage: QuestionPage[Boolean] = NationalInsuranceNumberYesNoPage
+  override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
+  override def ukAddressYesNoPage: QuestionPage[Boolean] = LiveInTheUkYesNoPage
+  override def ukAddressPage: QuestionPage[UkAddress] = UkAddressPage
+  override def nonUkAddressPage: QuestionPage[NonUkAddress] = NonUkAddressPage
 }
