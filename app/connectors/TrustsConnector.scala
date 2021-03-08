@@ -26,51 +26,57 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class TrustsConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private val trustsUrl: String = s"${config.trustsUrl}/trusts"
   private val protectorsUrl: String = s"$trustsUrl/protectors"
 
-  def getTrustDetails(utr: String)
+  def getTrustDetails(identifier: String)
                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
-    val url: String = s"$trustsUrl/$utr/trust-details"
+    val url: String = s"$trustsUrl/$identifier/trust-details"
     http.GET[TrustDetails](url)
   }
 
-  def getProtectors(utr: String)
+  def getProtectors(identifier: String)
                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Protectors] = {
-    val url: String = s"$protectorsUrl/$utr/transformed"
+    val url: String = s"$protectorsUrl/$identifier/transformed"
     http.GET[Protectors](url)
   }
 
-  def addIndividualProtector(utr: String, protector: IndividualProtector)
+  def addIndividualProtector(identifier: String, protector: IndividualProtector)
                             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"$protectorsUrl/add-individual/$utr"
+    val url: String = s"$protectorsUrl/add-individual/$identifier"
     http.POST[JsValue, HttpResponse](url, Json.toJson(protector))
   }
 
-  def amendIndividualProtector(utr: String, index: Int, individual: IndividualProtector)
+  def amendIndividualProtector(identifier: String, index: Int, individual: IndividualProtector)
                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"$protectorsUrl/amend-individual/$utr/$index"
+    val url: String = s"$protectorsUrl/amend-individual/$identifier/$index"
     http.POST[JsValue, HttpResponse](url, Json.toJson(individual))
   }
 
-  def addBusinessProtector(utr: String, protector: BusinessProtector)
+  def addBusinessProtector(identifier: String, protector: BusinessProtector)
                           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"$protectorsUrl/add-business/$utr"
+    val url: String = s"$protectorsUrl/add-business/$identifier"
     http.POST[JsValue, HttpResponse](url, Json.toJson(protector))
   }
 
-  def amendBusinessProtector(utr: String, index: Int, protector: BusinessProtector)
+  def amendBusinessProtector(identifier: String, index: Int, protector: BusinessProtector)
                             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"$protectorsUrl/amend-business/$utr/$index"
+    val url: String = s"$protectorsUrl/amend-business/$identifier/$index"
     http.POST[JsValue, HttpResponse](url, Json.toJson(protector))
   }
 
-  def removeProtector(utr: String, protector: RemoveProtector)
+  def removeProtector(identifier: String, protector: RemoveProtector)
                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"$protectorsUrl/$utr/remove"
+    val url: String = s"$protectorsUrl/$identifier/remove"
     http.PUT[JsValue, HttpResponse](url, Json.toJson(protector))
+  }
+
+  def isTrust5mld(identifier: String)
+                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    val url: String = s"$trustsUrl/$identifier/is-trust-5mld"
+    http.GET[Boolean](url)
   }
 
 }

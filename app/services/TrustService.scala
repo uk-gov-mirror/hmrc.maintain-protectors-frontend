@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.ImplementedBy
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import javax.inject.Inject
 import models.RemoveProtector
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
@@ -25,31 +25,31 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustServiceImpl @Inject()(connector: TrustConnector) extends TrustService {
+class TrustServiceImpl @Inject()(connector: TrustsConnector) extends TrustService {
 
-  override def getProtectors(utr: String)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[Protectors] =
-    connector.getProtectors(utr)
+  override def getProtectors(identifier: String)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[Protectors] =
+    connector.getProtectors(identifier)
 
-  override def getIndividualProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[IndividualProtector] =
-    getProtectors(utr).map(_.protector(index))
+  override def getIndividualProtector(identifier: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[IndividualProtector] =
+    getProtectors(identifier).map(_.protector(index))
 
-  override def getBusinessProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector] =
-    getProtectors(utr).map(_.protectorCompany(index))
+  override def getBusinessProtector(identifier: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector] =
+    getProtectors(identifier).map(_.protectorCompany(index))
 
-  override def removeProtector(utr: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    connector.removeProtector(utr, protector)
+  override def removeProtector(identifier: String, protector: RemoveProtector)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+    connector.removeProtector(identifier, protector)
 
 }
 
 @ImplementedBy(classOf[TrustServiceImpl])
 trait TrustService {
 
-  def getProtectors(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Protectors]
+  def getProtectors(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Protectors]
 
-  def getIndividualProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[IndividualProtector]
+  def getIndividualProtector(identifier: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[IndividualProtector]
 
-  def getBusinessProtector(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector]
+  def getBusinessProtector(identifier: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[BusinessProtector]
 
-  def removeProtector(utr: String, protector: RemoveProtector)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[HttpResponse]
+  def removeProtector(identifier: String, protector: RemoveProtector)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[HttpResponse]
 
 }

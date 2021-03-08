@@ -24,8 +24,7 @@ class StandardActionSets @Inject()(identify: IdentifierAction,
                                    val saveSession: SaveActiveSessionProvider,
                                    val getData: DataRetrievalAction,
                                    requireData: DataRequiredAction,
-                                   playbackIdentifier: PlaybackIdentifierAction
-                                  ){
+                                   playbackIdentifier: PlaybackIdentifierAction) {
 
   def auth: ActionBuilder[IdentifierRequest, AnyContent] = identify
 
@@ -33,6 +32,6 @@ class StandardActionSets @Inject()(identify: IdentifierAction,
 
   def identifiedUserWithData: ActionBuilder[DataRequest, AnyContent] = authWithSession andThen requireData
 
-  def verifiedForUtr: ActionBuilder[DataRequest, AnyContent] = identifiedUserWithData andThen playbackIdentifier
+  def verifiedForIdentifier: ActionBuilder[DataRequest, AnyContent] = identifiedUserWithData andThen playbackIdentifier
 
 }

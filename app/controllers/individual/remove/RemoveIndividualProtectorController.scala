@@ -56,17 +56,17 @@ class RemoveIndividualProtectorController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      trustService.getIndividualProtector(request.userAnswers.utr, index).map {
+      trustService.getIndividualProtector(request.userAnswers.identifier, index).map {
         protector =>
           Ok(view(preparedForm, index, protector.name.displayName))
       } recoverWith {
         case iobe: IndexOutOfBoundsException =>
-          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting individual protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
 
           Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
         case e =>
-          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting individual protector $index from trusts service ${e.getMessage}")
 
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
@@ -79,7 +79,7 @@ class RemoveIndividualProtectorController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) => {
-          trustService.getIndividualProtector(request.userAnswers.utr, index).map {
+          trustService.getIndividualProtector(request.userAnswers.identifier, index).map {
             protector =>
               BadRequest(view(formWithErrors, index, protector.name.displayName))
           }
@@ -88,10 +88,10 @@ class RemoveIndividualProtectorController @Inject()(
 
           if (value) {
 
-            trustService.getIndividualProtector(request.userAnswers.utr, index).flatMap {
+            trustService.getIndividualProtector(request.userAnswers.identifier, index).flatMap {
               protector =>
                 if (protector.provisional) {
-                  trustService.removeProtector(request.userAnswers.utr, RemoveProtector(ProtectorType.IndividualProtector, index)).map(_ =>
+                  trustService.removeProtector(request.userAnswers.identifier, RemoveProtector(ProtectorType.IndividualProtector, index)).map(_ =>
                     Redirect(controllers.routes.AddAProtectorController.onPageLoad())
                   )
                 } else {

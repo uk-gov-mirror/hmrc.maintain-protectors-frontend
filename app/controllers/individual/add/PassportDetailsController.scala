@@ -48,7 +48,7 @@ class PassportDetailsController @Inject()(
 
   private val form: Form[Passport] = formProvider.withPrefix("individualProtector")
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(PassportDetailsPage) match {
@@ -59,7 +59,7 @@ class PassportDetailsController @Inject()(
       Ok(view(preparedForm, countryOptions.options, request.protectorName))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(

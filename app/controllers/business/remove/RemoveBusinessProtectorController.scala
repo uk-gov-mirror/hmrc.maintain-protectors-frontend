@@ -56,17 +56,17 @@ class RemoveBusinessProtectorController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      trustService.getBusinessProtector(request.userAnswers.utr, index).map {
+      trustService.getBusinessProtector(request.userAnswers.identifier, index).map {
         protector =>
           Ok(view(preparedForm, index, protector.name))
       } recoverWith {
         case iobe: IndexOutOfBoundsException =>
-          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.warn(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException")
 
           Future.successful(Redirect(controllers.routes.AddAProtectorController.onPageLoad()))
         case e =>
-          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.utr}]" +
+          logger.error(s"[Session ID: ${utils.Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}]" +
             s" error getting business protector $index from trusts service ${e.getMessage}")
 
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
@@ -79,7 +79,7 @@ class RemoveBusinessProtectorController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) => {
-          trustService.getBusinessProtector(request.userAnswers.utr, index).map {
+          trustService.getBusinessProtector(request.userAnswers.identifier, index).map {
             protector =>
               BadRequest(view(formWithErrors, index, protector.name))
           }
@@ -88,10 +88,10 @@ class RemoveBusinessProtectorController @Inject()(
 
           if (value) {
 
-            trustService.getBusinessProtector(request.userAnswers.utr, index).flatMap {
+            trustService.getBusinessProtector(request.userAnswers.identifier, index).flatMap {
               protector =>
                 if (protector.provisional) {
-                  trustService.removeProtector(request.userAnswers.utr, RemoveProtector(ProtectorType.BusinessProtector, index)).map(_ =>
+                  trustService.removeProtector(request.userAnswers.identifier, RemoveProtector(ProtectorType.BusinessProtector, index)).map(_ =>
                     Redirect(controllers.routes.AddAProtectorController.onPageLoad())
                   )
                 } else {

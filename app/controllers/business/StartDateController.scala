@@ -44,7 +44,7 @@ class StartDateController @Inject()(
 
   private val prefix: String = "businessProtector.startDate"
 
-  def onPageLoad(): Action[AnyContent] = (standardActionSets.verifiedForUtr andThen nameAction) {
+  def onPageLoad(): Action[AnyContent] = (standardActionSets.verifiedForIdentifier andThen nameAction) {
     implicit request =>
 
       val form = formProvider.withPrefixAndTrustStartDate(prefix, request.userAnswers.whenTrustSetup)
@@ -57,7 +57,7 @@ class StartDateController @Inject()(
       Ok(view(preparedForm, request.protectorName))
   }
 
-  def onSubmit(): Action[AnyContent] = (standardActionSets.verifiedForUtr andThen nameAction).async {
+  def onSubmit(): Action[AnyContent] = (standardActionSets.verifiedForIdentifier andThen nameAction).async {
     implicit request =>
 
       val form = formProvider.withPrefixAndTrustStartDate(prefix, request.userAnswers.whenTrustSetup)

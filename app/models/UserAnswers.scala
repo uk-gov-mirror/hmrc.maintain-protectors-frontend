@@ -16,22 +16,23 @@
 
 package models
 
-import java.time.{LocalDate, LocalDateTime}
-
 import pages.AddNowPage
 import play.api.Logging
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 
+import java.time.{LocalDate, LocalDateTime}
 import scala.util.{Failure, Success, Try}
 
-final case class UserAnswers(
-                              internalId: String,
-                              utr: String,
-                              whenTrustSetup: LocalDate,
-                              data: JsObject = Json.obj(),
-                              updatedAt: LocalDateTime = LocalDateTime.now
-                            ) extends Logging {
+final case class UserAnswers(internalId: String,
+                             identifier: String,
+                             whenTrustSetup: LocalDate,
+                             data: JsObject = Json.obj(),
+                             updatedAt: LocalDateTime = LocalDateTime.now,
+                             is5mldEnabled: Boolean = false,
+                             isTaxable: Boolean = true,
+                             isUnderlyingData5mld: Boolean = false) extends Logging {
 
   def cleanup : Try[UserAnswers] = {
     this
@@ -43,7 +44,7 @@ final case class UserAnswers(
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
-      case JsError(errors) => None
+      case JsError(_) => None
     }
   }
 
@@ -58,7 +59,7 @@ final case class UserAnswers(
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]) = {
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -101,29 +102,26 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  implicit lazy val reads: Reads[UserAnswers] = {
+  implicit lazy val reads: Reads[UserAnswers] = (
+    (__ \ "internalId").read[String] and
+      ((__ \ "utr").read[String] or (__ \ "identifier").read[String]) and
+      (__ \ "whenTrustSetup").read[LocalDate] and
+      (__ \ "data").read[JsObject] and
+      (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead) and
+      (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
+      (__ \ "isTaxable").readWithDefault[Boolean](true) and
+      (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false)
+    )(UserAnswers.apply _)
 
-    import play.api.libs.functional.syntax._
+  implicit lazy val writes: OWrites[UserAnswers] = (
+    (__ \ "internalId").write[String] and
+      (__ \ "utr").write[String] and
+      (__ \ "whenTrustSetup").write[LocalDate] and
+      (__ \ "data").write[JsObject] and
+      (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite) and
+      (__ \ "is5mldEnabled").write[Boolean] and
+      (__ \ "isTaxable").write[Boolean] and
+      (__ \ "isUnderlyingData5mld").write[Boolean]
+    )(unlift(UserAnswers.unapply))
 
-    (
-      (__ \ "internalId").read[String] and
-        (__ \ "utr").read[String] and
-        (__ \ "whenTrustSetup").read[LocalDate] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (UserAnswers.apply _)
-  }
-
-  implicit lazy val writes: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "internalId").write[String] and
-        (__ \ "utr").write[String] and
-        (__ \ "whenTrustSetup").write[LocalDate] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(UserAnswers.unapply))
-  }
 }

@@ -16,44 +16,42 @@
 
 package extractors
 
-import com.google.inject.Inject
 import models.protectors.BusinessProtector
-import models.{Address, NonUkAddress, UkAddress, UserAnswers}
+import models.{NonUkAddress, UkAddress, UserAnswers}
+import pages.QuestionPage
 import pages.business._
+import play.api.libs.json.JsPath
 
+import java.time.LocalDate
 import scala.util.Try
 
-class BusinessProtectorExtractor @Inject()() {
+class BusinessProtectorExtractor extends ProtectorExtractor[BusinessProtector] {
 
-  def apply(answers: UserAnswers, business : BusinessProtector, index: Int): Try[UserAnswers] =
-    answers.deleteAtPath(pages.business.basePath)
+  override def apply(answers: UserAnswers, business: BusinessProtector, index: Int): Try[UserAnswers] = {
+    super.apply(answers, business, index)
       .flatMap(_.set(NamePage, business.name))
       .flatMap(answers => extractAddress(business.address, answers))
       .flatMap(answers => extractUtr(business.utr, answers))
-      .flatMap(_.set(StartDatePage, business.entityStart))
-      .flatMap(_.set(IndexPage, index))
-
-  private def extractUtr(utr: Option[String], answers: UserAnswers) : Try[UserAnswers] = {
-    utr match {
-      case Some(utr) =>
-        answers.set(UtrYesNoPage, true)
-        .flatMap(_.set(UtrPage, utr))
-      case _ => answers.set(UtrYesNoPage, false)
-    }
   }
 
-  private def extractAddress(address: Option[Address], answers: UserAnswers) : Try[UserAnswers] = {
-    address match {
-      case Some(uk: UkAddress) =>
-        answers.set(AddressYesNoPage, true)
-          .flatMap(_.set(AddressUkYesNoPage, true))
-          .flatMap(_.set(UkAddressPage, uk))
-      case Some(nonUk: NonUkAddress) =>
-        answers.set(AddressYesNoPage, true)
-          .flatMap(_.set(AddressUkYesNoPage, false))
-          .flatMap(_.set(NonUkAddressPage, nonUk))
-      case _ =>
-        answers.set(AddressYesNoPage, false)
+  override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
+  override def ukAddressYesNoPage: QuestionPage[Boolean] = AddressUkYesNoPage
+  override def ukAddressPage: QuestionPage[UkAddress] = UkAddressPage
+  override def nonUkAddressPage: QuestionPage[NonUkAddress] = NonUkAddressPage
+
+  override def startDatePage: QuestionPage[LocalDate] = StartDatePage
+
+  override def indexPage: QuestionPage[Int] = IndexPage
+
+  override def basePath: JsPath = pages.individual.basePath
+
+  private def extractUtr(utr: Option[String], answers: UserAnswers): Try[UserAnswers] = {
+    utr match {
+      case Some(utr) => answers
+        .set(UtrYesNoPage, true)
+        .flatMap(_.set(UtrPage, utr))
+      case _ => answers
+        .set(UtrYesNoPage, false)
     }
   }
 }

@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package models
+package models.protectors
 
-import java.time.LocalDate
+import play.api.libs.json.{JsPath, JsSuccess, Reads}
 
-import play.api.libs.json.{Format, Json}
+trait ProtectorReads {
 
-case class TrustDetails(startDate: LocalDate, typeOfTrust: Option[TypeOfTrust], trustTaxable: Option[Boolean])
-
-object TrustDetails {
-
-  implicit val formats: Format[TrustDetails] = Json.format[TrustDetails]
+  def readNullableAtSubPath[T: Reads](subPath: JsPath): Reads[Option[T]] = Reads(
+    _.transform(subPath.json.pick)
+      .flatMap(_.validate[T])
+      .map(Some(_))
+      .recoverWith(_ => JsSuccess(None))
+  )
 
 }

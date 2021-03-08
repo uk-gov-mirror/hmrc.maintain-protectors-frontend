@@ -45,7 +45,7 @@ class AddressYesNoController @Inject()(
 
   val form = formProvider.withPrefix("businessProtector.addressYesNo")
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AddressYesNoPage) match {
@@ -56,7 +56,7 @@ class AddressYesNoController @Inject()(
       Ok(view(preparedForm, request.protectorName, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(

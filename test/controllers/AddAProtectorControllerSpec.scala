@@ -19,7 +19,7 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBase
-import connectors.TrustStoreConnector
+import connectors.TrustsStoreConnector
 import forms.{AddAProtectorFormProvider, YesNoFormProvider}
 import models.protectors.{BusinessProtector, IndividualProtector, Protectors}
 import models.{AddAProtector, Name, NationalInsuranceNumber, RemoveProtector}
@@ -45,7 +45,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
   lazy val submitAnotherRoute : String = controllers.routes.AddAProtectorController.submitAnother().url
   lazy val submitCompleteRoute : String = controllers.routes.AddAProtectorController.submitComplete().url
 
-  val mockStoreConnector : TrustStoreConnector = mock[TrustStoreConnector]
+  val mockStoreConnector : TrustsStoreConnector = mock[TrustsStoreConnector]
 
   val addProtectorForm = new AddAProtectorFormProvider()()
   val addProtectorYesNoForm = new YesNoFormProvider().withPrefix("addAProtectorYesNo")
@@ -160,7 +160,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(Seq(
           bind(classOf[TrustService]).toInstance(fakeService),
-          bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+          bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
         )).build()
 
         val request =
@@ -186,7 +186,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(Seq(
             bind(classOf[TrustService]).toInstance(fakeService),
-            bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+            bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
           )).build()
 
         val request =
@@ -239,7 +239,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(Seq(
           bind(classOf[TrustService]).toInstance(fakeService),
-          bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+          bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
         )).build()
 
         val request =
@@ -285,7 +285,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(Seq(
             bind(classOf[TrustService]).toInstance(fakeService),
-            bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+            bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
           )).build()
 
         val request =
@@ -376,7 +376,7 @@ class AddAProtectorControllerSpec extends SpecBase with ScalaFutures {
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(Seq(
           bind(classOf[TrustService]).toInstance(fakeService),
-          bind(classOf[TrustStoreConnector]).toInstance(mockStoreConnector)
+          bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
         )).build()
 
         val request = FakeRequest(POST, submitCompleteRoute)

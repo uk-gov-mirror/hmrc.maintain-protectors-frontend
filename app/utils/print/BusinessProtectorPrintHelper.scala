@@ -17,7 +17,7 @@
 package utils.print
 
 import com.google.inject.Inject
-import models.{CheckMode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import pages.business._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
@@ -28,26 +28,22 @@ class BusinessProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConver
 
     val bound = answerRowConverter.bind(userAnswers, protectorName)
 
-    val add: Seq[AnswerRow] = Seq(
-      bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(NormalMode).url),
-      bound.yesNoQuestion(UtrYesNoPage, "businessProtector.utrYesNo", controllers.business.routes.UtrYesNoController.onPageLoad(NormalMode).url),
-      bound.stringQuestion(UtrPage, "businessProtector.utr", controllers.business.routes.UtrController.onPageLoad(NormalMode).url),
-      bound.yesNoQuestion(AddressYesNoPage, "businessProtector.addressYesNo", controllers.business.routes.AddressYesNoController.onPageLoad(NormalMode).url),
-      bound.yesNoQuestion(AddressUkYesNoPage, "businessProtector.addressUkYesNo", controllers.business.routes.AddressUkYesNoController.onPageLoad(NormalMode).url),
-      bound.addressQuestion(UkAddressPage, "businessProtector.ukAddress", controllers.business.routes.UkAddressController.onPageLoad(NormalMode).url),
-      bound.addressQuestion(NonUkAddressPage, "businessProtector.nonUkAddress", controllers.business.routes.NonUkAddressController.onPageLoad(NormalMode).url),
-      bound.dateQuestion(StartDatePage, "businessProtector.startDate", controllers.business.routes.StartDateController.onPageLoad().url)
-    ).flatten
+    def answerRows(mode: Mode): Seq[Option[AnswerRow]] = Seq(
+      bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(mode).url),
+      bound.yesNoQuestion(UtrYesNoPage, "businessProtector.utrYesNo", controllers.business.routes.UtrYesNoController.onPageLoad(mode).url),
+      bound.stringQuestion(UtrPage, "businessProtector.utr", controllers.business.routes.UtrController.onPageLoad(mode).url),
+      bound.yesNoQuestion(AddressYesNoPage, "businessProtector.addressYesNo", controllers.business.routes.AddressYesNoController.onPageLoad(mode).url),
+      bound.yesNoQuestion(AddressUkYesNoPage, "businessProtector.addressUkYesNo", controllers.business.routes.AddressUkYesNoController.onPageLoad(mode).url),
+      bound.addressQuestion(UkAddressPage, "businessProtector.ukAddress", controllers.business.routes.UkAddressController.onPageLoad(mode).url),
+      bound.addressQuestion(NonUkAddressPage, "businessProtector.nonUkAddress", controllers.business.routes.NonUkAddressController.onPageLoad(mode).url)
+    )
 
-    val amend: Seq[AnswerRow] = Seq(
-      bound.stringQuestion(NamePage, "businessProtector.name", controllers.business.routes.NameController.onPageLoad(CheckMode).url),
-      bound.yesNoQuestion(UtrYesNoPage, "businessProtector.utrYesNo", controllers.business.routes.UtrYesNoController.onPageLoad(CheckMode).url),
-      bound.stringQuestion(UtrPage, "businessProtector.utr", controllers.business.routes.UtrController.onPageLoad(CheckMode).url),
-      bound.yesNoQuestion(AddressYesNoPage, "businessProtector.addressYesNo", controllers.business.routes.AddressYesNoController.onPageLoad(CheckMode).url),
-      bound.yesNoQuestion(AddressUkYesNoPage, "businessProtector.addressUkYesNo", controllers.business.routes.AddressUkYesNoController.onPageLoad(CheckMode).url),
-      bound.addressQuestion(UkAddressPage, "businessProtector.ukAddress", controllers.business.routes.UkAddressController.onPageLoad(CheckMode).url),
-      bound.addressQuestion(NonUkAddressPage, "businessProtector.nonUkAddress", controllers.business.routes.NonUkAddressController.onPageLoad(CheckMode).url)
-    ).flatten
+    lazy val add: Seq[AnswerRow] = (
+      answerRows(NormalMode) :+
+        bound.dateQuestion(StartDatePage, "businessProtector.startDate", controllers.business.routes.StartDateController.onPageLoad().url)
+      ).flatten
+
+    val amend: Seq[AnswerRow] = answerRows(CheckMode).flatten
 
     AnswerSection(
       None,

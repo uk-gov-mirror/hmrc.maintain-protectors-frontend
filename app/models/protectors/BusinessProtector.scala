@@ -16,43 +16,33 @@
 
 package models.protectors
 
-import java.time.LocalDate
-
 import models.Address
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 final case class BusinessProtector(name: String,
-                                 utr: Option[String],
-                                 address: Option[Address],
-                                 entityStart: LocalDate,
-                                 provisional : Boolean) extends Protector
+                                   utr: Option[String],
+                                   address: Option[Address],
+                                   entityStart: LocalDate,
+                                   provisional: Boolean) extends Protector
 
-object BusinessProtector {
+object BusinessProtector extends ProtectorReads {
 
-  implicit val reads: Reads[BusinessProtector] =
-    ((__ \ 'name).read[String] and
+  implicit val reads: Reads[BusinessProtector] = (
+    (__ \ 'name).read[String] and
       __.lazyRead(readNullableAtSubPath[String](__ \ 'identification \ 'utr)) and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address)) and
       (__ \ "entityStart").read[LocalDate] and
-      (__ \ "provisional").readWithDefault(false)).tupled.map {
+      (__ \ "provisional").readWithDefault(false)
+    )(BusinessProtector.apply _)
 
-      case (name, utr, address, entityStart, provisional) =>
-        BusinessProtector(name, utr, address, entityStart, provisional)
-    }
-
-  implicit val writes: Writes[BusinessProtector] =
-    ((__ \ 'name).write[String] and
+  implicit val writes: Writes[BusinessProtector] = (
+    (__ \ 'name).write[String] and
       (__ \ 'identification \ 'utr).writeNullable[String] and
       (__ \ 'identification \ 'address).writeNullable[Address] and
       (__ \ "entityStart").write[LocalDate] and
       (__ \ "provisional").write[Boolean]
-      ).apply(unlift(BusinessProtector.unapply))
-
-  def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
-    _.transform(subPath.json.pick)
-      .flatMap(_.validate[T])
-      .map(Some(_))
-      .recoverWith(_ => JsSuccess(None))
-  )
+    )(unlift(BusinessProtector.unapply))
 }

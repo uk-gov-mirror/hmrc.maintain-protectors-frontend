@@ -17,7 +17,7 @@
 package controllers.business.amend
 
 import config.FrontendAppConfig
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import controllers.actions._
 import controllers.actions.business.NameRequiredAction
 import extractors.BusinessProtectorExtractor
@@ -42,7 +42,7 @@ class CheckDetailsController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
                                         service: TrustService,
-                                        connector: TrustConnector,
+                                        connector: TrustsConnector,
                                         val appConfig: FrontendAppConfig,
                                         playbackRepository: PlaybackRepository,
                                         printHelper: BusinessProtectorPrintHelper,
@@ -60,10 +60,10 @@ class CheckDetailsController @Inject()(
     Ok(view(section, index))
   }
 
-  def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
-      service.getBusinessProtector(request.userAnswers.utr, index) flatMap {
+      service.getBusinessProtector(request.userAnswers.identifier, index) flatMap {
         protector =>
           for {
             userAnswers <- Future.fromTry(extractor(request.userAnswers, protector, index))
@@ -74,17 +74,17 @@ class CheckDetailsController @Inject()(
       }
   }
 
-  def renderFromUserAnswers(index: Int) : Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def renderFromUserAnswers(index: Int) : Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
       render(request.userAnswers, index, request.protectorName)
   }
 
-  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       mapper(request.userAnswers).map {
         business =>
-          connector.amendBusinessProtector(request.userAnswers.utr, index, business).map(_ =>
+          connector.amendBusinessProtector(request.userAnswers.identifier, index, business).map(_ =>
             Redirect(controllers.routes.AddAProtectorController.onPageLoad())
           )
       }.getOrElse(Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate)))

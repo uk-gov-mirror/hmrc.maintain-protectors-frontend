@@ -17,7 +17,7 @@
 package controllers.individual.add
 
 import config.FrontendAppConfig
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import controllers.actions._
 import controllers.actions.individual.NameRequiredAction
 import handlers.ErrorHandler
@@ -37,7 +37,7 @@ class CheckDetailsController @Inject()(
                                         standardActionSets: StandardActionSets,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
-                                        connector: TrustConnector,
+                                        connector: TrustsConnector,
                                         val appConfig: FrontendAppConfig,
                                         printHelper: IndividualProtectorPrintHelper,
                                         mapper: IndividualProtectorMapper,
@@ -45,21 +45,21 @@ class CheckDetailsController @Inject()(
                                         errorHandler: ErrorHandler
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.andThen(nameAction) {
     implicit request =>
 
       val section: AnswerSection = printHelper(request.userAnswers, provisional = true, request.protectorName)
       Ok(view(section))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
     implicit request =>
 
       mapper(request.userAnswers) match {
         case None =>
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         case Some(protector) =>
-          connector.addIndividualProtector(request.userAnswers.utr, protector).map(_ =>
+          connector.addIndividualProtector(request.userAnswers.identifier, protector).map(_ =>
             Redirect(controllers.routes.AddAProtectorController.onPageLoad())
           )
       }
