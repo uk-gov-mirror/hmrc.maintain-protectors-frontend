@@ -16,47 +16,36 @@
 
 package models.protectors
 
-import java.time.LocalDate
-
 import models.{Address, IndividualIdentification, Name}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 final case class IndividualProtector(name: Name,
-                                   dateOfBirth: Option[LocalDate],
-                                   identification: Option[IndividualIdentification],
-                                   address : Option[Address],
-                                   entityStart: LocalDate,
-                                   provisional : Boolean) extends Protector
+                                     dateOfBirth: Option[LocalDate],
+                                     identification: Option[IndividualIdentification],
+                                     address : Option[Address],
+                                     entityStart: LocalDate,
+                                     provisional : Boolean) extends Protector
 
-object IndividualProtector {
+object IndividualProtector extends ProtectorReads {
 
-  implicit val reads: Reads[IndividualProtector] =
-    ((__ \ 'name).read[Name] and
+  implicit val reads: Reads[IndividualProtector] = (
+    (__ \ 'name).read[Name] and
       (__ \ 'dateOfBirth).readNullable[LocalDate] and
       __.lazyRead(readNullableAtSubPath[IndividualIdentification](__ \ 'identification)) and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address)) and
       (__ \ "entityStart").read[LocalDate] and
-      (__ \ "provisional").readWithDefault(false)).tupled.map{
+      (__ \ "provisional").readWithDefault(false)
+    )(IndividualProtector.apply _)
 
-      case (name, dob, nino, identification, entityStart, provisional) =>
-        IndividualProtector(name, dob, nino, identification, entityStart, provisional)
-
-    }
-
-  implicit val writes: Writes[IndividualProtector] =
-    ((__ \ 'name).write[Name] and
+  implicit val writes: Writes[IndividualProtector] = (
+    (__ \ 'name).write[Name] and
       (__ \ 'dateOfBirth).writeNullable[LocalDate] and
       (__ \ 'identification).writeNullable[IndividualIdentification] and
       (__ \ 'identification \ 'address).writeNullable[Address] and
       (__ \ "entityStart").write[LocalDate] and
       (__ \ "provisional").write[Boolean]
-      ).apply(unlift(IndividualProtector.unapply))
-
-  def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
-    _.transform(subPath.json.pick)
-      .flatMap(_.validate[T])
-      .map(Some(_))
-      .recoverWith(_ => JsSuccess(None))
-  )
+    )(unlift(IndividualProtector.unapply))
 }

@@ -20,10 +20,14 @@ import play.api.i18n.{Messages, MessagesProvider}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Reads, __}
 
-trait Protector
+import java.time.LocalDate
+
+trait Protector {
+  val entityStart: LocalDate
+}
 
 case class Protectors(protector: List[IndividualProtector],
-                    protectorCompany: List[BusinessProtector]) {
+                      protectorCompany: List[BusinessProtector]) {
 
   val size: Int = (protector ++ protectorCompany).size
 
@@ -40,13 +44,13 @@ case class Protectors(protector: List[IndividualProtector],
     (protector ++ protectorCompany).size >= 25
   }
 
-  val isNotMaxedOut = !isMaxedOut
+  val isNotMaxedOut: Boolean = !isMaxedOut
 
 }
 
 object Protectors {
-  implicit val reads: Reads[Protectors] =
-    ((__ \ "protectors" \ "protector").readWithDefault[List[IndividualProtector]](Nil)
+  implicit val reads: Reads[Protectors] = (
+    (__ \ "protectors" \ "protector").readWithDefault[List[IndividualProtector]](Nil)
       and (__ \ "protectors" \ "protectorCompany").readWithDefault[List[BusinessProtector]](Nil)
-      ).apply(Protectors.apply _)
+    ).apply(Protectors.apply _)
 }
