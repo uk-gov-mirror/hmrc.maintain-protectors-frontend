@@ -16,13 +16,14 @@
 
 package extractors
 
+import models.Constant.GB
 import models.protectors.Protector
 import models.{Address, NonUkAddress, UkAddress, UserAnswers}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 import java.time.LocalDate
-import scala.util.Try
+import scala.util.{Success, Try}
 
 trait ProtectorExtractor[T <: Protector] {
 
@@ -32,6 +33,9 @@ trait ProtectorExtractor[T <: Protector] {
       .flatMap(_.set(indexPage, index))
   }
 
+  def countryOfResidenceYesNoPage: QuestionPage[Boolean]
+  def countryOfResidenceUkYesNoPage: QuestionPage[Boolean]
+  def countryOfResidencePage: QuestionPage[String]
   def addressYesNoPage: QuestionPage[Boolean]
   def ukAddressYesNoPage: QuestionPage[Boolean]
   def ukAddressPage: QuestionPage[UkAddress]
@@ -43,18 +47,41 @@ trait ProtectorExtractor[T <: Protector] {
 
   def basePath: JsPath
 
+  def extractCountryOfResidence(countryOfResidence: Option[String], answers: UserAnswers): Try[UserAnswers] = {
+    if (answers.is5mldEnabled && answers.isUnderlyingData5mld) {
+      countryOfResidence match {
+        case Some(GB) => answers
+          .set(countryOfResidenceYesNoPage, true)
+          .flatMap(_.set(countryOfResidenceUkYesNoPage, true))
+          .flatMap(_.set(countryOfResidencePage, GB))
+        case Some(country) => answers
+          .set(countryOfResidenceYesNoPage, true)
+          .flatMap(_.set(countryOfResidenceUkYesNoPage, false))
+          .flatMap(_.set(countryOfResidencePage, country))
+        case None => answers
+          .set(countryOfResidenceYesNoPage, false)
+      }
+    } else {
+      Success(answers)
+    }
+  }
+
   def extractAddress(address: Option[Address], answers: UserAnswers): Try[UserAnswers] = {
-    address match {
-      case Some(uk: UkAddress) => answers
-        .set(addressYesNoPage, true)
-        .flatMap(_.set(ukAddressYesNoPage, true))
-        .flatMap(_.set(ukAddressPage, uk))
-      case Some(nonUk: NonUkAddress) => answers
-        .set(addressYesNoPage, true)
-        .flatMap(_.set(ukAddressYesNoPage, false))
-        .flatMap(_.set(nonUkAddressPage, nonUk))
-      case _ => answers
-        .set(addressYesNoPage, false)
+    if (answers.isTaxable) {
+      address match {
+        case Some(uk: UkAddress) => answers
+          .set(addressYesNoPage, true)
+          .flatMap(_.set(ukAddressYesNoPage, true))
+          .flatMap(_.set(ukAddressPage, uk))
+        case Some(nonUk: NonUkAddress) => answers
+          .set(addressYesNoPage, true)
+          .flatMap(_.set(ukAddressYesNoPage, false))
+          .flatMap(_.set(nonUkAddressPage, nonUk))
+        case _ => answers
+          .set(addressYesNoPage, false)
+      }
+    } else {
+      Success(answers)
     }
   }
 

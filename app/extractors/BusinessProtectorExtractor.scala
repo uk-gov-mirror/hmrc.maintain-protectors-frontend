@@ -23,17 +23,21 @@ import pages.business._
 import play.api.libs.json.JsPath
 
 import java.time.LocalDate
-import scala.util.Try
+import scala.util.{Success, Try}
 
 class BusinessProtectorExtractor extends ProtectorExtractor[BusinessProtector] {
 
   override def apply(answers: UserAnswers, business: BusinessProtector, index: Int): Try[UserAnswers] = {
     super.apply(answers, business, index)
       .flatMap(_.set(NamePage, business.name))
+      .flatMap(answers => extractCountryOfResidence(business.countryOfResidence, answers))
       .flatMap(answers => extractAddress(business.address, answers))
       .flatMap(answers => extractUtr(business.utr, answers))
   }
 
+  override def countryOfResidenceYesNoPage: QuestionPage[Boolean] = CountryOfResidenceYesNoPage
+  override def countryOfResidenceUkYesNoPage: QuestionPage[Boolean] = CountryOfResidenceUkYesNoPage
+  override def countryOfResidencePage: QuestionPage[String] = CountryOfResidencePage
   override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
   override def ukAddressYesNoPage: QuestionPage[Boolean] = AddressUkYesNoPage
   override def ukAddressPage: QuestionPage[UkAddress] = UkAddressPage
@@ -46,12 +50,16 @@ class BusinessProtectorExtractor extends ProtectorExtractor[BusinessProtector] {
   override def basePath: JsPath = pages.individual.basePath
 
   private def extractUtr(utr: Option[String], answers: UserAnswers): Try[UserAnswers] = {
-    utr match {
-      case Some(utr) => answers
-        .set(UtrYesNoPage, true)
-        .flatMap(_.set(UtrPage, utr))
-      case _ => answers
-        .set(UtrYesNoPage, false)
+    if (answers.isTaxable) {
+      utr match {
+        case Some(utr) => answers
+          .set(UtrYesNoPage, true)
+          .flatMap(_.set(UtrPage, utr))
+        case _ => answers
+          .set(UtrYesNoPage, false)
+      }
+    } else {
+      Success(answers)
     }
   }
 }

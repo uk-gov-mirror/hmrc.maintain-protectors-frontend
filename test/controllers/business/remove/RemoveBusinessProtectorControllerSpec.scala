@@ -49,6 +49,7 @@ class RemoveBusinessProtectorControllerSpec extends SpecBase with ScalaCheckProp
   def businessProtector(id: Int, provisional : Boolean) = BusinessProtector(
     name = s"Some Name $id",
     utr = None,
+    countryOfResidence = None,
     address = None,
     entityStart = LocalDate.parse("2012-03-14"),
     provisional = provisional

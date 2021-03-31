@@ -17,8 +17,8 @@
 package utils.mappers
 
 import java.time.LocalDate
-
 import base.SpecBase
+import models.Constant.GB
 import models.{NonUkAddress, UkAddress}
 import pages.business._
 
@@ -99,6 +99,45 @@ class BusinessProtectorMapperSpec extends SpecBase {
       result.name mustBe name
       result.utr mustBe None
       result.address mustBe Some(nonUkAddress)
+      result.entityStart mustBe startDate
+    }
+
+    "generate business protector model with GB Residency" in {
+
+      val userAnswers = emptyUserAnswers
+        .set(NamePage, name).success.value
+        .set(UtrYesNoPage, false).success.value
+        .set(CountryOfResidenceYesNoPage, true).success.value
+        .set(CountryOfResidenceUkYesNoPage, true).success.value
+        .set(AddressYesNoPage, false).success.value
+        .set(StartDatePage, startDate).success.value
+
+      val result = mapper(userAnswers).get
+
+      result.name mustBe name
+      result.utr mustBe None
+      result.countryOfResidence mustBe Some(GB)
+      result.address mustBe None
+      result.entityStart mustBe startDate
+    }
+
+    "generate business protector model with US Residency" in {
+
+      val userAnswers = emptyUserAnswers
+        .set(NamePage, name).success.value
+        .set(UtrYesNoPage, false).success.value
+        .set(CountryOfResidenceYesNoPage, true).success.value
+        .set(CountryOfResidenceUkYesNoPage, false).success.value
+        .set(CountryOfResidencePage, "US").success.value
+        .set(AddressYesNoPage, false).success.value
+        .set(StartDatePage, startDate).success.value
+
+      val result = mapper(userAnswers).get
+
+      result.name mustBe name
+      result.utr mustBe None
+      result.countryOfResidence mustBe Some("US")
+      result.address mustBe None
       result.entityStart mustBe startDate
     }
   }

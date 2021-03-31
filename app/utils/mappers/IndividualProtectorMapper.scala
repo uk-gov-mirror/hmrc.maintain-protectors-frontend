@@ -60,6 +60,9 @@ class IndividualProtectorMapper extends Mapper[IndividualProtector] {
     }
   }
 
+  override def countryOfResidenceYesNoPage: QuestionPage[Boolean] = CountryOfResidenceYesNoPage
+  override def countryOfResidenceUkYesNoPage: QuestionPage[Boolean] = CountryOfResidenceUkYesNoPage
+  override def countryOfResidencePage: QuestionPage[String] = CountryOfResidencePage
   override def addressDeciderPage: QuestionPage[Boolean] = NationalInsuranceNumberYesNoPage
   override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
   override def ukAddressYesNoPage: QuestionPage[Boolean] = LiveInTheUkYesNoPage

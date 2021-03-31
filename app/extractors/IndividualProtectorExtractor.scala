@@ -35,6 +35,9 @@ class IndividualProtectorExtractor extends ProtectorExtractor[IndividualProtecto
       .flatMap(answers => extractIdentification(individual, answers))
   }
 
+  override def countryOfResidenceYesNoPage: QuestionPage[Boolean] = CountryOfResidenceYesNoPage
+  override def countryOfResidenceUkYesNoPage: QuestionPage[Boolean] = CountryOfResidenceUkYesNoPage
+  override def countryOfResidencePage: QuestionPage[String] = CountryOfResidencePage
   override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
   override def ukAddressYesNoPage: QuestionPage[Boolean] = LiveInTheUkYesNoPage
   override def ukAddressPage: QuestionPage[UkAddress] = UkAddressPage

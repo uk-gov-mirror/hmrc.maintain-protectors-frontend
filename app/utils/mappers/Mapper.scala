@@ -16,6 +16,7 @@
 
 package utils.mappers
 
+import models.Constant.GB
 import models.protectors.Protector
 import models.{Address, NonUkAddress, UkAddress, UserAnswers}
 import pages.QuestionPage
@@ -38,11 +39,24 @@ abstract class Mapper[T <: Protector : ClassTag] extends Logging {
 
   val reads: Reads[T]
 
+  def countryOfResidenceYesNoPage: QuestionPage[Boolean]
+  def countryOfResidenceUkYesNoPage: QuestionPage[Boolean]
+  def countryOfResidencePage: QuestionPage[String]
   def addressDeciderPage: QuestionPage[Boolean]
   def addressYesNoPage: QuestionPage[Boolean]
   def ukAddressYesNoPage: QuestionPage[Boolean]
   def ukAddressPage: QuestionPage[UkAddress]
   def nonUkAddressPage: QuestionPage[NonUkAddress]
+
+  def readCountryOfResidence: Reads[Option[String]] = {
+    countryOfResidenceYesNoPage.path.readNullable[Boolean].flatMap[Option[String]] {
+      case Some(true) => countryOfResidenceUkYesNoPage.path.read[Boolean].flatMap {
+        case true => Reads(_ => JsSuccess(Some(GB)))
+        case false => countryOfResidencePage.path.read[String].map(Some(_))
+      }
+      case _ => Reads(_ => JsSuccess(None))
+    }
+  }
 
   def readAddress: Reads[Option[Address]] = {
     addressDeciderPage.path.read[Boolean].flatMap {

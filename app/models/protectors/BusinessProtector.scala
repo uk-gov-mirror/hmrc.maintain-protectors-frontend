@@ -24,6 +24,7 @@ import java.time.LocalDate
 
 final case class BusinessProtector(name: String,
                                    utr: Option[String],
+                                   countryOfResidence: Option[String],
                                    address: Option[Address],
                                    entityStart: LocalDate,
                                    provisional: Boolean) extends Protector
@@ -33,6 +34,7 @@ object BusinessProtector extends ProtectorReads {
   implicit val reads: Reads[BusinessProtector] = (
     (__ \ 'name).read[String] and
       __.lazyRead(readNullableAtSubPath[String](__ \ 'identification \ 'utr)) and
+      (__ \ 'countryOfResidence).readNullable[String] and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address)) and
       (__ \ "entityStart").read[LocalDate] and
       (__ \ "provisional").readWithDefault(false)
@@ -41,6 +43,7 @@ object BusinessProtector extends ProtectorReads {
   implicit val writes: Writes[BusinessProtector] = (
     (__ \ 'name).write[String] and
       (__ \ 'identification \ 'utr).writeNullable[String] and
+      (__ \ 'countryOfResidence).writeNullable[String] and
       (__ \ 'identification \ 'address).writeNullable[Address] and
       (__ \ "entityStart").write[LocalDate] and
       (__ \ "provisional").write[Boolean]
