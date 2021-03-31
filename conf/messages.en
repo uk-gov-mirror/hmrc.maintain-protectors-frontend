@@ -330,6 +330,24 @@ businessProtector.utr.error.required = Enter the protector’s Unique Taxpayer R
 businessProtector.utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 businessProtector.utr.error.invalid = Enter the protector’s Unique Taxpayer Reference in the correct format
 
+businessProtector.countryOfResidenceYesNo.title = Do you know the protector’s country of residence?
+businessProtector.countryOfResidenceYesNo.heading = Do you know {0}’s country of residence?
+businessProtector.countryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+businessProtector.countryOfResidenceYesNo.error.required = Select yes if you know the protector’s country of residence
+businessProtector.countryOfResidenceYesNo.hint = The country of residence is usually where the business is registered (incorporated). The business has UK residency if it is registered with Companies House.
+
+businessProtector.countryOfResidenceUkYesNo.title = Does the protector have UK residency?
+businessProtector.countryOfResidenceUkYesNo.heading = Does {0} have UK residency?
+businessProtector.countryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+businessProtector.countryOfResidenceUkYesNo.error.required = Select yes if if the business is a UK resident
+
+businessProtector.countryOfResidence.title = What is the protector’s country of residence?
+businessProtector.countryOfResidence.heading = What is {0}’s country of residence?
+businessProtector.countryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
+businessProtector.countryOfResidence.error.required = Enter a country
+businessProtector.countryOfResidence.error.length = The country of residence must be 100 characters or less
+businessProtector.countryOfResidence.error.invalidCharacters = The country of residence must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
 businessProtector.addressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 businessProtector.addressYesNo.title = Do you know the protector’s address?
 businessProtector.addressYesNo.heading = Do you know {0}’s address?
