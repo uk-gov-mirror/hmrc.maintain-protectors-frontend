@@ -17,8 +17,8 @@
 package utils.mappers
 
 import java.time.LocalDate
-
 import base.SpecBase
+import models.Constant.GB
 import models.{NonUkAddress, UkAddress}
 import pages.business._
 
@@ -34,72 +34,121 @@ class BusinessProtectorMapperSpec extends SpecBase {
 
     val mapper = injector.instanceOf[BusinessProtectorMapper]
 
-    "generate business protector model with no utr and no address" in {
+    "4mld" must {
 
-      val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(UtrYesNoPage, false).success.value
-        .set(AddressYesNoPage, false).success.value
-        .set(StartDatePage, startDate).success.value
+      "generate business protector model with no utr and no address" in {
 
-      val result = mapper(userAnswers).get
+        val userAnswers = emptyUserAnswers
+          .set(NamePage, name).success.value
+          .set(UtrYesNoPage, false).success.value
+          .set(AddressYesNoPage, false).success.value
+          .set(StartDatePage, startDate).success.value
 
-      result.name mustBe name
-      result.utr mustBe None
-      result.address mustBe None
-      result.entityStart mustBe startDate
+        val result = mapper(userAnswers).get
+
+        result.name mustBe name
+        result.utr mustBe None
+        result.address mustBe None
+        result.entityStart mustBe startDate
+      }
+
+      "generate business protector model with utr and no address" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(NamePage, name).success.value
+          .set(UtrYesNoPage, true).success.value
+          .set(UtrPage, utr).success.value
+          .set(StartDatePage, startDate).success.value
+
+        val result = mapper(userAnswers).get
+
+        result.name mustBe name
+        result.utr mustBe Some(utr)
+        result.address mustBe None
+        result.entityStart mustBe startDate
+      }
+
+      "generate business protector model with UK address and no utr" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(NamePage, name).success.value
+          .set(UtrYesNoPage, false).success.value
+          .set(AddressYesNoPage, true).success.value
+          .set(AddressUkYesNoPage, true).success.value
+          .set(UkAddressPage, ukAddress).success.value
+          .set(StartDatePage, startDate).success.value
+
+        val result = mapper(userAnswers).get
+
+        result.name mustBe name
+        result.utr mustBe None
+        result.address mustBe Some(ukAddress)
+        result.entityStart mustBe startDate
+      }
+
+      "generate business protector model with non-UK address and no utr" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(NamePage, name).success.value
+          .set(UtrYesNoPage, false).success.value
+          .set(AddressYesNoPage, true).success.value
+          .set(AddressUkYesNoPage, false).success.value
+          .set(NonUkAddressPage, nonUkAddress).success.value
+          .set(StartDatePage, startDate).success.value
+
+        val result = mapper(userAnswers).get
+
+        result.name mustBe name
+        result.utr mustBe None
+        result.address mustBe Some(nonUkAddress)
+        result.entityStart mustBe startDate
+      }
     }
 
-    "generate business protector model with utr and no address" in {
+    "5mld" when {
 
-      val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(UtrYesNoPage, true).success.value
-        .set(UtrPage, utr).success.value
-        .set(StartDatePage, startDate).success.value
+      "taxable" must {
 
-      val result = mapper(userAnswers).get
+        "generate business protector model with UK Residency" in {
 
-      result.name mustBe name
-      result.utr mustBe Some(utr)
-      result.address mustBe None
-      result.entityStart mustBe startDate
-    }
+          val userAnswers = emptyUserAnswers
+            .set(NamePage, name).success.value
+            .set(UtrYesNoPage, false).success.value
+            .set(CountryOfResidenceYesNoPage, true).success.value
+            .set(CountryOfResidenceUkYesNoPage, true).success.value
+            .set(AddressYesNoPage, false).success.value
+            .set(StartDatePage, startDate).success.value
 
-    "generate business protector model with UK address and no utr" in {
+          val result = mapper(userAnswers).get
 
-      val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(UtrYesNoPage, false).success.value
-        .set(AddressYesNoPage, true).success.value
-        .set(AddressUkYesNoPage, true).success.value
-        .set(UkAddressPage, ukAddress).success.value
-        .set(StartDatePage, startDate).success.value
+          result.name mustBe name
+          result.utr mustBe None
+          result.countryOfResidence mustBe Some(GB)
+          result.address mustBe None
+          result.entityStart mustBe startDate
+        }
+      }
 
-      val result = mapper(userAnswers).get
+      "non-taxable" must {
 
-      result.name mustBe name
-      result.utr mustBe None
-      result.address mustBe Some(ukAddress)
-      result.entityStart mustBe startDate
-    }
+        "generate business protector model with non-UK Residency" in {
 
-    "generate business protector model with non-UK address and no utr" in {
+          val userAnswers = emptyUserAnswers
+            .set(NamePage, name).success.value
+            .set(CountryOfResidenceYesNoPage, true).success.value
+            .set(CountryOfResidenceUkYesNoPage, false).success.value
+            .set(CountryOfResidencePage, "US").success.value
+            .set(StartDatePage, startDate).success.value
 
-      val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(UtrYesNoPage, false).success.value
-        .set(AddressYesNoPage, true).success.value
-        .set(AddressUkYesNoPage, false).success.value
-        .set(NonUkAddressPage, nonUkAddress).success.value
-        .set(StartDatePage, startDate).success.value
+          val result = mapper(userAnswers).get
 
-      val result = mapper(userAnswers).get
-
-      result.name mustBe name
-      result.utr mustBe None
-      result.address mustBe Some(nonUkAddress)
-      result.entityStart mustBe startDate
+          result.name mustBe name
+          result.utr mustBe None
+          result.countryOfResidence mustBe Some("US")
+          result.address mustBe None
+          result.entityStart mustBe startDate
+        }
+      }
     }
   }
 }

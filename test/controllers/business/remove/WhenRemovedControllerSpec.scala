@@ -66,6 +66,7 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
   def businessProtector(id: Int) = BusinessProtector(
     name = s"Some Name $id",
     utr = None,
+    countryOfResidence = None,
     address = None,
     entityStart = LocalDate.parse("2012-03-14"),
     provisional = false

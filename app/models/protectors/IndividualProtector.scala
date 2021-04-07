@@ -24,18 +24,24 @@ import java.time.LocalDate
 
 final case class IndividualProtector(name: Name,
                                      dateOfBirth: Option[LocalDate],
+                                     countryOfNationality: Option[String] = None,
                                      identification: Option[IndividualIdentification],
-                                     address : Option[Address],
+                                     countryOfResidence: Option[String] = None,
+                                     address: Option[Address],
+                                     mentalCapacityYesNo: Option[Boolean] = None,
                                      entityStart: LocalDate,
-                                     provisional : Boolean) extends Protector
+                                     provisional: Boolean) extends Protector
 
 object IndividualProtector extends ProtectorReads {
 
   implicit val reads: Reads[IndividualProtector] = (
     (__ \ 'name).read[Name] and
       (__ \ 'dateOfBirth).readNullable[LocalDate] and
+      (__ \ 'nationality).readNullable[String] and
       __.lazyRead(readNullableAtSubPath[IndividualIdentification](__ \ 'identification)) and
+      (__ \ 'countryOfResidence).readNullable[String] and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address)) and
+      (__ \ 'legallyIncapable).readNullable[Boolean].map(_.map(!_)) and
       (__ \ "entityStart").read[LocalDate] and
       (__ \ "provisional").readWithDefault(false)
     )(IndividualProtector.apply _)
@@ -43,9 +49,13 @@ object IndividualProtector extends ProtectorReads {
   implicit val writes: Writes[IndividualProtector] = (
     (__ \ 'name).write[Name] and
       (__ \ 'dateOfBirth).writeNullable[LocalDate] and
+      (__ \ 'nationality).writeNullable[String] and
       (__ \ 'identification).writeNullable[IndividualIdentification] and
+      (__ \ 'countryOfResidence).writeNullable[String] and
       (__ \ 'identification \ 'address).writeNullable[Address] and
+      (__ \ 'legallyIncapable).writeNullable[Boolean](x => JsBoolean(!x)) and
       (__ \ "entityStart").write[LocalDate] and
       (__ \ "provisional").write[Boolean]
     )(unlift(IndividualProtector.unapply))
+
 }

@@ -30,16 +30,20 @@ class IndividualProtectorMapper extends Mapper[IndividualProtector] {
   override val reads: Reads[IndividualProtector] = (
     NamePage.path.read[Name] and
       DateOfBirthPage.path.readNullable[LocalDate] and
+      readCountryOfNationality and
       readIdentification and
+      readCountryOfResidence and
       readAddress and
+      readMentalCapacity and
       StartDatePage.path.read[LocalDate] and
       Reads(_ => JsSuccess(true))
     )(IndividualProtector.apply _)
 
   private def readIdentification: Reads[Option[IndividualIdentification]] = {
-    NationalInsuranceNumberYesNoPage.path.read[Boolean].flatMap[Option[IndividualIdentification]] {
-      case true => NationalInsuranceNumberPage.path.read[String].map(nino => Some(NationalInsuranceNumber(nino)))
-      case false => readPassportOrIdCard
+    NationalInsuranceNumberYesNoPage.path.readNullable[Boolean].flatMap[Option[IndividualIdentification]] {
+      case Some(true) => NationalInsuranceNumberPage.path.read[String].map(nino => Some(NationalInsuranceNumber(nino)))
+      case Some(false) => readPassportOrIdCard
+      case _ => Reads(_ => JsSuccess(None))
     }
   }
 
@@ -60,9 +64,24 @@ class IndividualProtectorMapper extends Mapper[IndividualProtector] {
     }
   }
 
+  private def readCountryOfNationality: Reads[Option[String]] = {
+    readCountryOfResidenceOrNationality(CountryOfNationalityYesNoPage, CountryOfNationalityUkYesNoPage, CountryOfNationalityPage)
+  }
+
+  private def readMentalCapacity: Reads[Option[Boolean]] = {
+    MentalCapacityYesNoPage.path.readNullable[Boolean].flatMap[Option[Boolean]] {
+      case Some(value) => Reads(_ => JsSuccess(Some(value)))
+      case _ => Reads(_ => JsSuccess(None))
+    }
+  }
+
+  override def countryOfResidenceYesNoPage: QuestionPage[Boolean] = CountryOfResidenceYesNoPage
+  override def countryOfResidenceUkYesNoPage: QuestionPage[Boolean] = CountryOfResidenceUkYesNoPage
+  override def countryOfResidencePage: QuestionPage[String] = CountryOfResidencePage
   override def addressDeciderPage: QuestionPage[Boolean] = NationalInsuranceNumberYesNoPage
   override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
   override def ukAddressYesNoPage: QuestionPage[Boolean] = LiveInTheUkYesNoPage
   override def ukAddressPage: QuestionPage[UkAddress] = UkAddressPage
   override def nonUkAddressPage: QuestionPage[NonUkAddress] = NonUkAddressPage
+
 }

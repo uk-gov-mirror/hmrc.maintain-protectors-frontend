@@ -40,28 +40,33 @@ class IndexController @Inject()(
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(identifier: String): Action[AnyContent] = (actions.auth andThen actions.saveSession(identifier) andThen actions.getData).async {
-      implicit request =>
-        logger.info(s"[Session ID: ${Session.id(hc)}][UTR/URN/URN: $identifier]" +
-          s" user has started to maintain protectors")
-        for {
-          details <- connector.getTrustDetails(identifier)
-          is5mldEnabled <- featureFlagService.is5mldEnabled()
-          isUnderlyingData5mld <- connector.isTrust5mld(identifier)
-          ua <- Future.successful(
-            request.userAnswers.getOrElse {
-              UserAnswers(
-                internalId = request.user.internalId,
-                identifier = identifier,
-                whenTrustSetup = details.startDate,
-                is5mldEnabled = is5mldEnabled,
-                isTaxable = details.trustTaxable.getOrElse(true),
-                isUnderlyingData5mld = isUnderlyingData5mld
-              )
-            }
-          )
-          _ <- cacheRepository.set(ua)
-        } yield {
-          Redirect(controllers.routes.AddAProtectorController.onPageLoad())
-        }
-    }
+    implicit request =>
+      logger.info(s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier]" +
+        s" user has started to maintain protectors")
+      for {
+        details <- connector.getTrustDetails(identifier)
+        is5mldEnabled <- featureFlagService.is5mldEnabled()
+        isUnderlyingData5mld <- connector.isTrust5mld(identifier)
+        ua <- Future.successful(
+          request.userAnswers match {
+            case Some(userAnswers) => userAnswers.copy(
+              is5mldEnabled = is5mldEnabled,
+              isTaxable = details.isTaxable,
+              isUnderlyingData5mld = isUnderlyingData5mld
+            )
+            case None => UserAnswers(
+              internalId = request.user.internalId,
+              identifier = identifier,
+              whenTrustSetup = details.startDate,
+              is5mldEnabled = is5mldEnabled,
+              isTaxable = details.isTaxable,
+              isUnderlyingData5mld = isUnderlyingData5mld
+            )
+          }
+        )
+        _ <- cacheRepository.set(ua)
+      } yield {
+        Redirect(controllers.routes.AddAProtectorController.onPageLoad())
+      }
+  }
 }

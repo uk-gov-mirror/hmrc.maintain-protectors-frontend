@@ -30,11 +30,15 @@ class BusinessProtectorMapper extends Mapper[BusinessProtector] {
   override val reads: Reads[BusinessProtector] = (
     NamePage.path.read[String] and
       UtrPage.path.readNullable[String] and
+      readCountryOfResidence and
       readAddress and
       StartDatePage.path.read[LocalDate] and
       Reads(_ => JsSuccess(true))
     )(BusinessProtector.apply _)
 
+  override def countryOfResidenceYesNoPage: QuestionPage[Boolean] = CountryOfResidenceYesNoPage
+  override def countryOfResidenceUkYesNoPage: QuestionPage[Boolean] = CountryOfResidenceUkYesNoPage
+  override def countryOfResidencePage: QuestionPage[String] = CountryOfResidencePage
   override def addressDeciderPage: QuestionPage[Boolean] = UtrYesNoPage
   override def addressYesNoPage: QuestionPage[Boolean] = AddressYesNoPage
   override def ukAddressYesNoPage: QuestionPage[Boolean] = AddressUkYesNoPage

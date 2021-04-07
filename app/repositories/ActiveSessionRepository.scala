@@ -26,7 +26,6 @@ import play.api.libs.json._
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.IndexType
 import reactivemongo.play.json.collection.JSONCollection
-import reactivemongo.play.json.compat.jsObjectWrites
 
 import scala.concurrent.{ExecutionContext, Future}
 
