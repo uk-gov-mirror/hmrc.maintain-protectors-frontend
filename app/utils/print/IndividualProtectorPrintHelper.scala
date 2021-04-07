@@ -15,6 +15,7 @@
  */
 
 package utils.print
+
 import com.google.inject.Inject
 import controllers.individual.add.{routes => addRts}
 import controllers.individual.amend.{routes => amendRts}
@@ -30,40 +31,35 @@ class IndividualProtectorPrintHelper @Inject()(answerRowConverter: AnswerRowConv
 
     val bound = answerRowConverter.bind(userAnswers, protectorName)
 
-    def answerRows(mode: Mode): Seq[Option[AnswerRow]] = Seq(
-      bound.nameQuestion(NamePage, "individualProtector.name", rts.NameController.onPageLoad(mode).url),
-      bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", rts.DateOfBirthYesNoController.onPageLoad(mode).url),
-      bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", rts.DateOfBirthController.onPageLoad(mode).url),
-      bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", rts.NationalInsuranceNumberYesNoController.onPageLoad(mode).url),
-      bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", rts.NationalInsuranceNumberController.onPageLoad(mode).url),
-      bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", rts.AddressYesNoController.onPageLoad(mode).url),
-      bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", rts.LiveInTheUkYesNoController.onPageLoad(mode).url),
-      bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", rts.UkAddressController.onPageLoad(mode).url),
-      bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", rts.NonUkAddressController.onPageLoad(mode).url)
-    )
-
-    lazy val add: Seq[AnswerRow] = (
-      answerRows(NormalMode) ++
-        Seq(
-          bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", addRts.PassportDetailsYesNoController.onPageLoad().url),
-          bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", addRts.PassportDetailsController.onPageLoad().url),
-          bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", addRts.IdCardDetailsYesNoController.onPageLoad().url),
-          bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", addRts.IdCardDetailsController.onPageLoad().url),
-          bound.dateQuestion(StartDatePage, "individualProtector.startDate", addRts.StartDateController.onPageLoad().url)
-        )
+    def answerRows: Seq[AnswerRow] = {
+      val mode: Mode = if (provisional) NormalMode else CheckMode
+      Seq(
+        bound.nameQuestion(NamePage, "individualProtector.name", rts.NameController.onPageLoad(mode).url),
+        bound.yesNoQuestion(DateOfBirthYesNoPage, "individualProtector.dateOfBirthYesNo", rts.DateOfBirthYesNoController.onPageLoad(mode).url),
+        bound.dateQuestion(DateOfBirthPage, "individualProtector.dateOfBirth", rts.DateOfBirthController.onPageLoad(mode).url),
+        bound.yesNoQuestion(CountryOfNationalityYesNoPage, "individualProtector.countryOfNationalityYesNo", rts.CountryOfNationalityYesNoController.onPageLoad(mode).url),
+        bound.yesNoQuestion(CountryOfNationalityUkYesNoPage, "individualProtector.countryOfNationalityUkYesNo", rts.CountryOfNationalityUkYesNoController.onPageLoad(mode).url),
+        bound.countryQuestion(CountryOfNationalityUkYesNoPage, CountryOfNationalityPage, "individualProtector.countryOfNationality", rts.CountryOfNationalityController.onPageLoad(mode).url),
+        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "individualProtector.nationalInsuranceNumberYesNo", rts.NationalInsuranceNumberYesNoController.onPageLoad(mode).url),
+        bound.ninoQuestion(NationalInsuranceNumberPage, "individualProtector.nationalInsuranceNumber", rts.NationalInsuranceNumberController.onPageLoad(mode).url),
+        bound.yesNoQuestion(CountryOfResidenceYesNoPage, "individualProtector.countryOfResidenceYesNo", rts.CountryOfResidenceYesNoController.onPageLoad(mode).url),
+        bound.yesNoQuestion(CountryOfResidenceUkYesNoPage, "individualProtector.countryOfResidenceUkYesNo", rts.CountryOfResidenceUkYesNoController.onPageLoad(mode).url),
+        bound.countryQuestion(CountryOfResidenceUkYesNoPage, CountryOfResidencePage, "individualProtector.countryOfResidence", rts.CountryOfResidenceController.onPageLoad(mode).url),
+        bound.yesNoQuestion(AddressYesNoPage, "individualProtector.addressYesNo", rts.AddressYesNoController.onPageLoad(mode).url),
+        bound.yesNoQuestion(LiveInTheUkYesNoPage, "individualProtector.liveInTheUkYesNo", rts.LiveInTheUkYesNoController.onPageLoad(mode).url),
+        bound.addressQuestion(UkAddressPage, "individualProtector.ukAddress", rts.UkAddressController.onPageLoad(mode).url),
+        bound.addressQuestion(NonUkAddressPage, "individualProtector.nonUkAddress", rts.NonUkAddressController.onPageLoad(mode).url),
+        if (mode == NormalMode) bound.yesNoQuestion(PassportDetailsYesNoPage, "individualProtector.passportDetailsYesNo", addRts.PassportDetailsYesNoController.onPageLoad().url) else None,
+        if (mode == NormalMode) bound.passportDetailsQuestion(PassportDetailsPage, "individualProtector.passportDetails", addRts.PassportDetailsController.onPageLoad().url) else None,
+        if (mode == NormalMode) bound.yesNoQuestion(IdCardDetailsYesNoPage, "individualProtector.idCardDetailsYesNo", addRts.IdCardDetailsYesNoController.onPageLoad().url) else None,
+        if (mode == NormalMode) bound.idCardDetailsQuestion(IdCardDetailsPage, "individualProtector.idCardDetails", addRts.IdCardDetailsController.onPageLoad().url) else None,
+        if (mode == CheckMode) bound.yesNoQuestion(PassportOrIdCardDetailsYesNoPage, "individualProtector.passportOrIdCardDetailsYesNo", amendRts.PassportOrIdCardDetailsYesNoController.onPageLoad().url) else None,
+        if (mode == CheckMode) bound.passportOrIdCardDetailsQuestion(PassportOrIdCardDetailsPage, "individualProtector.passportOrIdCardDetails", amendRts.PassportOrIdCardDetailsController.onPageLoad().url) else None,
+        bound.yesNoQuestion(MentalCapacityYesNoPage, "individualProtector.mentalCapacityYesNo", rts.MentalCapacityYesNoController.onPageLoad(mode).url),
+        if (mode == NormalMode) bound.dateQuestion(StartDatePage, "individualProtector.startDate", addRts.StartDateController.onPageLoad().url) else None
       ).flatten
+    }
 
-    lazy val amend: Seq[AnswerRow] = (
-      answerRows(CheckMode) ++
-        Seq(
-          bound.yesNoQuestion(PassportOrIdCardDetailsYesNoPage, "individualProtector.passportOrIdCardDetailsYesNo", amendRts.PassportOrIdCardDetailsYesNoController.onPageLoad().url),
-          bound.passportOrIdCardDetailsQuestion(PassportOrIdCardDetailsPage, "individualProtector.passportOrIdCardDetails", amendRts.PassportOrIdCardDetailsController.onPageLoad().url)
-        )
-      ).flatten
-
-    AnswerSection(
-      None,
-      if (provisional) add else amend
-    )
+    AnswerSection(headingKey = None, rows = answerRows)
   }
 }

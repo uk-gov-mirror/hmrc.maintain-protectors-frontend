@@ -82,6 +82,7 @@ class TrustsConnectorSpec extends SpecBase with Generators with ScalaFutures
   private val business = BusinessProtector(
     name = "Protector Org 24",
     utr = None,
+    countryOfResidence = None,
     address = None,
     entityStart = date,
     provisional = false

@@ -54,6 +54,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
   private val businessProtector = BusinessProtector(
     name = name,
     utr = None,
+    countryOfResidence = None,
     address = Some(address),
     entityStart = startDate,
     provisional = false

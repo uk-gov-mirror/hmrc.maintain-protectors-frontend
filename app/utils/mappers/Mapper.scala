@@ -16,6 +16,7 @@
 
 package utils.mappers
 
+import models.Constant.GB
 import models.protectors.Protector
 import models.{Address, NonUkAddress, UkAddress, UserAnswers}
 import pages.QuestionPage
@@ -38,19 +39,38 @@ abstract class Mapper[T <: Protector : ClassTag] extends Logging {
 
   val reads: Reads[T]
 
+  def countryOfResidenceYesNoPage: QuestionPage[Boolean]
+  def countryOfResidenceUkYesNoPage: QuestionPage[Boolean]
+  def countryOfResidencePage: QuestionPage[String]
   def addressDeciderPage: QuestionPage[Boolean]
   def addressYesNoPage: QuestionPage[Boolean]
   def ukAddressYesNoPage: QuestionPage[Boolean]
   def ukAddressPage: QuestionPage[UkAddress]
   def nonUkAddressPage: QuestionPage[NonUkAddress]
 
+  def readCountryOfResidence: Reads[Option[String]] = {
+    readCountryOfResidenceOrNationality(countryOfResidenceYesNoPage, countryOfResidenceUkYesNoPage, countryOfResidencePage)
+  }
+
+  def readCountryOfResidenceOrNationality(yesNoPage: QuestionPage[Boolean],
+                                          ukYesNoPage: QuestionPage[Boolean],
+                                          page: QuestionPage[String]): Reads[Option[String]] = {
+    yesNoPage.path.readNullable[Boolean].flatMap[Option[String]] {
+      case Some(true) => ukYesNoPage.path.read[Boolean].flatMap {
+        case true => Reads(_ => JsSuccess(Some(GB)))
+        case false => page.path.read[String].map(Some(_))
+      }
+      case _ => Reads(_ => JsSuccess(None))
+    }
+  }
+
   def readAddress: Reads[Option[Address]] = {
-    addressDeciderPage.path.read[Boolean].flatMap {
-      case true => Reads(_ => JsSuccess(None))
-      case false => addressYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
+    addressDeciderPage.path.readNullable[Boolean].flatMap {
+      case Some(false) => addressYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
         case true => readUkOrNonUkAddress
         case false => Reads(_ => JsSuccess(None))
       }
+      case _ => Reads(_ => JsSuccess(None))
     }
   }
 

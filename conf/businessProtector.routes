@@ -14,6 +14,21 @@ POST       /utr                                             controllers.business
 GET        /change-utr                                      controllers.business.UtrController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-utr                                      controllers.business.UtrController.onSubmit(mode: Mode = CheckMode)
 
+GET        /has-country-of-residence                        controllers.business.CountryOfResidenceYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-country-of-residence                        controllers.business.CountryOfResidenceYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-country-of-residence                 controllers.business.CountryOfResidenceYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-country-of-residence                 controllers.business.CountryOfResidenceYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uk-residence                                    controllers.business.CountryOfResidenceUkYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /uk-residence                                    controllers.business.CountryOfResidenceUkYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-uk-residence                             controllers.business.CountryOfResidenceUkYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-uk-residence                             controllers.business.CountryOfResidenceUkYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /country-of-residence                            controllers.business.CountryOfResidenceController.onPageLoad(mode: Mode = NormalMode)
+POST       /country-of-residence                            controllers.business.CountryOfResidenceController.onSubmit(mode: Mode = NormalMode)
+GET        /change-country-of-residence                     controllers.business.CountryOfResidenceController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-country-of-residence                     controllers.business.CountryOfResidenceController.onSubmit(mode: Mode = CheckMode)
+
 GET        /has-address                                     controllers.business.AddressYesNoController.onPageLoad(mode: Mode = NormalMode)
 POST       /has-address                                     controllers.business.AddressYesNoController.onSubmit(mode: Mode = NormalMode)
 GET        /change-has-address                              controllers.business.AddressYesNoController.onPageLoad(mode: Mode = CheckMode)

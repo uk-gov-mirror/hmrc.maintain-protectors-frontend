@@ -168,6 +168,24 @@ individualProtector.dateOfBirth.error.invalid = Enter a real date of birth
 individualProtector.dateOfBirth.error.future = Date of birth must be today or in the past
 individualProtector.dateOfBirth.error.past = Date of birth must be after 31 December 1499
 
+individualProtector.countryOfNationalityYesNo.title = Do you know the individual protector’s country of nationality?
+individualProtector.countryOfNationalityYesNo.heading = Do you know {0}’s country of nationality?
+individualProtector.countryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+individualProtector.countryOfNationalityYesNo.error.required = Select yes if you know the individual protector’s country of nationality
+individualProtector.countryOfNationalityYesNo.hint = The country of nationality is usually where the individual was born and where their passport is registered.
+
+individualProtector.countryOfNationalityUkYesNo.title = Does the individual protector have UK nationality?
+individualProtector.countryOfNationalityUkYesNo.heading = Does {0} have UK nationality?
+individualProtector.countryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+individualProtector.countryOfNationalityUkYesNo.error.required = Select yes if the individual protector has UK nationality
+
+individualProtector.countryOfNationality.title = What is the individual protector’s country of nationality?
+individualProtector.countryOfNationality.heading = What is {0}’s country of nationality?
+individualProtector.countryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
+individualProtector.countryOfNationality.error.required = Enter a country
+individualProtector.countryOfNationality.error.length = The country of nationality must be 100 characters or less
+individualProtector.countryOfNationality.error.invalidCharacters = The country of nationality must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
 individualProtector.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 individualProtector.nationalInsuranceNumberYesNo.title = Do you know the protector’s National Insurance number?
 individualProtector.nationalInsuranceNumberYesNo.heading = Do you know {0}’s National Insurance number?
@@ -179,6 +197,24 @@ individualProtector.nationalInsuranceNumber.heading = What is {0}’s National I
 individualProtector.nationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 individualProtector.nationalInsuranceNumber.error.required = Enter the protector’s National Insurance number
 individualProtector.nationalInsuranceNumber.error.invalidFormat = Enter the protector’s National Insurance number in the correct format
+
+individualProtector.countryOfResidenceYesNo.title = Do you know the individual protector’s country of residence?
+individualProtector.countryOfResidenceYesNo.heading = Do you know {0}’s country of residence?
+individualProtector.countryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+individualProtector.countryOfResidenceYesNo.error.required = Select yes if you know the individual protector’s country of residence
+individualProtector.countryOfResidenceYesNo.hint = The country of residence is usually where the individual lives and works most of the time during the tax year.
+
+individualProtector.countryOfResidenceUkYesNo.title = Does the individual protector have UK residency?
+individualProtector.countryOfResidenceUkYesNo.heading = Does {0} have UK residency?
+individualProtector.countryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+individualProtector.countryOfResidenceUkYesNo.error.required = Select yes if the individual protector has UK residency
+
+individualProtector.countryOfResidence.title = What is the individual protector’s country of residence?
+individualProtector.countryOfResidence.heading = What is {0}’s country of residence?
+individualProtector.countryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
+individualProtector.countryOfResidence.error.required = Enter a country
+individualProtector.countryOfResidence.error.length = The country of residence must be 100 characters or less
+individualProtector.countryOfResidence.error.invalidCharacters = The country of residence must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
 
 individualProtector.addressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 individualProtector.addressYesNo.title = Do you know the protector’s address?
@@ -278,6 +314,12 @@ individualProtector.passportOrIdCardDetails.expiryDate.error.invalid = Enter a r
 individualProtector.passportOrIdCardDetails.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
 individualProtector.passportOrIdCardDetails.expiryDate.error.past = ID card expiry date must be after 31 December 1499 and before 01 January 2100
 
+individualProtector.mentalCapacityYesNo.title = Does the individual protector have mental capacity at the time of registration?
+individualProtector.mentalCapacityYesNo.heading = Does {0} have mental capacity at the time of registration?
+individualProtector.mentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
+individualProtector.mentalCapacityYesNo.error.required = Select yes if you know the individual protector has mental capacity at the time of registration
+individualProtector.mentalCapacityYesNo.hint = An individual protector does not have mental capacity if they cannot understand information and make decisions about the trust due to a mental illness, learning disability, dementia or related condition, or they cannot communicate.
+
 individualProtector.startDate.checkYourAnswersLabel = When was {0} added as a protector?
 individualProtector.startDate.title = When was the protector added to the trust?
 individualProtector.startDate.heading = When was {0} added as a protector?
@@ -329,6 +371,24 @@ businessProtector.utr.link = find a lost UTR number (opens in a new window or ta
 businessProtector.utr.error.required = Enter the protector’s Unique Taxpayer Reference
 businessProtector.utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 businessProtector.utr.error.invalid = Enter the protector’s Unique Taxpayer Reference in the correct format
+
+businessProtector.countryOfResidenceYesNo.title = Do you know the protector’s country of residence?
+businessProtector.countryOfResidenceYesNo.heading = Do you know {0}’s country of residence?
+businessProtector.countryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+businessProtector.countryOfResidenceYesNo.error.required = Select yes if you know the protector’s country of residence
+businessProtector.countryOfResidenceYesNo.hint = The country of residence is usually where the business is registered (incorporated). The business has UK residency if it is registered with Companies House.
+
+businessProtector.countryOfResidenceUkYesNo.title = Does the protector have UK residency?
+businessProtector.countryOfResidenceUkYesNo.heading = Does {0} have UK residency?
+businessProtector.countryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+businessProtector.countryOfResidenceUkYesNo.error.required = Select yes if the business is a UK resident
+
+businessProtector.countryOfResidence.title = What is the protector’s country of residence?
+businessProtector.countryOfResidence.heading = What is {0}’s country of residence?
+businessProtector.countryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
+businessProtector.countryOfResidence.error.required = Enter a country
+businessProtector.countryOfResidence.error.length = The country of residence must be 100 characters or less
+businessProtector.countryOfResidence.error.invalidCharacters = The country of residence must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
 
 businessProtector.addressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 businessProtector.addressYesNo.title = Do you know the protector’s address?
