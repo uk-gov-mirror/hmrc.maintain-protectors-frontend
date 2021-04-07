@@ -381,7 +381,7 @@ businessProtector.countryOfResidenceYesNo.hint = The country of residence is usu
 businessProtector.countryOfResidenceUkYesNo.title = Does the protector have UK residency?
 businessProtector.countryOfResidenceUkYesNo.heading = Does {0} have UK residency?
 businessProtector.countryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
-businessProtector.countryOfResidenceUkYesNo.error.required = Select yes if if the business is a UK resident
+businessProtector.countryOfResidenceUkYesNo.error.required = Select yes if the business is a UK resident
 
 businessProtector.countryOfResidence.title = What is the protector’s country of residence?
 businessProtector.countryOfResidence.heading = What is {0}’s country of residence?
